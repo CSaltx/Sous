@@ -6,7 +6,7 @@
 
 ## About Sous
 
-Ever since I was a child, I wanted to be a chef. I took culinary classes and watched every cooking video I could find. At the age of 12, I came to a harsh realization: becoming a chef is a terrible path so I chose a better one. The pay is poor, especially at the early levels, you work terrible hours, and the stress is unimaginable. However, the aching to cook never left. So, in this project, my group and I will realize my dream while combining our unique experiences in CS. Our language will improve on the many lanugage's inferior aspects, import some of our computer science experiences, and include some of the culinary professions. With conciseness, eloquent expressions, and
+Ever since I was a child, I wanted to be a chef. I took culinary classes and watched every cooking video I could find. At the age of 12, I came to a harsh realization: becoming a chef is a terrible path so I chose a better one. The pay is poor, especially at the early levels, you work terrible hours, and the stress is unimaginable. However, the aching to cook never left. So, in this project, my group and I will realize my dream while combining our unique experiences in CS. Our language will improve on the many lanugage's inferior aspects, import some of our computer science experiences, and include some of the culinary professions. With conciseness, eloquent expressions, and a fun, unique approach, Sous cooks so you don't have to worry about it.
 
 ## Features
 
