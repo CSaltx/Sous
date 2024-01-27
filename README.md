@@ -1,4 +1,4 @@
-<img src="./docs/sous-64.png">
+<img src="./docs/sous-1024.png" height=64 width=64>
 
 # Sous
 
