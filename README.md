@@ -22,7 +22,7 @@ Ever since I was a child, I wanted to be a chef. I took culinary classes and wat
 - [x] Allows for Variable Immutability and Variable Mutability
 - [x] Allows for Pyth-style loops for conciseness
 
-> Note: Features are tentative and likely will change/update as language develops
+> Note: Features are tentative and likely will change/update as language develops <br/>
 > More features likely to be realized as development process continues
 
 ## Examples
@@ -92,5 +92,11 @@ for (let N = 0; N < 10; N++) {
 console.log(N);
 }
 \```
+
+| Sous                                                                                                                                                                                                                                                                 | JavaScript                                                       |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `serve("Hello World!")`                                                                                                                                                                                                                                              | `console.log("Hello World");`                                    |
+| `// valid`<br>`title := "Head Chef";`<br>`title = "Sous Chef";`<br>`age := 86;`<br>`_yoe := 10;`<br><br>`// invalid`<br>`title := 40;`<br>`4name := "john";`<br>`title = "Dishwasher"`                                                                               | `let title = "Head Chef";`<br>`const age = 25;`                  |
+| `for (N := 0; N < 10; ++N) {`<br>`    serve(N)`<br>`}`<br>`// format FVrXY`<br>`// V is desired var to store value, X, Y are predefined values where range is [X, Y), must be defined before looping`<br>`Z := 0`<br>`T := 10`<br>`FNrZT {`<br>`    serve(N)`<br>`}` | `for (let N = 0; N < 10; N++) {`<br>`    console.log(N);`<br>`}` |
 
 > NOTE: See directory examples/ to see more examples
