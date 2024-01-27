@@ -1,0 +1,20 @@
+{
+  "name": "sous",
+  "version": "1.0.0",
+  "description": "Compiler for Sous Programming Language for CMSI 3802",
+  "main": "sous.js",
+  "type": "module",
+  "scripts": {
+    "test": "c8 mocha"
+  },
+  "keywords": [],
+  "author": "CSaltx, mpmarkovic, cchoi17, CJPhill",
+  "license": "MIT",
+  "devDependencies": {
+    "c8": "^9.1.0",
+    "mocha": "^10.2.0"
+  },
+  "dependencies": {
+    "ohm-js": "^17.1.0"
+  }
+}
