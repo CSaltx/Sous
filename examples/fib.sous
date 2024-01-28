@@ -1,0 +1,24 @@
+ingredient N := 10; // Number of Fibonacci numbers to generate
+ingredient first := 0, second := 1, next := 0;
+
+serve("Fibonacci Sequence up to ", N, " numbers:");
+
+for (plate := 0; plate < N; ++plate) {
+    if (plate <= 1) {
+        next := plate;
+    } else {
+        next := first + second;
+        first := second;
+        second := next;
+    }
+    serve(next, " ");
+}
+
+'''
+for loop can be replaced as seen below:
+ingredient Z := 0;
+FPrZN {
+    ingredient plate := P;
+    ...
+}
+'''

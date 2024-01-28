@@ -11,6 +11,8 @@ Ever since I was a child, I wanted to be a chef. I took culinary classes and wat
 ## Features
 
 - [x] Variables
+- [x] Restaurant-Style Infusion
+- [x] Functions
 - [x] Classes
 - [x] Strongly-Typed
 - [x] Static Typing
@@ -29,10 +31,10 @@ Ever since I was a child, I wanted to be a chef. I took culinary classes and wat
 
 This section provides a side-by-side comparison of how common programming tasks are accomplished in Sous versus JavaScript. The comparison aims to highlight the syntax, features, and usability of Sous.
 
-| Sous                                                                                                                                                                                                                                                                               | JavaScript                                                       |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `serve("Hello World!");`                                                                                                                                                                                                                                                           | `console.log("Hello World");`                                    |
-| `// valid`<br>`title := "Head Chef";`<br>`title = "Sous Chef";`<br>`age := 86;`<br>`_yoe := 10;`<br><br>`// invalid`<br>`title := 40;`<br>`4name := "john";`<br>`title = "Dishwasher"`                                                                                             | `let title = "Head Chef";`<br>`const age = 25;`                  |
-| `for (N := 0; N < 10; ++N) {`<br>`    serve(N)`<br>`}`<br>`// format FVrXY`<br>`// V is desired var to store value, X, Y are `<br>` //predefined values where range is [X, Y), must`<br>`be defined before looping`<br>`Z := 0`<br>`T := 10`<br>`FNrZT {`<br>`    serve(N)`<br>`}` | `for (let N = 0; N < 10; N++) {`<br>`    console.log(N);`<br>`}` |
+| Sous                                                                                                                                                                                                                                                                                                                 | JavaScript                                                       |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `serve("Hello World!");`                                                                                                                                                                                                                                                                                             | `console.log("Hello World");`                                    |
+| `// valid`<br>`ingredient title := "Head Chef";`<br>`ingredient title = "Sous Chef";`<br>`ingredient age := 86;`<br>`ingredient _yoe := 10;`<br><br>`// invalid`<br>`ingredient title := 40;`<br>`ingredient 4name := "john";`<br>`ingredient title = "Dishwasher"`                                                  | `let title = "Head Chef";`<br>`const age = 25;`                  |
+| `for (ingredient N := 0; N < 10; ++N) {`<br>`    serve(N)`<br>`}`<br>`// format FVrXY`<br>`// V is desired var to store value, X, Y are `<br>` // predefined values where range is [X, Y), must`<br>`be defined before looping`<br>`ingredient Z := 0`<br>`ingredient T := 10`<br>`FNrZT {`<br>`    serve(N)`<br>`}` | `for (let N = 0; N < 10; N++) {`<br>`    console.log(N);`<br>`}` |
 
 > NOTE: See directory examples/ to see more examples

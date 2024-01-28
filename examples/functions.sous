@@ -1,0 +1,11 @@
+ingredient temp := 350;
+
+recipe CheckTemperature() {
+    if (temp > 300) {
+        serve("Temperature is hot enough for baking.");
+    } else {
+        serve("Temperature too low. Increase heat.");
+    }
+}
+
+CheckTemperature();

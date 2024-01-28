@@ -1,0 +1,14 @@
+menu := ["Soup", "Salad", "Steak", "Dessert"];
+
+for (dishIdx := 0; dishIdx < count(menu); ++dishIdx) {
+    serve("Preparing ", menu[dishIdx]);
+}
+
+// OR
+
+ingredient Z = 0;
+ingredient C = count(menu)
+
+FDrZC {
+    serve("Preparing ", menu[Z]);
+}
