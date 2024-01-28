@@ -6,7 +6,7 @@
 
 ## About Sous
 
-Ever since I was a child, I wanted to be a chef. I took culinary classes and watched every cooking video I could find. At the age of 12, I came to a harsh realization: becoming a chef is a terrible path so I chose a better one. The pay is poor, especially at the early levels, you work terrible hours, and the stress is unimaginable. However, the aching to cook never left. So, in this project, my group and I will realize my dream while combining our unique experiences in CS. Our language will improve on the many lanugage's inferior aspects, import some of our computer science experiences, and include some of the culinary professions. With conciseness, eloquent expressions, and a fun, unique approach, Sous cooks so you don't have to worry about it.
+What are the two most calming things to do? Cooking and programming. What if you could combine the two? Sous is a language that combines the two. Sous is a language that is easy to learn and easy to use. Sous is a language that is made by people who love to cook. Sous is a language that is made by people who love to program. As people from various backgrounds, my group and I chose to develop a language that combines our passions, creating Sous—a unique programming language that infuses culinary art into computer science. Sous is intuitive, blending features like strong and static typing, garbage collection, and Pyth-style loops with a playful, cooking-themed syntax. This language, ever-evolving, is for those who savor the art of code as much as the art of cooking, offering a flavorful twist to traditional programming.
 
 ## Features
 
