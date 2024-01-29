@@ -6,7 +6,7 @@
 
 ## About Sous
 
-What are the two most calming things to do? Cooking and programming. What if you could combine the two? Sous is a language that is easy to learn and easy to use. Sous is a language that is made by people who love to cook. Sous is a language that is made by people who love to program. As people from various backgrounds, my group and I chose to develop a language that combines our passions, creating Sous—a unique programming language that infuses culinary art into computer science. Sous is intuitive, blending features like strong and static typing, garbage collection, and Pyth-style loops with a playful, cooking-themed syntax. This language, ever-evolving is for those who savor the art of code as much as the art of cooking, offering a flavorful twist to traditional programming.
+What are the two most calming things to do? Cooking and programming. What if you could combine the two? Sous is a language that is easy to learn and easy to use. Sous is a language that is made by people who love to cook. Sous is a language that is made by people who love to program. As people from various backgrounds, we chose to develop a language that combines our passions, creating Sous—a unique programming language that infuses culinary art into computer science. Sous is intuitive, blending features like strong and static typing, garbage collection, and Pyth-style loops with a playful, cooking-themed syntax. This language, ever-evolving is for those who savor the art of code as much as the art of cooking, offering a flavorful twist to traditional programming.
 
 ## Features
 

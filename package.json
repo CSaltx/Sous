@@ -8,7 +8,7 @@
     "test": "c8 mocha"
   },
   "keywords": [],
-  "author": "CSaltx, mpmarkovic, cchoi17, CJPhill",
+  "author": "Coby Schumitzky (CSaltx), Milla Penelope-Markovic (mpmarkovic), Christina Choi (cchoi17), Clifford Phillips (CJPhill)",
   "license": "MIT",
   "devDependencies": {
     "c8": "^9.1.0",
