@@ -1,4 +1,4 @@
-Practice {
+Sous {
     Program = (Decl | Stmt)+ 
 
     Decl = VarDecl | FunDecl | ClassDecl
