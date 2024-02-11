@@ -1,0 +1,103 @@
+Practice {
+    Program = (Decl | Stmt)+ 
+
+    Decl = VarDecl | FunDecl | ClassDecl
+
+    VarDecl = ingredient nonemptyListOf<(VarInit | id), ","> ";" -- list
+    			  | ingredient VarInit ";"    -- with_init
+            	  | ingredient id ";"    -- without_init
+    VarInit = id ":=" Exp
+
+    ClassDecl = StructDecl | EnumDecl
+    StructDecl = Dish id "{" VarDecl* "}"
+    EnumDecl = Dish id "{" Params "}"
+	
+    FunDecl = recipe id "(" Params* ")" Block
+	Params = nonemptyListOf<Param, ",">
+    Param = ingredient id
+    Block = "{" Stmt* "}"
+
+    Stmt = Assignment
+         | BreakStmt
+         | ContinueStmt
+         | ReturnStmt
+         | CallStmt
+         | WhileStmt
+         | IfStmt
+         | TryStmt
+         | ForStmt
+         | PrintStmt
+     
+    PrintStmt = serve "(" ListOf<(string | id), ","> ")" ";"    --list
+    				| serve "(" (string | id) ")" ";" --no_list
+    Assignment = ingredient id "=" Exp ";"
+    BreakStmt = break ";"
+    ContinueStmt = continue ";"
+    ReturnStmt = return Exp ";"
+    CallStmt = Call ";"
+    WhileStmt = while "(" Exp ")" Block
+    IfStmt = if "(" Exp ")" Block else Block    -- with_else
+           | if "(" Exp ")" Block else IfStmt    -- nested_if
+           | if "(" Exp ")" Block    -- plain_if
+    TryStmt = try "(" Block ")" Catch* Finally?
+    Catch = catch "(" id ")" Block
+    Finally = finally Block
+    ForStmt = for "(" nonemptyListOf<(VarDecl | Exp), ";"> ")" Block
+    Call = id "(" Args ")"
+    Args = ListOf<Exp, ",">
+
+    Exp  = "-" Primary    -- negation
+         | Exp0
+    Exp0 = Exp0 "||" Exp1    -- or
+         | Exp1
+    Exp1 = Exp1 "&&" Exp2    -- and
+         | Exp2
+    Exp2 = Exp3 relop Exp3    -- relational
+         | Exp3
+    Exp3 = Exp3 ("+" | "-") Term    -- add
+         | Term
+    Term = Term ("*" | "/" | "%") Factor    --multiply
+         | Factor
+    Factor = Primary "**" Factor  -- power
+           | Primary
+    Primary = "(" Exp ")"              -- parens
+            | "[" NonemptyListOf<Exp, ","> "]" -- array
+            | ~num Primary "[" (Exp | string)* "]" -- subscript
+            | ~num Primary "." id      -- member
+            | id
+            | num
+            | Call
+            | string
+
+    relop = "<=" | "<" | ">=" | ">" | "==" | "!="
+    string = "\"" text* "\""
+
+
+	ingredient = "ingredient" ~idchar
+    recipe = "recipe" ~idchar
+    Dish = "Dish" ~idchar
+    serve = "serve" ~idchar
+    if = "if" ~idchar
+    else = "else" ~idchar
+    for  = "for" ~idchar
+    while = "while" ~idchar
+    finally = "finally" ~idchar
+    return = "return" ~idchar
+    break = "break" ~idchar
+    continue = "continue" ~idchar
+    try = "try" ~idchar
+    catch = "catch" ~idchar
+    throw = "throw" ~idchar
+    true = "true" ~idchar
+    false = "false" ~idchar
+    in = "in" ~idchar
+    
+    text = ~"\"" any
+    keyword = ingredient | recipe | serve | if | else | for | while | finally | return | break | continue | try | catch | throw
+            | true | false | in
+    id = ~keyword letter idchar* | ~keyword "_" idchar*
+    idchar = letter | digit | "_" | symbol
+    symbol = "." | "!" | "?"
+    space += "//" (~"\n" any)*    -- comment
+    num = digit+ ("." digit+)? (("e" | "E") ("+" | "-")? digit+)?
+}
