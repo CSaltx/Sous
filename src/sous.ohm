@@ -1,85 +1,91 @@
-Sous {
-    Program = (Decl | Stmt)+ 
-
-    Decl = VarDecl | FunDecl | ClassDecl
-
-    VarDecl = ingredient nonemptyListOf<(VarInit | id), ","> ";" -- list
-    			  | ingredient VarInit ";"    -- with_init
-            	  | ingredient id ";"    -- without_init
-    VarInit = id ":=" Exp
-
-    ClassDecl = StructDecl | EnumDecl
-    StructDecl = Dish id "{" VarDecl* "}"
-    EnumDecl = Dish id "{" Params "}"
-	
-    FunDecl = recipe id "(" Params* ")" Block
-	Params = nonemptyListOf<Param, ",">
+Test1_Sous {
+	Program  = (Decl | Stmt)+
+    
+    Decl = VarDecl | FunDecl | ClassDecl |ObjDecl
+    
+    VarDecl = ingredient nonemptyListOf<(VarInit | id), ","> ";" --list
+    	| ingredient VarInit ";" --with_init
+        | ingredient id ";" --wihout_init
+    VarInit = id ":=" (Exp | id)
+    
+    FunDecl = recipe id "(" Params ")" Block
+    Params = ListOf<Param, ",">
     Param = ingredient id
     Block = "{" Stmt* "}"
-
-    Stmt = Assignment
-         | BreakStmt
-         | ContinueStmt
-         | ReturnStmt
-         | CallStmt
-         | WhileStmt
-         | IfStmt
-         | TryStmt
-         | ForStmt
-         | PrintStmt
-     
-    PrintStmt = serve "(" ListOf<(string | id), ","> ")" ";"    --list
-    				| serve "(" (string | id) ")" ";" --no_list
-    Assignment = ingredient id "=" Exp ";"
+    
+    ClassDecl = dish id "{" Decl* "}"
+    
+    ObjDecl = id id ":=" new id "(" ListOf<(Param | string), ","> ")" ";"
+    
+    Stmt = VarDecl
+    	| Assignment
+    	| BreakStmt
+        | ContinueStmt
+        | ReturnStmt
+        | CallStmt
+        | WhileStmt
+        | IfStmt
+        | TryStmt
+        | ForStmt
+        | PythForStmt
+        | PrintStmt
+    
+    Assignment = id "=" Exp ";"
     BreakStmt = break ";"
     ContinueStmt = continue ";"
     ReturnStmt = return Exp ";"
     CallStmt = Call ";"
+    Call = id "(" Args ")"
+    Args = ListOf<Exp, ".">
     WhileStmt = while "(" Exp ")" Block
-    IfStmt = if "(" Exp ")" Block else Block    -- with_else
-           | if "(" Exp ")" Block else IfStmt    -- nested_if
-           | if "(" Exp ")" Block    -- plain_if
+    IfStmt = if "(" Exp ")" Block else Block --with_else
+    	| if "(" Exp ")" Block else IfStmt --nested_if
+        | if "(" Exp ")" Block --plain_if
     TryStmt = try "(" Block ")" Catch* Finally?
     Catch = catch "(" id ")" Block
     Finally = finally Block
-    ForStmt = for "(" nonemptyListOf<(VarDecl | Exp), ";"> ")" Block
-    Call = id "(" Args ")"
-    Args = ListOf<Exp, ",">
-
-    Exp  = "-" Primary    -- negation
-         | Exp0
-    Exp0 = Exp0 "||" Exp1    -- or
-         | Exp1
-    Exp1 = Exp1 "&&" Exp2    -- and
-         | Exp2
-    Exp2 = Exp3 relop Exp3    -- relational
-         | Exp3
-    Exp3 = Exp3 ("+" | "-") Term    -- add
-         | Term
-    Term = Term ("*" | "/" | "%") Factor    --multiply
-         | Factor
-    Factor = Primary "**" Factor  -- power
-           | Primary
-    Primary = "(" Exp ")"              -- parens
-            | "[" NonemptyListOf<Exp, ","> "]" -- array
-            | ~num Primary "[" (Exp | string)* "]" -- subscript
-            | ~num Primary "." id      -- member
-            | id
-            | num
-            | Call
-            | string
-
+    ForStmt = for "(" VarDecl Exp ";" Exp ")" Block --norm_style
+    PythForStmt = "F" (single_letter_id | Primary)  "r" (single_letter_id | id) (single_letter_id | id) Block --pyth_style
+    
+    PrintStmt = serve "(" ListOf<Exp, ","> ")" ";" --list
+    	| serve "(" Exp ")" ";" --no_list
+    
+    Exp = "-" Primary --negation
+    	| Exp0
+        | "++" Primary --incrementing
+    Exp0 = Exp0 "||" Exp --or
+    	| Exp1
+    Exp1 = Exp1 "&&" Exp2 --and
+    	| Exp2
+    Exp2 = Exp3 relop Exp3 --relational
+    	| Exp3
+    Exp3 = Exp ("+" | "-") Term --add
+    	| Term
+    Term = Term ("*" | "/" | "%") Factor --multiply
+    	| Factor
+    Factor = Primary "**" Factor --power
+    	| Primary
+    Primary = "(" Exp ")" --parens
+    	| "[" nonemptyListOf<Exp, ","> "]" --array
+        | ~num Primary "[" Exp "]" --subscript
+        | ~num Primary "." id --member
+        | Call
+        | id
+        | true
+        | false
+        | num
+        | string
+    
     relop = "<=" | "<" | ">=" | ">" | "==" | "!="
-    string = "\"" text* "\""
-
-
-	ingredient = "ingredient" ~idchar
+    string = "\"" char* "\""
+    
+    dish = "Dish" ~idchar
+    ingredient = "ingredient" ~idchar
     recipe = "recipe" ~idchar
-    Dish = "Dish" ~idchar
     serve = "serve" ~idchar
     if = "if" ~idchar
     else = "else" ~idchar
-    for  = "for" ~idchar
+    for = "for" ~idchar
     while = "while" ~idchar
     finally = "finally" ~idchar
     return = "return" ~idchar
@@ -91,13 +97,20 @@ Sous {
     true = "true" ~idchar
     false = "false" ~idchar
     in = "in" ~idchar
+    count = "count" ~idchar
+    new = "new" ~idchar
     
-    text = ~"\"" any
-    keyword = ingredient | recipe | serve | if | else | for | while | finally | return | break | continue | try | catch | throw
-            | true | false | in
-    id = ~keyword letter idchar* | ~keyword "_" idchar*
-    idchar = letter | digit | "_" | symbol
-    symbol = "." | "!" | "?"
-    space += "//" (~"\n" any)*    -- comment
-    num = digit+ ("." digit+)? (("e" | "E") ("+" | "-")? digit+)?
+    char = "\\u{" hexDigit+ "}"   --codepoint
+    	| "\\" any               --nonbackslash
+        | ~"\"" any
+    keyword = ingredient | recipe | serve | if | else | for | while | finally | return | break | continue | try | catch | throw | true | false | in | ingredient | recipe | serve | new
+    single_letter_id = ~keyword letter | ~keyword "_"
+    id = ~keyword letter idchar* --multi_letter
+    	| ~keyword "_" idchar* --underscore_letters
+        | ~keyword "_" --single_underscore
+    	| ~keyword letter --single_letter
+    idchar = alnum | "_" | symbol
+    symbol = "." | "!" | "?" | "_"
+    space += "//" (~"\n" any)* --comment
+    num = digit+ ("," digit+)? (("e" | "E") ("+" | "-")? digit+)?
 }

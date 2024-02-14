@@ -5,11 +5,11 @@ serve("Fibonacci Sequence up to ", N, " numbers:");
 
 for (ingredient plate := 0; plate < N; ++plate) {
     if (plate <= 1) {
-        next := plate;
+        next = plate;
     } else {
-        next := first + second;
-        first := second;
-        second := next;
+        next = first + second;
+        first = second;
+        second = next;
     }
     serve(next, " ");
 }
