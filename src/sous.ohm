@@ -26,7 +26,7 @@ Sous {
       | IfStmt
       | TryStmt
       | ForStmt
-      | PythForStmt
+      | pythForStmt
       | PrintStmt
 
   Assignment = id "=" Exp ";"
@@ -44,7 +44,7 @@ Sous {
   Catch = catch "(" id ")" Block
   Finally = finally Block
   ForStmt = for "(" VarDecl Exp ";" Exp ")" Block --norm_style
-  PythForStmt = "F" (single_letter_id | Primary)  "r" (single_letter_id | id) (single_letter_id | id) Block --pyth_style
+  pythForStmt = "F" (single_letter_id | Primary)  "r" (single_letter_id | id) (single_letter_id | id) Block --pyth_style
     
   PrintStmt = serve "(" ListOf<Exp, ","> ")" ";" --list
     	    | serve "(" Exp ")" ";" --no_list
