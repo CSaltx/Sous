@@ -45,7 +45,12 @@ Test1_Sous {
     Catch = catch "(" id ")" Block
     Finally = finally Block
     ForStmt = for "(" VarDecl Exp ";" Exp ")" Block --norm_style
-    PythForStmt = "F" (single_letter_id | Primary)  "r" (single_letter_id | id) (single_letter_id | id) Block --pyth_style
+    PythForStmt = pythFormat Block
+    pythFormat = "F" pythVars  "r" pythVars pythVars
+    pythVars =  id "[" id "]" --var_in_list
+        | id "(" id ")" --var_from_call
+        | single_letter_id --single_var
+        | id --name_var
     
     PrintStmt = serve "(" ListOf<Exp, ","> ")" ";" --list
     	| serve "(" Exp ")" ";" --no_list
