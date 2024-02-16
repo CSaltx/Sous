@@ -1,5 +1,5 @@
 Sous {
-  Program  = (Decl | Stmt)+
+  Program  = (Decl | Stmt)*
 
   Decl = VarDecl | FunDecl | ClassDecl | ObjDecl
 
@@ -21,13 +21,13 @@ Sous {
       | BreakStmt
       | ContinueStmt
       | ReturnStmt
+      | PrintStmt
       | CallStmt
       | WhileStmt
       | IfStmt
       | TryStmt
       | ForStmt
-      | pythForStmt Block  --pyth
-      | PrintStmt
+      | pythForStmt Block         --pyth
 
   Assignment = id "=" Exp ";"
   BreakStmt = break ";"
@@ -36,18 +36,20 @@ Sous {
   CallStmt = Call ";"
   Call = id "(" Args ")"
   Args = ListOf<Exp, ".">
+
   WhileStmt = while "(" Exp ")" Block
   IfStmt = if "(" Exp ")" Block else Block --with_else
          | if "(" Exp ")" Block else IfStmt --nested_if
          | if "(" Exp ")" Block --plain_if
-  TryStmt = try "(" Block ")" Catch* Finally?
+
+  TryStmt = try Block Catch* Finally?
   Catch = catch "(" id ")" Block
   Finally = finally Block
+
   ForStmt = for "(" VarDecl Exp ";" Exp ")" Block --norm_style
   pythForStmt = "F" single_letter_id  "r" single_letter_not_under single_letter_not_under --pyth
-    
-  PrintStmt = serve "(" ListOf<Exp, ","> ")" ";" --list
-    	    | serve "(" Exp ")" ";" --no_list
+
+  PrintStmt = serve "(" ListOf<Exp, ","> ")" ";"
     
   Exp = ("-" | "!") Primary    --negation
       | Exp0 "?" Exp0 ":" Exp  --ternary
