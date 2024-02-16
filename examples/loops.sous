@@ -9,6 +9,6 @@ for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx) {
 ingredient Z := 0;
 ingredient C := count(menu);
 
-Fmenu[D]rZC {
+FDrZC {
     serve("Preparing ", menu[Z]);
 }

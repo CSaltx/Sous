@@ -26,7 +26,7 @@ Sous {
       | IfStmt
       | TryStmt
       | ForStmt
-      | pythForStmt
+      | pythForStmt Block  --pyth
       | PrintStmt
 
   Assignment = id "=" Exp ";"
@@ -44,12 +44,13 @@ Sous {
   Catch = catch "(" id ")" Block
   Finally = finally Block
   ForStmt = for "(" VarDecl Exp ";" Exp ")" Block --norm_style
-  pythForStmt = "F" (single_letter_id | Primary)  "r" (single_letter_id | id) (single_letter_id | id) Block --pyth_style
+  pythForStmt = "F" single_letter_id  "r" single_letter_not_under single_letter_not_under --pyth
     
   PrintStmt = serve "(" ListOf<Exp, ","> ")" ";" --list
     	    | serve "(" Exp ")" ";" --no_list
     
   Exp = ("-" | "!") Primary    --negation
+      | Exp0 "?" Exp0 ":" Exp  --ternary
       | Exp0
       | "++" Primary --incrementing
   Exp0 = Exp0 "||" Exp --or
@@ -67,10 +68,10 @@ Sous {
   Primary = "[" nonemptyListOf<Exp, ","> "]" --array
           | ~num Primary "[" Exp "]"         --subscript
           | ~num Primary "." id              --member
-          | Call
-          | id
           | true
           | false
+          | Call
+          | id
           | num
           | string
           | "(" Exp ")"                      --parens
@@ -99,18 +100,21 @@ Sous {
   count = "count" ~idchar
   new = "new" ~idchar
     
-  char = "\\u{" hexDigit+ "}"   --codepoint
-       | "\\" any               --nonbackslash
-       | ~"\"" any
+  char = ~control ~"\\" ~"\"" any
+              | "\\" ("n" | "t" | "\"" | "\\")                --escape
+              | "\\u{" hex hex? hex? hex? hex? hex? "}"       --codepoint
+  control = "\x00".."\x1f" | "\x80".."\x9f"
+  hex = hexDigit
   keyword = ingredient | recipe | serve | if | else | for | while | finally | return | break | continue | try | catch | throw | true | false | in | ingredient | recipe | serve | new
   single_letter_id = ~keyword letter | ~keyword "_"
+  single_letter_not_under = ~keyword letter
   id = ~keyword letter idchar* --multi_letter
      | ~keyword "_" idchar*    --underscore_letters
      | ~keyword "_"            --single_underscore
      | ~keyword letter         --single_letter
   idchar = alnum | "_" | symbol
   symbol = "." | "!" | "?" | "_"
-  num = digit+ ("," digit+)? (("e" | "E") ("+" | "-")? digit+)?
+  num = digit+ ("." digit+)? (("e" | "E") ("+" | "-")? digit+)?
   space += "//" (~"\n" any)*   --comment
          | "'''" (~"'''" any)* "'''"
 }
