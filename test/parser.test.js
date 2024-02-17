@@ -21,6 +21,9 @@ const syntaxChecks = [
   ["non-Latin letters in identifiers", "コンパイラ = 100;"],
   ["pyth for statement", "FdrXD {serve(D);}"],
   ["regular for statement", "for (ingredient x := 0; x < 5; ++x) {serve();}"],
+  ["program with just a print statement", "serve(\"Hello World!\");"],
+  ["for statement with subscript", "for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx) {serve( \"Preparaing\", menu[dishIdx]);}"],
+  ["for statement without init", "for (ingredient x; x < 5; ++x) {serve();}"],
   ["while statement", "while (true) {serve();}"],
   ["empty program", ""],
   ["program with just a comment", "// yay"],
@@ -47,9 +50,15 @@ const syntaxChecks = [
     "try catch finally statement",
     "try {serve();} catch (x) {serve();} finally {serve();}",
   ],
-  ["for statement without init", "for (ingredient x; x < 5; ++x) {serve();}"],
   ["serve works with list of expressions", "serve(5 + 3, 7 * 2, 1);"],
   ["serve works with single expression", "serve(5 + 3);"],
+  ["Dish works with without expression", "Dish Cake {}"],
+  ["Dish works with a single declaration", "Dish Cake { ingredient flour; }"],
+  ["Dish works with a list of declarations", "Dish Cake { ingredient flour; recipe Bake() { serve(\"Baking the Cake...\"); } } "],
+  ["a class instance", "Cake myCake := new Cake(\"2 cups\", \"1 cup\", \"3\");"],
+  ["a variable declaration with no assignment", "ingredient sugar;"],
+  ["a variable declaration with an assignment", "ingredient temp := 350;"],
+
 ];
 
 const syntaxErrors = [
