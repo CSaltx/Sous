@@ -4,7 +4,7 @@ import * as fs from "node:fs/promises";
 import process from "node:process";
 import compile from "./compiler.js";
 // import { Program } from "./core.js";
-import stringify from "graph-stringify";
+// import stringify from "graph-stringify";
 
 const help = `Sous compiler
 
