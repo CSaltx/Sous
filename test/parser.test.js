@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import parse from "../src/parser.js";
 
 const syntaxChecks = [
-  ["all numeric literal forms", "print(8 * 89.123);"],
-  ["complex expressions", "print(83 * ((((-((((13 / 21)))))))) + 1 - 0);"],
-  ["all unary operators", "print (-3); print (!false);"],
+  ["all numeric literal forms", "serve(8 * 89.123);"],
+  ["complex expressions", "serve(83 * ((((-((((13 / 21)))))))) + 1 - 0);"],
+  ["all unary operators", "serve (-3); serve (!false);"],
   ["all binary operators", "serve(x && y || z * 1 / 2 ** 3 + 4 < 5);"],
   [
     "all arithmetic operators",
@@ -16,13 +16,16 @@ const syntaxChecks = [
   ],
   ["all logical operators", "ingredient x := true && false || (!false);"],
   ["the conditional operator", "serve(x ? y : z);"],
-  ["end of program inside comment", "print(0); // yay"],
-  ["comments with no text are ok", "print(1);//\nprint(0);//"],
+  ["end of program inside comment", "serve(0); // yay"],
+  ["comments with no text are ok", "serve(1);//\nserve(0);//"],
   ["non-Latin letters in identifiers", "コンパイラ = 100;"],
   ["pyth for statement", "FdrXD {serve(D);}"],
   ["regular for statement", "for (ingredient x := 0; x < 5; ++x) {serve();}"],
-  ["program with just a print statement", "serve(\"Hello World!\");"],
-  ["for statement with subscript", "for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx) {serve( \"Preparaing\", menu[dishIdx]);}"],
+  ["program with just a serve statement", "serve(\"Hello World!\");"],
+  [
+    "for statement with subscript", 
+    "for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx) {serve( \"Prepararing\", menu[dishIdx]);}"
+  ],
   ["for statement without init", "for (ingredient x; x < 5; ++x) {serve();}"],
   ["while statement", "while (true) {serve();}"],
   ["empty program", ""],
@@ -31,6 +34,7 @@ const syntaxChecks = [
   ["program with just a newline", "\n"],
   ["program with just a newline and a comment", "\n// yay"],
   ["program with just a newline and a comment", "\n// yay\n"],
+  ["program with just a serve statement", "serve();"],
   ["if statement", "if (x != 27 || y == 3) {serve();}"],
   ["if-else statement", "if (x != 27 || y == 3) {serve();} else {serve();}"],
   [
@@ -54,24 +58,46 @@ const syntaxChecks = [
   ["serve works with single expression", "serve(5 + 3);"],
   ["Dish works with without expression", "Dish Cake {}"],
   ["Dish works with a single declaration", "Dish Cake { ingredient flour; }"],
-  ["Dish works with a list of declarations", "Dish Cake { ingredient flour; recipe Bake() { serve(\"Baking the Cake...\"); } } "],
+  [
+    "Dish works with a list of declarations",
+    "Dish Cake { ingredient flour; recipe Bake() { serve(\"Baking the Cake...\"); } } "
+  ],
   ["a class instance", "Cake myCake := new Cake(\"2 cups\", \"1 cup\", \"3\");"],
   ["a variable declaration with no assignment", "ingredient sugar;"],
-  ["a variable declaration with an assignment", "ingredient temp := 350;"],
-
+  ["a variable declaration with an assignment", "ingredient temp := 350;"]
 ];
 
 const syntaxErrors = [
   ["non-letter in an identifier", "ab😭c = 2", /Line 1, col 3/],
+  ["malformed variable with integer", "4x = 7", /Line 1, col 1/],
+  ["malformed variable with symbol", "@x = 7", /Line 1, col 1/],
   ["malformed number", "x= 2.", /Line 1, col 6/],
+  ["malformed number expression", "x = 3-", /Line 1, col 7/],
+  ["malformed signed number", "x = +-3", /Line 1, col 5/],
+  ["malformed double signed number", "x = --3", /Line 1, col 6/],
+  ["binary operators next to each other", "serve(x &&|| z * 1 / 2 ** 3 + 4 < 5);", /Line 1, col 11/],
+  ["arithmetic operators next to each other", "serve(3*/ 5);", /Line 1, col 9/],
+  ["multiple unary operators next to each other", "serve(!!false);", /Line 1, col 8/],
   ["missing semicolon", "x = 3 y = 1", /Line 1, col 7/],
-  ["a missing right operand", "print(5 -", /Line 1, col 10/],
-  ["a non-operator", "print(7 * ((2 _ 3)", /Line 1, col 15/],
-  ["an expression starting with a )", "x = );", /Line 1, col 5/],
-  ["a statement starting with expression", "x * 5;", /Line 1, col 3/],
-  ["an illegal statement on line 2", "print(5);\nx * 5;", /Line 2, col 3/],
-  ["a statement starting with a )", "print(5);\n) * 5", /Line 2, col 1/],
-  ["an expression starting with a *", "x = * 71;", /Line 1, col 5/],
+  ["missing right operand", "serve(5 -", /Line 1, col 10/],
+  ["missing right paren", "serve(\"Hello\";", /Line 1, col 14/],
+  ["missing left paren", "serve\"Hello\");", /Line 1, col 6/],
+  ["non-operator", "serve(7 * ((2 _ 3);", /Line 1, col 15/],
+  ["malformed power operator", "serve(6**);", /Line 1, col 10/],
+  ["expression starting with a )", "x = );", /Line 1, col 5/],
+  ["statement starting with expression", "x * 5;", /Line 1, col 3/],
+  ["illegal statement on line 2", "serve(5);\nx * 5;", /Line 2, col 3/],
+  ["statement starting with a )", "serve(5);\n) * 5", /Line 2, col 1/],
+  ["expression starting with a *", "x = * 71;", /Line 1, col 5/],
+  ["expression starting with a /", "x = / 71;", /Line 1, col 5/],
+  ["expression starting with a **", "x = ** 71;", /Line 1, col 5/],
+  ["expression starting with a +", "x = + 71;", /Line 1, col 5/],
+  ["expression starting with a >", "x = > 71;", /Line 1, col 5/],
+  ["expression starting with a >", "x = < 71;", /Line 1, col 5/],
+  ["malformed greater-than relational operator", "x => 0", /Line 1, col 4/],
+  ["malformed less-than relational operator", "x =< 0", /Line 1, col 4/],
+  ["malformed equal-to operator", "x === 0", /Line 1, col 4/],
+  ["malformed serve statement with string", "serve(\"\"\")", /Line 1, col 9/],
   ["pyth statement illegality", "FxsrDV {serve(x)}", /Line 1, col 8/],
   [
     "for statement without block",
@@ -118,14 +144,21 @@ const syntaxErrors = [
   ["unmatched right brace", "serve(5 + {3 * 7);", /Line 1, col 11/],
   ["illegal right bracket", "serve(5 + [3 * 7);", /Line 1, col 17/],
   ["illegal right angle", "serve(5 + <3 * 7);", /Line 1, col 11/],
+  ["unmatched left paren", "serve(5 + 3 * 7));", /Line 1, col 17/],
+  ["unmatched left brace", "serve(5 + 3 * 7)};", /Line 1, col 17/],
+  ["illegal left bracket", "serve(5 + 3 * 7)];", /Line 1, col 17/],
+  ["illegal left angle", "serve(5 + >3 * 7);", /Line 1, col 11/],
   ["unmatched right quote", 'serve(5 + "3 * 7);', /Line 1, col 19/],
   ["unmatched right quote", "serve(5 + '3 * 7);", /Line 1, col 11/],
   ["unmatched right quote", "serve(5 + `3 * 7);", /Line 1, col 11/],
+  ["unmatched left quote", 'serve(5 + 3 * 7");', /Line 1, col 16/],
+  ["unmatched left quote", "serve(5 + 3 * 7');", /Line 1, col 16/],
+  ["unmatched left quote", "serve(5 + 3 * 7`);", /Line 1, col 16/],
   [
     "for statement without condition",
     "for (ingredient x := 0; ; ++x) {serve();}",
     /Line 1, col 25/,
-  ],
+  ]
 ];
 
 describe("The parser", () => {
