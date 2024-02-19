@@ -1,5 +1,5 @@
 Sous {
-  Program  = (Decl | Stmt)*
+  Program  = (Decl | Stmt)+
 
   Decl = VarDecl | FunDecl | ClassDecl | ObjDecl
 
