@@ -3,6 +3,7 @@
 # Sous
 
 > A Compiler made by people who love to cook
+> <br/>
 > Created by Coby Schumitzky, Milla Penelope Markovic, Clifford Phillps, and Christina Choi
 
 ## About Sous
