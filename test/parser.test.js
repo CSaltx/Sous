@@ -21,10 +21,10 @@ const syntaxChecks = [
   ["non-Latin letters in identifiers", "コンパイラ = 100;"],
   ["pyth for statement", "FdrXD {serve(D);}"],
   ["regular for statement", "for (ingredient x := 0; x < 5; ++x) {serve();}"],
-  ["program with just a serve statement", "serve(\"Hello World!\");"],
+  ["program with just a serve statement", 'serve("Hello World!");'],
   [
-    "for statement with subscript", 
-    "for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx) {serve( \"Prepararing\", menu[dishIdx]);}"
+    "for statement with subscript",
+    'for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx) {serve( "Prepararing", menu[dishIdx]);}',
   ],
   ["for statement without init", "for (ingredient x; x < 5; ++x) {serve();}"],
   ["while statement", "while (true) {serve();}"],
@@ -60,11 +60,11 @@ const syntaxChecks = [
   ["Dish works with a single declaration", "Dish Cake { ingredient flour; }"],
   [
     "Dish works with a list of declarations",
-    "Dish Cake { ingredient flour; recipe Bake() { serve(\"Baking the Cake...\"); } } "
+    'Dish Cake { ingredient flour; recipe Bake() { serve("Baking the Cake..."); } } ',
   ],
-  ["a class instance", "Cake myCake := new Cake(\"2 cups\", \"1 cup\", \"3\");"],
+  ["a class instance", 'Cake myCake := new Cake("2 cups", "1 cup", "3");'],
   ["a variable declaration with no assignment", "ingredient sugar;"],
-  ["a variable declaration with an assignment", "ingredient temp := 350;"]
+  ["a variable declaration with an assignment", "ingredient temp := 350;"],
 ];
 
 const syntaxErrors = [
@@ -75,13 +75,21 @@ const syntaxErrors = [
   ["malformed number expression", "x = 3-", /Line 1, col 7/],
   ["malformed signed number", "x = +-3", /Line 1, col 5/],
   ["malformed double signed number", "x = --3", /Line 1, col 6/],
-  ["binary operators next to each other", "serve(x &&|| z * 1 / 2 ** 3 + 4 < 5);", /Line 1, col 11/],
+  [
+    "binary operators next to each other",
+    "serve(x &&|| z * 1 / 2 ** 3 + 4 < 5);",
+    /Line 1, col 11/,
+  ],
   ["arithmetic operators next to each other", "serve(3*/ 5);", /Line 1, col 9/],
-  ["multiple unary operators next to each other", "serve(!!false);", /Line 1, col 8/],
+  [
+    "multiple unary operators next to each other",
+    "serve(!!false);",
+    /Line 1, col 8/,
+  ],
   ["missing semicolon", "x = 3 y = 1", /Line 1, col 7/],
   ["missing right operand", "serve(5 -", /Line 1, col 10/],
-  ["missing right paren", "serve(\"Hello\";", /Line 1, col 14/],
-  ["missing left paren", "serve\"Hello\");", /Line 1, col 6/],
+  ["missing right paren", 'serve("Hello";', /Line 1, col 14/],
+  ["missing left paren", 'serve"Hello");', /Line 1, col 6/],
   ["non-operator", "serve(7 * ((2 _ 3);", /Line 1, col 15/],
   ["malformed power operator", "serve(6**);", /Line 1, col 10/],
   ["expression starting with a )", "x = );", /Line 1, col 5/],
@@ -97,7 +105,7 @@ const syntaxErrors = [
   ["malformed greater-than relational operator", "x => 0", /Line 1, col 4/],
   ["malformed less-than relational operator", "x =< 0", /Line 1, col 4/],
   ["malformed equal-to operator", "x === 0", /Line 1, col 4/],
-  ["malformed serve statement with string", "serve(\"\"\")", /Line 1, col 9/],
+  ["malformed serve statement with string", 'serve(""")', /Line 1, col 9/],
   ["pyth statement illegality", "FxsrDV {serve(x)}", /Line 1, col 8/],
   [
     "for statement without block",
@@ -158,7 +166,7 @@ const syntaxErrors = [
     "for statement without condition",
     "for (ingredient x := 0; ; ++x) {serve();}",
     /Line 1, col 25/,
-  ]
+  ],
 ];
 
 describe("The parser", () => {
