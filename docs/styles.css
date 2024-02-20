@@ -12,7 +12,7 @@ html {
 html {
   height: 0;
 }
-
+/* 
 .nav__repository {
   background-color: #0594cb;
   color: white;
@@ -46,4 +46,4 @@ html {
   scale: 1.05;
   transition: cubic-bezier(1, 0, 0, 1);
   transition-duration: 0.2s;
-}
+} */
