@@ -1,40 +1,49 @@
-body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-}
+/* CSS for Sous Github Pages */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-header {
-  background: #333;
-  color: #fff;
-  padding: 10px 0;
-  text-align: center;
-}
-
-nav ul {
-  list-style: none;
+body,
+html {
+  margin: 0;
   padding: 0;
 }
 
-nav ul li {
-  display: inline;
-  margin: 0 10px;
+html {
+  height: 0;
+}
+/* 
+.nav__repository {
+  background-color: #0594cb;
+  color: white;
+  padding: 2vh 2vh;
+  border-radius: 10%;
+  border: none;
 }
 
-nav ul li a {
-  color: #fff;
-  text-decoration: none;
+.nav__grid {
+  width: 100vw;
 }
 
-main {
-  padding: 15px;
+.nav {
+  background-color: #0a1922;
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  margin: auto;
 }
 
-footer {
-  text-align: center;
-  padding: 10px;
-  background: #333;
-  color: #fff;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+.nav__text {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
 }
+
+.nav__repository:hover {
+  scale: 1.05;
+  transition: cubic-bezier(1, 0, 0, 1);
+  transition-duration: 0.2s;
+} */

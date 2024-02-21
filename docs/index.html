@@ -7,15 +7,21 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header>
-      <h1>Welcome to Sous</h1>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="documentation.html">Documentation</a></li>
-          <li><a href="about.html">About</a></li>
-        </ul>
-      </nav>
+    <header class="nav">
+      <div class="nav__grid">
+        <div class="nav-right flex flex-col gap-10 padding-[2vh]">
+          <img src="sous-1024.png" alt="Sous Logo" width="50" height="50" />
+          <h1>Sous</h1>
+        </div>
+      </div>
+      <!-- <div class="nav__grid">
+        <a
+          href="https://github.com/CSaltx/Sous/"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><button class="nav__repository">Repository</button></a
+        >
+      </div> -->
     </header>
     <main>
       <section>
@@ -27,8 +33,14 @@
       </section>
       <section>
         <h2>Getting Started</h2>
-        <p>Learn how to get started with Sous ...</p>
+        <p>Learn how to get started with Sous</p>
         <!-- Add more content here -->
+        <p>
+          The project is hosted on
+          <a href="https://github.com/CSaltx/Sous/">GitHub</a>. Clone the
+          repository to access the codebase in your terminal:
+        </p>
+        <p><code>git clone [ssh or desired method]</code></p>
       </section>
     </main>
     <footer>
