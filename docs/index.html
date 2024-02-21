@@ -2,27 +2,103 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="author" content="Coby Schumitzky" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/gif/png" href="sous-64.png" />
     <title>Sous</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="output.css" />
   </head>
   <body>
-    <header class="nav">
-      <div class="nav__grid">
-        <div class="nav-right flex flex-col gap-10 padding-[2vh]">
-          <img src="sous-1024.png" alt="Sous Logo" width="50" height="50" />
-          <h1>Sous</h1>
+    <header
+      class="h-[7vh] flex justify-center items-center relative bg-white z-[999]"
+    >
+      <h2 class="font-bold text-black text-[1.75vh]">
+        BETA RELEASE OF <span class="text-[#FF850E]">SOUS</span> IN PROGRESS
+        — MADE WITH YOU IN MIND
+      </h2>
+    </header>
+    <div class="nav h-[93vh] flex flex-col relative">
+      <nav class="h-[10vh] p-0">
+        <div class="flex gap-20">
+          <h1 class="font-bold text-[4vh] flex justify-center items-center">
+            <img
+              src="sous-500-no-bg.png"
+              alt="Sous logo"
+              width="100"
+              height="100"
+            />SOUS
+          </h1>
+          <a
+            href="https://github.com/CSaltx/Sous"
+            class="flex flex-row text-white justify-center items-center gap-2 font-bold"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub<svg
+              class="h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              width="10"
+              height="10"
+              viewBox="0 0 32 32"
+              style="fill: white"
+              aria-label="External Link"
+            >
+              <path
+                class="bg-white"
+                d="M25.152 16.576v5.696q0 2.144-1.504 3.648T20 27.424H5.152q-2.144.0-3.648-1.504t-1.504-3.648V7.424q0-2.112 1.504-3.616t3.648-1.536h12.576q.224.0.384.16t.16.416V4q0 .256-.16.416t-.384.16H5.152q-1.184.0-2.016.832t-.864 2.016v14.848q0 1.184.864 2.016t2.016.864H20q1.184.0 2.016-.864t.832-2.016v-5.696q0-.256.16-.416t.416-.16h1.152q.256.0.416.16t.16.416zM32 1.152v9.12q0 .48-.352.8t-.8.352-.8-.352l-3.136-3.136-11.648 11.648q-.16.192-.416.192t-.384-.192l-2.048-2.048q-.192-.16-.192-.384t.192-.416L24.064 5.088l-3.136-3.136q-.352-.352-.352-.8t.352-.8.8-.352h9.12q.48.0.8.352t.352.8z"
+              ></path></svg
+          ></a>
+          <a
+            href="mailto:cschumit@lion.lmu.edu"
+            class="flex flex-row text-white justify-center items-center gap-2 font-bold z-[9999]"
+            >Contact<svg
+              class="h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              width="10"
+              height="10"
+              viewBox="0 0 32 32"
+              style="fill: white"
+              aria-label="External Link"
+            >
+              <path
+                class="bg-white"
+                d="M25.152 16.576v5.696q0 2.144-1.504 3.648T20 27.424H5.152q-2.144.0-3.648-1.504t-1.504-3.648V7.424q0-2.112 1.504-3.616t3.648-1.536h12.576q.224.0.384.16t.16.416V4q0 .256-.16.416t-.384.16H5.152q-1.184.0-2.016.832t-.864 2.016v14.848q0 1.184.864 2.016t2.016.864H20q1.184.0 2.016-.864t.832-2.016v-5.696q0-.256.16-.416t.416-.16h1.152q.256.0.416.16t.16.416zM32 1.152v9.12q0 .48-.352.8t-.8.352-.8-.352l-3.136-3.136-11.648 11.648q-.16.192-.416.192t-.384-.192l-2.048-2.048q-.192-.16-.192-.384t.192-.416L24.064 5.088l-3.136-3.136q-.352-.352-.352-.8t.352-.8.8-.352h9.12q.48.0.8.352t.352.8z"
+              ></path></svg
+          ></a>
         </div>
-      </div>
-      <!-- <div class="nav__grid">
+      </nav>
+      <div class="nav__grid flex justify-center items-center flex-col">
+        <div
+          class="w-[50vw] h-[50vh] flex flex-col justify-center items-center z-[999]"
+        >
+          <img
+            src="sous-1024-nobg.png"
+            alt="Sous Logo"
+            class="absolute z-[-1] w-[50vw] h-auto pointer-events-none"
+          />
+        </div>
+        <div class="w-screen flex justify-center items-center">
+          <h1 class="text-white text-[6vh] font-bold">
+            A modern, culinary-inspired language
+          </h1>
+        </div>
+        <p class="text-white mt-[2vh] mb-[3vh] font-[500]">
+          Sous is a language made for culinary enthusiasts with the SoTA coding
+          practices.
+        </p>
         <a
           href="https://github.com/CSaltx/Sous/"
           target="_blank"
           rel="noopener noreferrer"
-          ><button class="nav__repository">Repository</button></a
+          ><button
+            class="nav__repository text-[#ff850e] px-[2vh] py-[1.5vh] bg-white uppercase font-bold"
+          >
+            Repository
+          </button></a
         >
-      </div> -->
-    </header>
+      </div>
+    </div>
     <main>
       <section>
         <h2>Introduction to Sous</h2>
