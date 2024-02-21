@@ -1,4 +1,7 @@
-/* CSS for Sous Github Pages */
+/* CSS for Sous Github Pages 
+Most CSS should be done via tailwind which is installed but must be pre-deployed with:
+> npm run build
+in terminal. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,11 +15,8 @@ html {
 html {
   height: 0;
 }
-/* 
+
 .nav__repository {
-  background-color: #0594cb;
-  color: white;
-  padding: 2vh 2vh;
   border-radius: 10%;
   border: none;
 }
@@ -26,14 +26,8 @@ html {
 }
 
 .nav {
-  background-color: #0a1922;
+  background-color: #ff850e;
   color: white;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  margin: auto;
 }
 
 .nav__text {
@@ -46,4 +40,4 @@ html {
   scale: 1.05;
   transition: cubic-bezier(1, 0, 0, 1);
   transition-duration: 0.2s;
-} */
+}
