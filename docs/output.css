@@ -571,8 +571,17 @@ video {
   z-index: 999;
 }
 
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .mb-\[3vh\] {
   margin-bottom: 3vh;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
 }
 
 .mt-\[2vh\] {
@@ -581,6 +590,10 @@ video {
 
 .flex {
   display: flex;
+}
+
+.grid {
+  display: grid;
 }
 
 .h-4 {
@@ -615,8 +628,16 @@ video {
   width: 50vw;
 }
 
+.w-full {
+  width: 100%;
+}
+
 .w-screen {
   width: 100vw;
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -643,6 +664,15 @@ video {
   gap: 5rem;
 }
 
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.bg-\[\#5a00ff\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(90 0 255 / var(--tw-bg-opacity));
+}
+
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -650,6 +680,10 @@ video {
 
 .p-0 {
   padding: 0px;
+}
+
+.p-6 {
+  padding: 1.5rem;
 }
 
 .px-\[2vh\] {
@@ -674,6 +708,11 @@ video {
   font-size: 6vh;
 }
 
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .font-\[500\] {
   font-weight: 500;
 }
@@ -686,14 +725,9 @@ video {
   text-transform: uppercase;
 }
 
-.text-\[\#FF850E\] {
+.text-\[\#5a00ff\] {
   --tw-text-opacity: 1;
-  color: rgb(255 133 14 / var(--tw-text-opacity));
-}
-
-.text-\[\#ff850e\] {
-  --tw-text-opacity: 1;
-  color: rgb(255 133 14 / var(--tw-text-opacity));
+  color: rgb(90 0 255 / var(--tw-text-opacity));
 }
 
 .text-black {
@@ -701,9 +735,25 @@ video {
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
+.text-gray-700 {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+
+.text-purple-800 {
+  --tw-text-opacity: 1;
+  color: rgb(107 33 168 / var(--tw-text-opacity));
+}
+
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.shadow-lg {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 body,
@@ -726,7 +776,6 @@ html {
 }
 
 .nav {
-  background-color: #ff850e;
   color: white;
 }
 
