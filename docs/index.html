@@ -7,6 +7,7 @@
     <link rel="icon" type="image/gif/png" href="sous-64.png" />
     <title>Sous</title>
     <link rel="stylesheet" href="output.css" />
+    <link rel="stylesheet" href="prism.css" />
   </head>
   <body>
     <header
@@ -99,7 +100,7 @@
         >
       </div>
     </div>
-    <div class="dev__bios grid grid-cols-4 gap-2 mx-2">
+    <div class="dev__bios grid grid-cols-4 gap-2 mx-2 my-10">
       <div class="coby_dev__bio">
         <div class="w-full">
           <div class="bg-white p-6 rounded-lg shadow-lg">
@@ -157,28 +158,183 @@
         </div>
       </div>
     </div>
-    <main>
-      <section>
-        <h2>Introduction to Sous</h2>
-        <p>
-          Sous is a new programming language designed for ... [brief
-          description]
-        </p>
-      </section>
-      <section>
-        <h2>Getting Started</h2>
-        <p>Learn how to get started with Sous</p>
-        <!-- Add more content here -->
-        <p>
-          The project is hosted on
-          <a href="https://github.com/CSaltx/Sous/">GitHub</a>. Clone the
-          repository to access the codebase in your terminal:
-        </p>
-        <p><code>git clone [ssh or desired method]</code></p>
-      </section>
+    <main class="grid grid-cols-2">
+      <div class="language_info"></div>
+      <div class="language__features"></div>
     </main>
-    <footer>
+
+    <div class="flex p-[30vh] flex-col h-[130vh]">
+      <h1 class="flex justify-center items-center font-bold text-[4vh]">
+        Example Programs
+      </h1>
+      <div class="flex justify-center items-center gap-10 mb-4">
+        <button
+          id="prev"
+          class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Prev
+        </button>
+        <button
+          id="next"
+          class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Next
+        </button>
+      </div>
+      <div class="w-full flex flex-col items-center justify-center">
+        <div
+          id="slideshow"
+          class="w-full flex justify-center items-center p-10 rounded-md"
+          style="
+            display: block;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+          "
+        >
+          <!-- Example Programs -->
+          <div class="slide w-full" style="display: block">
+            <h3
+              class="text-lg font-semibold mb-4 flex justify-center items-center"
+            >
+              Hello Program
+            </h3>
+            <code class="prettyprint linenums:4">serve("Hello World!");</code>
+          </div>
+          <div class="slide w-full" style="display: none">
+            <h3
+              class="text-lg font-semibold mb-4 flex justify-center items-center"
+            >
+              Functions
+            </h3>
+            <code class="prettyprint linenums:4">
+              ingredient temp := 350;<br />
+              <br />
+              recipe CheckTemperature() {<br />
+              &nbsp;&nbsp;&nbsp;if (temp > 300) {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Temperature is hot
+              enough for baking.");<br />
+              &nbsp;&nbsp;&nbsp;} else {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Temperature too low.
+              Increase heat.");<br />
+              &nbsp;&nbsp;&nbsp;}<br />
+              }<br />
+              <br />
+              CheckTemperature();<br />
+            </code>
+          </div>
+          <div class="slide w-full" style="display: none">
+            <h3
+              class="text-lg font-semibold mb-4 flex justify-center items-center"
+            >
+              Loops
+            </h3>
+            <code class="prettyprint linenums:4">
+              ingredient menu := ["Soup", "Salad", "Steak", "Dessert"];<br />
+              <br />
+              for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx)
+              {<br />
+              &nbsp;&nbsp;&nbsp;serve("Preparing ", menu[dishIdx]);<br />
+              }<br />
+              <br />
+              // OR<br />
+              <br />
+              ingredient Z := 0;<br />
+              ingredient C := count(menu);<br />
+              <br />
+              FDrZC {<br />
+              &nbsp;&nbsp;&nbsp;serve("Preparing ", menu[Z]);<br />
+              }<br />
+            </code>
+          </div>
+          <div class="slide w-full" style="display: none">
+            <h3
+              class="text-lg font-semibold mb-4 flex justify-center items-center"
+            >
+              Classes
+            </h3>
+            <code class="prettyprint linenums:4">
+              // Class Usage: Initializing a class using Dish and creating a new
+              Object<br />
+              <br />
+              Dish Cake {<br />
+              &nbsp;&nbsp;&nbsp;ingredient flour;<br />
+              &nbsp;&nbsp;&nbsp;ingredient sugar;<br />
+              &nbsp;&nbsp;&nbsp;ingredient eggs;<br />
+              <br />
+              &nbsp;&nbsp;&nbsp;recipe MixIngredients() {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Mixing ingredients: ",
+              flour, ", ", sugar, ", ", eggs);<br />
+              &nbsp;&nbsp;&nbsp;}<br />
+              <br />
+              &nbsp;&nbsp;&nbsp;recipe Bake() {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Baking the
+              cake...");<br />
+              &nbsp;&nbsp;&nbsp;}<br />
+              }<br />
+              <br />
+              Cake myCake := new Cake("2 cups", "1 cup", "3");<br />
+              <br />
+              myCake.MixIngredients();<br />
+              myCake.Bake();<br />
+            </code>
+          </div>
+          <div class="slide w-full" style="display: none">
+            <h3
+              class="text-lg font-semibold mb-4 flex justify-center items-center"
+            >
+              Fibbonnaci
+            </h3>
+            <code class="prettyprint linenums:4">
+              ingredient N := 10; // Number of Fibonacci numbers to generate<br />
+              ingredient first := 0, second := 1, next := 0;<br />
+              <br />
+              serve("Fibonacci Sequence up to ", N, " numbers:");<br />
+              <br />
+              for (ingredient plate := 0; plate < N; ++plate) {<br />
+              &nbsp;&nbsp;&nbsp;if (plate <= 1) {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next = plate;<br />
+              &nbsp;&nbsp;&nbsp;} else {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next = first + second;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;first = second;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second = next;<br />
+              &nbsp;&nbsp;&nbsp;}<br />
+              &nbsp;&nbsp;&nbsp;serve(next, " ");<br />
+              }<br />
+              <br />
+              '''<br />
+              for loop can be replaced as seen below:<br />
+              ingredient Z := 0;<br />
+              FPrZN {<br />
+              &nbsp;&nbsp;&nbsp;ingredient plate := P;<br />
+              &nbsp;&nbsp;&nbsp;...<br />
+              }<br />
+              '''
+            </code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="flex justify-center items-center font-bold p-5">
       <p>&copy; 2024 Sous Language</p>
     </footer>
+    <script>
+      let currentSlide = 0;
+      const slides = document.querySelectorAll("#slideshow .slide");
+      const nextButton = document.getElementById("next");
+      const prevButton = document.getElementById("prev");
+
+      nextButton.addEventListener("click", () => {
+        slides[currentSlide].style.display = "none";
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].style.display = "block";
+      });
+
+      prevButton.addEventListener("click", () => {
+        slides[currentSlide].style.display = "none";
+        currentSlide = Math.max(currentSlide - 1, 0);
+        slides[currentSlide].style.display = "block";
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   </body>
 </html>
