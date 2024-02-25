@@ -17,7 +17,9 @@ export default function analyze(match) {
     //   }
     // },
 
-    VarDecl_without_init(_var, id, _semi) {
+    VarDecl_list(_ingredient, ids, _semi) {},
+
+    VarDecl_without_init(_ingredient, id, _semi) {
       return new core.VarDecl(id.rep(), null);
     },
 
@@ -25,15 +27,17 @@ export default function analyze(match) {
       return new core.Assignment(target.rep(), expression.rep());
     },
 
-    Print(_print, exp, _semi) {
-      return new core.PrintStatement(exp.rep());
+    PrintStmt(_print, _open, exps, _closed, _semi) {
+      return exps
+        .asIteration()
+        .children.map((exp) => new core.PrintStatement(exp.rep()));
     },
 
-    IfStmt(_if, exp, block, elsePart) {},
-    ElsePart_nested_if(_else, stmt) {},
-    ElsePart_else_block(_else, block) {},
+    IfStmt_with_else(_if, _open, exp, _closed, block, _else, else_block) {},
+    IfStmt_nested_if(_if, _open, exp, _closed, block, _else, stmt) {},
+    IfStmt_plain_if(_if, _open, exp, _closed, block) {},
 
-    ReturnStatement(_return, exp, _semi) {
+    ReturnStmt(_return, exp, _semi) {
       return new core.ReturnStatement(exp.rep());
     },
 
@@ -43,26 +47,29 @@ export default function analyze(match) {
       return new core.ContinueStatement();
     },
 
-    WhileStmt(_while, exp, block) {
+    WhileStmt(_while, _open, exp, _closed, block) {
       return new core.WhileStatement(exp.rep(), block.rep());
     },
 
-    ForStmt(_for, _open, init, test, _semi, update, _updatesemi, block) {
-      return new core.ForStatement(
-        init.rep(),
-        test.rep(),
-        update.rep(),
-        block.rep()
-      );
+    ForStmt_norm(_for, _open, init, test, _semi, update, _updatesemi, block) {},
+
+    ErrorStmt(_eightysix, _open, exp, _closed, _semi) {
+      return new core.ErrorStatement(exp);
     },
 
-    ErrorStmt(_eightysix, Exp, _semi) {
-      throw new core.ErrorStatement(Exp);
+    Stmt_pyth_for(statement, Block) {},
+
+    pythForStmt(_f, id, _r, id1, id2) {
+      return new core.PythForStmt(id.rep(), id1.rep(), id2.rep());
     },
 
-    pythForStmt(_f, id, _r, id1, id2, body) {
-      return new core.PythForStmt(id.rep(), id1.rep(), id2.rep(), body.rep());
-    },
+    FunDecl(_recipe, id, _open, params, _closed, block) {},
+
+    ClassDecl(_dish, id, _open, decls, _closed) {},
+
+    ObjDecl(typeid, id, _equals, _new, classid, _open, args, _closed, _semi) {},
+
+    CallStmt(call, _semi) {},
 
     Block(_open, stmts, _close) {
       return statements.children.map((s) => s.rep());
@@ -75,29 +82,69 @@ export default function analyze(match) {
       return new core.UnaryExpression(op.sourceString, operand.rep());
     },
 
-    Exp_binary(test, _if, conseq, _else, alt) {
+    Exp_ternary(test, _if, conseq, _else, alt) {
       return new core.IfStatement(test.rep(), conseq.rep(), alt.rep());
     },
     Exp_incrementing(op, operand) {
       return new core.UnaryExpression(op.sourceString, operand.rep());
     },
-    Exp_exp0(exp) {
-      return exp.rep();
+
+    Exp0_or(left, _or, right) {
+      return new core.BinaryExpression(left.rep(), "||", right.rep());
     },
-    Factor_negation(op, operand) {
-      return new core.UnaryExpression(op.sourceString, operand.rep());
+
+    Exp1_and(left, _and, right) {
+      return new core.BinaryExpression(left.rep(), "&&", right.rep());
     },
-    Primary_call(id, _open, args, _close) {
-      return new core.Call(id.rep(), args.rep());
+
+    Exp2_relational(left, relop, right) {
+      return new core.BinaryExpression(
+        left.rep(),
+        _relop.sourceString,
+        right.rep()
+      );
     },
+
+    Exp3_add(left, op, right) {
+      return new core.BinaryExpression(
+        left.rep(),
+        op.sourceString,
+        right.rep()
+      );
+    },
+
+    Term_multiply(left, op, right) {
+      return new core.BinaryExpression(
+        left.rep(),
+        op.sourceString,
+        right.rep()
+      );
+    },
+
+    Factor_exponentiation(left, op, right) {
+      return new core.BinaryExpression(left.rep(), "**", right.rep());
+    },
+
+    Primary_array(_open, args, _closed) {},
+
+    Primary_subscript(object, _open, index, _closed) {},
+
+    Primary_member(member, _dot, id) {},
+
     Primary_parens(_open, exp, _close) {
       return exp.rep();
     },
+
     Primary_id(id) {
       return new core.Variable(id.sourceString);
     },
-    numeral(_main, _dot, _frac, _e, _sign, _exp) {
+
+    num(_main, _dot, _frac, _e, _sign, _exp) {
       return Number(this.sourceString);
+    },
+
+    string(_open, chars, _closed) {
+      return this.sourceString;
     },
   });
 

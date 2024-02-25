@@ -5,6 +5,9 @@ import process from "node:process";
 import compile from "./compiler.js";
 // import { Program } from "./core.js";
 // import stringify from "graph-stringify";
+import util from "node:util";
+import parse from "./parser.js";
+import analyze from "./analyzer.js";
 
 const help = `Sous compiler
 
@@ -34,4 +37,9 @@ if (process.argv.length !== 4) {
   console.log(help);
 } else if (process.argv[3] === "parsed") {
   compileFromFile(process.argv[2], "parsed");
+} else if (process.argv[3] === "analyzed") {
+  const buffer = await fs.readFile(process.argv[2]);
+  const match = parse(buffer);
+  const rep = analyze(match);
+  console.log(util.inspect(rep, { depth: 5 }));
 }

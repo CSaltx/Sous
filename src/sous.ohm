@@ -1,10 +1,25 @@
 Sous {
   Program  = (Decl | Stmt)*
 
+  Stmt = VarDecl
+      | Assignment
+      | BreakStmt
+      | ContinueStmt
+      | ReturnStmt
+      | PrintStmt
+      | CallStmt
+      | ErrorStmt
+      | WhileStmt
+      | IfStmt
+      | TryStmt
+      | ForStmt
+      | pythForStmt Block --pyth_for
+      | ThrowStmt
+
   Decl = VarDecl | FunDecl | ClassDecl | ObjDecl
 
   VarDecl = ingredient nonemptyListOf<(VarInit | id), ","> ";" --list
-          | ingredient id ";" --wihout_init
+          | ingredient id ";" --without_init
   VarInit = id ":=" (Exp | id)
 
   FunDecl = recipe id "(" Params ")" Block
@@ -16,25 +31,12 @@ Sous {
 
   ObjDecl = id id ":=" new id "(" ListOf<(Param | string), ","> ")" ";"
 
-  Stmt = VarDecl
-      | Assignment
-      | BreakStmt
-      | ContinueStmt
-      | ReturnStmt
-      | PrintStmt
-      | ErrorStmt
-      | WhileStmt
-      | IfStmt
-      | TryStmt
-      | ForStmt
-      | pythForStmt Block         --pyth
-      | ThrowStmt
-
   Assignment = id "=" Exp ";"
   BreakStmt = break ";"
   ContinueStmt = continue ";"
   ReturnStmt = return Exp ";"
-  Call = id "(" Args ")" ";" --call
+  CallStmt = Call ";"
+  Call = id "(" Args ")" --call
   Args = ListOf<Exp, ".">
 
   WhileStmt = while "(" Exp ")" Block
@@ -46,8 +48,8 @@ Sous {
   Catch = catch "(" id ")" Block
   Finally = finally Block
 
-  ForStmt = for "(" VarDecl Exp ";" Exp ")" Block --norm
-  pythForStmt = "F" single_letter_id  "r" single_letter_id single_letter_id --pyth
+  ForStmt = for "(" VarDecl Exp ";" Exp ")" Block                            --norm
+  pythForStmt = "F" single_letter_id  "r" single_letter_id single_letter_id  
 
   PrintStmt = serve "(" ListOf<Exp, ","> ")" ";"
   ErrorStmt = eightysix "(" Exp ")" ";"
@@ -55,7 +57,7 @@ Sous {
     
   Exp = ("-" | "!") Primary            --negation
       | Exp0 "?" Exp0 ":" Exp          --ternary
-      | Exp0                           --exp0
+      | Exp0                          
       | "++" Primary                   --incrementing 
   Exp0 = Exp0 "||" Exp                 --or
        | Exp1
@@ -67,7 +69,7 @@ Sous {
        | Term
   Term = Term ("*" | "/" | "%") Factor --multiply
        | Factor
-  Factor = Primary "**" Factor --power
+  Factor = Primary "**" Factor --exponentiation
          | Primary
   Primary = "[" nonemptyListOf<Exp, ","> "]" --array
           | ~num Primary "[" Exp "]"         --subscript
@@ -75,7 +77,7 @@ Sous {
           | true            
           | false
           | Call                             --call
-          | id
+          | id                               --id
           | num
           | string
           | "(" Exp ")"                      --parens
