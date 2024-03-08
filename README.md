@@ -22,9 +22,7 @@ What are the two most calming things to do? Cooking and programming. What if you
 - [x] Static Typing
 - [x] Type Inference
 - [x] Static Scoping
-- [x] Garbage Collection
 - [x] Optionals
-- [x] Generics
 - [x] Allows for Variable Immutability and Variable Mutability
 - [x] Allows for Pyth-style loops for conciseness
 

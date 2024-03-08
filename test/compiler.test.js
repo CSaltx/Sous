@@ -26,11 +26,11 @@ describe("The compiler", () => {
     done();
   });
 
-  it("throws an error with the 'analyzed' option", () => {
-    assert.throws(() => {
-      compile(sampleProgram, "analyzed");
-    });
-  });
+  // it("throws an error with the 'analyzed' option", () => {
+  //   assert.throws(() => {
+  //     compile(sampleProgram, "analyzed");
+  //   });
+  // });
 
   it("throws an error with the 'optimized' option", () => {
     // manually test for non-implementation

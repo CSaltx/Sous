@@ -1,9 +1,9 @@
 // Class Usage: Initializing a class using Dish and creating a new Object
 
 Dish Cake {
-    ingredient flour;
-    ingredient sugar;
-    ingredient eggs;
+    ingredient flour : string;
+    ingredient sugar : int;
+    ingredient eggs : float;
 
     recipe MixIngredients() {
         serve("Mixing ingredients: ", flour, ", ", sugar, ", ", eggs);

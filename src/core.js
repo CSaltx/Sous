@@ -1,109 +1,181 @@
-export class Program {
-  constructor(statements) {
-    this.statements = statements;
-  }
+export function program(statements) {
+  return { kind: "Program", statements };
 }
 
-export class VarDecl {
-  constructor(name, initializer) {
-    Object.assign(this, { name, initializer });
-  }
+export function variableDeclaration(name, initializer) {
+  return { kind: "VariableDeclaration", name, initializer };
 }
 
-export class Assignment {
-  constructor(target, source) {
-    Object.assign(this, { target, source });
-  }
+export function variable(name, readOnly, type) {
+  return { kind: "Variable", name, readOnly, type };
 }
 
-export class ContinueStatement {
-  constructor() {}
+export function field(name, type) {
+  return { kind: "Field", name, type };
 }
 
-export class ReturnStatement {
-  constructor(argument) {
-    this.argument = argument;
-  }
+export function functionDeclaration(name, fun, params, body) {
+  return { kind: "FunctionDeclaration", name, fun, params, body };
 }
 
-export class PrintStatement {
-  constructor(argument) {
-    this.argument = argument;
-  }
+export function classDeclaration(name, fields, methods) {
+  return { kind: "ClassDeclaration", name, fields, methods };
 }
 
-export class IfStatement {
-  constructor(test, consequent, alternate) {
-    Object.assign(this, { test, consequent, alternate });
-  }
+export function fun(name, type) {
+  return { kind: "Function", name, type };
 }
 
-export class WhileStatement {
-  constructor(test, body) {
-    Object.assign(this, { test, body });
-  }
+export function arrayType(baseType) {
+  return { kind: "ArrayType", baseType };
 }
 
-export class ForStatement {
-  constructor(init, test, update, body) {
-    Object.assign(this, { init, test, update, body });
-  }
+export function functionType(paramTypes, returnType) {
+  return { kind: "FunctionType", paramTypes, returnType };
 }
 
-export class PythForStmt {
-  constructor(id1, id2, id3, body) {
-    Object.assign(this, { id1, id2, id3, body });
-  }
+export function optionalType(baseType) {
+  return { kind: "OptionalType", baseType };
 }
 
-export class BreakStatement {
-  constructor() {}
+export function increment(variable) {
+  return { kind: "Increment", variable };
 }
 
-export class Variable {
-  constructor(name) {
-    Object.assign(this, { name });
-  }
+export function decrement(variable) {
+  return { kind: "Decrement", variable };
 }
 
-export class IntrinsicFunction {
-  constructor(name, parameterCount) {
-    Object.assign(this, { name, parameterCount });
-  }
+export function assignment(target, source) {
+  return { kind: "Assignment", target, source };
 }
 
-export class Call {
-  constructor(callee, args) {
-    Object.assign(this, { callee, args });
-  }
+export const breakStatement = { kind: "BreakStatement" };
+
+export function returnStatement(expression) {
+  return { kind: "ReturnStatement", expression };
 }
 
-export class BinaryExpression {
-  constructor(op, left, right) {
-    Object.assign(this, { op, left, right });
-  }
+export function shortReturnStatement() {
+  return { kind: "ShortReturnStatement" };
 }
 
-export class UnaryExpression {
-  constructor(op, argument) {
-    Object.assign(this, { op, argument });
-  }
+export function ifStatement(test, consequent, alternate) {
+  return { kind: "IfStatement", test, consequent, alternate };
 }
 
-export class ThrowStatement {
-  constructor(argument) {
-    this.argument = argument;
-  }
+export function whileStatement(test, body) {
+  return { kind: "WhileStatement", test, body };
 }
 
-export class TryStatement {
-  constructor(block) {
-    Object.assign(this, { block });
-  }
+export function conditional(test, consequent, alternate, type) {
+  return { kind: "Conditional", test, consequent, alternate, type };
 }
 
-export class CatchClause {
-  constructor(param, body) {
-    Object.assign(this, { param, body });
-  }
+export function binary(op, left, right, type) {
+  return { kind: "BinaryExpression", op, left, right, type };
 }
+
+export function unary(op, operand, type) {
+  return { kind: "UnaryExpression", op, operand, type };
+}
+
+export function emptyOptional(baseType) {
+  return { kind: "EmptyOptional", baseType, type: optionalType(baseType) };
+}
+
+export function subscript(array, index) {
+  return {
+    kind: "SubscriptExpression",
+    array,
+    index,
+    type: array.type.baseType,
+  };
+}
+
+export function arrayExpression(elements) {
+  return {
+    kind: "ArrayExpression",
+    elements,
+    type: arrayType(elements[0].type),
+  };
+}
+
+export function emptyArray(type) {
+  return { kind: "EmptyArray", type };
+}
+
+export function memberExpression(object, op, field) {
+  return { kind: "MemberExpression", object, op, field, type: field.type };
+}
+
+export function functionCall(callee, args) {
+  return { kind: "FunctionCall", callee, args, type: callee.type.returnType };
+}
+
+export function constructorCall(callee, args) {
+  return { kind: "ConstructorCall", callee, args, type: callee };
+}
+
+export function pythForStatement(iterator, collection, body) {
+  return { kind: "ForStatement", iterator, collection, body };
+}
+
+export const continueStatement = { kind: "ContinueStatement" };
+
+export function forStatement(init, test, update, body) {
+  return { kind: "ForStatement", init, test, update, body };
+}
+export function throwStatement(argument) {
+  return { kind: "ThrowStatement", argument };
+}
+
+export function tryStatement(block) {
+  return { kind: "TryStatement", block };
+}
+
+export function catchClause(param, body) {
+  return { kind: "CatchClause", param, body };
+}
+
+export function finallyBlock(block) {
+  return { kind: "Finally", block };
+}
+
+// the following code is taken from Professor Ray Toal's lecture notes: https://cs.lmu.edu/~ray/notes/howtowriteacompiler/
+// all code is taken with permission from the author
+
+export const boolType = { kind: "BoolType" };
+export const intType = { kind: "IntType" };
+export const floatType = { kind: "FloatType" };
+export const stringType = { kind: "StringType" };
+export const voidType = { kind: "VoidType" };
+export const anyType = { kind: "AnyType" };
+
+const floatToFloatType = functionType([floatType], floatType);
+const floatFloatToFloatType = functionType([floatType, floatType], floatType);
+const stringToIntsType = functionType([stringType], arrayType(intType));
+const anyToVoidType = functionType([anyType], voidType);
+
+export const standardLibrary = Object.freeze({
+  int: intType,
+  float: floatType,
+  boolean: boolType,
+  string: stringType,
+  void: voidType,
+  any: anyType,
+  π: variable("π", true, floatType),
+  serve: fun("serve", anyToVoidType),
+  sin: fun("sin", floatToFloatType),
+  cos: fun("cos", floatToFloatType),
+  exp: fun("exp", floatToFloatType),
+  ln: fun("ln", floatToFloatType),
+  hypot: fun("hypot", floatFloatToFloatType),
+  bytes: fun("bytes", stringToIntsType),
+  codepoints: fun("codepoints", stringToIntsType),
+});
+
+String.prototype.type = stringType;
+Number.prototype.type = floatType;
+BigInt.prototype.type = intType;
+Boolean.prototype.type = boolType;
