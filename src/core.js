@@ -156,6 +156,7 @@ const floatToFloatType = functionType([floatType], floatType);
 const floatFloatToFloatType = functionType([floatType, floatType], floatType);
 const stringToIntsType = functionType([stringType], arrayType(intType));
 const anyToVoidType = functionType([anyType], voidType);
+const anyArrayToVoidType = functionType([arrayType(anyType)], voidType);
 
 export const standardLibrary = Object.freeze({
   int: intType,
@@ -165,7 +166,7 @@ export const standardLibrary = Object.freeze({
   void: voidType,
   any: anyType,
   π: variable("π", true, floatType),
-  serve: fun("serve", anyToVoidType),
+  serve: fun("serve", anyArrayToVoidType),
   sin: fun("sin", floatToFloatType),
   cos: fun("cos", floatToFloatType),
   exp: fun("exp", floatToFloatType),

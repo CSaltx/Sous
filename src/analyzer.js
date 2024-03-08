@@ -158,6 +158,14 @@ export default function analyze(match) {
     must(!containsSelf, "Struct type must not be self-containing", at);
   }
 
+  function mustBeCallable(entity, at) {
+    must(
+      entity.kind === "Function" || entity.kind === "ClassDeclaration",
+      `Expected a recipe or a dish but found ${entity.kind.toLowerCase()}`,
+      at
+    );
+  }
+
   function equivalent(t1, t2) {
     return (
       t1 === t2 ||
@@ -289,23 +297,90 @@ export default function analyze(match) {
       return core.program(statements.children.map((s) => s.rep()));
     },
 
-    VarDecl_list(_ingredient, ids, _semi) {},
+    VarDecl_list(_ingredient, declarations, _semi) {
+      //FIXME: Doesn't handle the ingredient part of the declaration, when it is analyzed, the declaration will just be x=5, not ingredient x=5
+      return declarations
+        .asIteration()
+        .children.map((declaration) => declaration.rep());
+    },
 
-    VarDecl_without_init(_ingredient, id, _semi) {
-      return new core.VarDecl(id.rep(), null);
+    VarDecl_without_init(_ingredient, id, _colon, type, _semi) {
+      const variableName = id.sourceString;
+      const variableType = type.rep();
+      mustNotAlreadyBeDeclared(variableName, id);
+      const value =
+        variableType === INT
+          ? 0
+          : variableType === FLOAT
+          ? 0.0
+          : variableType === STRING
+          ? ""
+          : variableType === BOOLEAN
+          ? false
+          : null;
+      const variable = core.variableDeclaration(variableName, value);
+      variable.type = variableType; // Ensure type is set correctly
+      context.add(variableName, variable);
+      return variable;
+    },
+    //TODO: FIGURE THIS OUT
+    VarInit(variable_id, _equals, expression) {
+      const source = expression.rep();
+      const target = variable_id.rep();
+      mustBeAssignable(source, { toType: target.type }, { at: target });
+      const variable = core.variableDeclaration(target, source);
+      variable.type = target.type;
+      context.add(target.name, variable);
+      return variable;
     },
 
     Stmt_assign(variable, _eq, expression, _semicolon) {
       const source = expression.rep();
       const target = variable.rep();
+      mustHaveBeenFound(target, variable.sourceString, variable);
       mustBeAssignable(source, { toType: target.type }, { at: variable });
       mustNotBeReadOnly(target, { at: variable });
       return core.assignment(target, source);
     },
 
-    IfStmt_with_else(_if, _open, exp, _closed, block, _else, else_block) {},
-    IfStmt_nested_if(_if, _open, exp, _closed, block, _else, stmt) {},
-    IfStmt_plain_if(_if, _open, exp, _closed, block) {},
+    IfStmt_with_else(_if, _open, exp, _close, block1, _else, block2) {
+      const test = exp.rep();
+      mustHaveBooleanType(test, { at: exp });
+      context = context.newChildContext();
+      const consequent = block1.rep();
+      context = context.parent;
+      context = context.newChildContext();
+      const alternate = block2.rep();
+      context = context.parent;
+      return core.ifStatement(test, consequent, alternate);
+    },
+
+    IfStmt_nested_if(
+      _if,
+      _open,
+      exp,
+      _close,
+      block,
+      _else,
+      trailingIfStatement
+    ) {
+      const test = exp.rep();
+      mustHaveBooleanType(test, { at: exp });
+      context = context.newChildContext();
+      const consequent = block.rep();
+      // Do NOT make a new context for the alternate!
+      const alternate = trailingIfStatement.rep();
+      return core.ifStatement(test, consequent, alternate);
+    },
+
+    IfStmt_plain_if(_if, _open, exp, _closed, block) {
+      const test = exp.rep();
+      mustHaveBooleanType(test, { at: exp });
+      context = context.newChildContext();
+      const consequent = block.rep();
+      context = context.parent;
+      return core.shortIfStatement(test, consequent);
+    },
 
     Stmt_returnstmt(_return, exp, _semi) {
       mustBeInAFunction({ at: returnKeyword });
@@ -382,6 +457,7 @@ export default function analyze(match) {
       fun.type = core.functionType(paramTypes, returnType);
 
       const body = block.rep();
+      console.log(body);
 
       context = context.parent;
       return core.functionDeclaration(id.sourceString, fun, params, body);
@@ -399,40 +475,47 @@ export default function analyze(match) {
       return param;
     },
 
-    Type_optional(baseType, _questionMark) {
-      return core.optionalType(baseType.rep());
-    },
-
-    Type_array(_left, baseType, _right) {
-      return core.arrayType(baseType.rep());
-    },
-
-    Type_function(_left, types, _right, _arrow, type) {
-      const paramTypes = types.asIteration().children.map((t) => t.rep());
-      const returnType = type.rep();
-      return core.functionType(paramTypes, returnType);
-    },
-
-    Type_id(id) {
-      const entity = context.lookup(id.sourceString);
-      mustHaveBeenFound(entity, id.sourceString, { at: id });
-      mustBeAType(entity, { at: id });
-      return entity;
+    Block(_open, statements, _close) {
+      return statements.children.map((s) => s.rep());
     },
     //FIXME: THIS MIGHT BE INCORRECT, IDK SO PLEASE CHECK
-    ClassDecl(_dish, id, _open, varDecl, functions, _closed) {
-      mustNotAlreadyBeDeclared(id);
-      const fields = varDecl.asIteration().children.map((p) => p.rep());
-      const methods = functions.asIteration().children.map((p) => p.rep());
-      const classNode = core.classDeclaration(id.sourceString, fields, methods);
-      context.add(id.sourceString, classNode);
-      return classNode;
+    ClassDecl(_dish, id, _open, varDecls, funDecls, _closed) {
+      const className = id.sourceString;
+      mustNotAlreadyBeDeclared(className, id);
+      context = context.newChildContext();
+
+      const fields = varDecls
+        .asIteration()
+        .children.map((varDecl) => varDecl.rep());
+      const methods = funDecls
+        .asIteration()
+        .children.map((funDecl) => funDecl.rep());
+
+      context = context.parent; // Revert to the parent context after adding fields and methods
+      const classDeclaration = core.classDeclaration(
+        className,
+        fields,
+        methods
+      );
+      context.add(className, classDeclaration);
+
+      return classDeclaration;
     },
 
-    ObjDecl(typeid, id, _equals, _new, classid, _open, args, _closed, _semi) {},
+    //TODO: Check this!
+    ObjDecl(id1, id2, _equals, _new, classid, _open, args, _closed, _semi) {
+      const objectName = id2.sourceString;
+      const className = classid.sourceString;
+      const classEntity = context.lookup(className);
 
-    Block(_open, stmts, _close) {
-      return statements.children.map((s) => s.rep());
+      mustHaveBeenFound(classEntity, className, id1); // Ensure the class exists
+      const argument = args.asIteration().children.map((arg) => arg.rep());
+
+      // Verify arguments against class constructor here (if applicable)
+      const objDeclaration = core.constructorCall(classEntity, argument);
+      context.add(objectName, objDeclaration);
+
+      return objDeclaration;
     },
 
     Exp_conditional(exp, _questionMark, exp1, colon, exp2) {
@@ -628,6 +711,13 @@ export default function analyze(match) {
 
     Exp9_call(exp, open, expList, _close) {
       const callee = exp.rep();
+      if (callee.name === "serve") {
+        // Handle 'serve' differently: it can take any number of arguments and returns void.
+        const args = expList.asIteration().children.map((exp) => exp.rep());
+        // Since 'serve' always returns void, you don't need to adjust the return type here.
+        // You might still want to check if arguments are valid expressions if necessary.
+        return core.functionCall(callee, args);
+      }
       mustBeCallable(callee, { at: exp });
       const exps = expList.asIteration().children;
       const targetTypes =
@@ -651,6 +741,27 @@ export default function analyze(match) {
       // When an id appears in an expression, it had better have been declared
       const entity = context.lookup(id.sourceString);
       mustHaveBeenFound(entity, id.sourceString, { at: id });
+      return entity;
+    },
+
+    Type_optional(baseType, _questionMark) {
+      return core.optionalType(baseType.rep());
+    },
+
+    Type_array(_left, baseType, _right) {
+      return core.arrayType(baseType.rep());
+    },
+
+    Type_function(_left, types, _right, _arrow, type) {
+      const paramTypes = types.asIteration().children.map((t) => t.rep());
+      const returnType = type.rep();
+      return core.functionType(paramTypes, returnType);
+    },
+
+    Type_id(id) {
+      const entity = context.lookup(id.sourceString);
+      mustHaveBeenFound(entity, id.sourceString, { at: id });
+      mustBeAType(entity, { at: id });
       return entity;
     },
 

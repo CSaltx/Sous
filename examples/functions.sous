@@ -1,4 +1,4 @@
-ingredient temp := 350;
+ingredient temp : int;
 
 recipe CheckTemperature() : int{
     if (temp > 300) {

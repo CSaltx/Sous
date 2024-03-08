@@ -7,11 +7,11 @@ Sous {
                 | ObjDecl
                 | ("++" | "--") Exp9 ";"           --bump
                 | Exp9 "=" Exp ";"                 --assign
-                | Exp9_call ";" 			       --call
+                | Exp9_call ";" 			             --call
                 | break ";"                        --breakstmt
                 | ContinueStmt
                 | return Exp ";"                   --returnstmt
-                | return ";"				       --shortreturn
+                | return ";"				               --shortreturn
                 | ErrorStmt
                 | WhileStmt
                 | IfStmt
@@ -21,13 +21,13 @@ Sous {
                 | ThrowStmt
   
   Decl          = VarDecl | FunDecl | ClassDecl | ObjDecl
-  Type          = Type "?"                                          --optional
-                | "[" Type "]"                                       --array
-                | "(" ListOf<Type, ","> ")" "->" Type                --function
-                | id                                                 --id
+  Type          = Type "?"                                                --optional
+                | "[" Type "]"                                            --array
+                | "(" ListOf<Type, ","> ")" "->" Type                     --function
+                | id                                                      --id
   VarDecl       = ingredient nonemptyListOf<(VarInit | VarDecl), ","> ";" --list
-                | ingredient id ":" Type ";" --without_init
-  VarInit       = id ":=" (Exp | id)
+                | ingredient id ":" Type ";"                              --without_init
+  VarInit       = id ":=" Exp
 
   FunDecl       = recipe id "(" Params ")" (":" Type)? Block
   Params        = ListOf<Param, ",">
