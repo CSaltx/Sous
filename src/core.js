@@ -117,8 +117,8 @@ export function constructorCall(callee, args) {
   return { kind: "ConstructorCall", callee, args, type: callee };
 }
 
-export function pythForStatement(iterator, collection, body) {
-  return { kind: "ForStatement", iterator, collection, body };
+export function pythForStatement(iterator, low, high, body) {
+  return { kind: "ForStatement", iterator, low, high, body };
 }
 
 export const continueStatement = { kind: "ContinueStatement" };
@@ -142,6 +142,10 @@ export function finallyBlock(block) {
   return { kind: "Finally", block };
 }
 
+export function objectConstructor(name, fields, type) {
+  return { kind: "ObjectConstructor", name, fields, type };
+}
+
 // the following code is taken from Professor Ray Toal's lecture notes: https://cs.lmu.edu/~ray/notes/howtowriteacompiler/
 // all code is taken with permission from the author
 
@@ -156,7 +160,7 @@ const floatToFloatType = functionType([floatType], floatType);
 const floatFloatToFloatType = functionType([floatType, floatType], floatType);
 const stringToIntsType = functionType([stringType], arrayType(intType));
 const anyToVoidType = functionType([anyType], voidType);
-const anyArrayToVoidType = functionType([arrayType(anyType)], voidType);
+const anyToIntType = functionType([anyType], intType);
 
 export const standardLibrary = Object.freeze({
   int: intType,
@@ -166,13 +170,14 @@ export const standardLibrary = Object.freeze({
   void: voidType,
   any: anyType,
   π: variable("π", true, floatType),
-  serve: fun("serve", anyArrayToVoidType),
+  serve: fun("serve", anyToVoidType),
   sin: fun("sin", floatToFloatType),
   cos: fun("cos", floatToFloatType),
   exp: fun("exp", floatToFloatType),
   ln: fun("ln", floatToFloatType),
   hypot: fun("hypot", floatFloatToFloatType),
   bytes: fun("bytes", stringToIntsType),
+  count: fun("count", anyToIntType),
   codepoints: fun("codepoints", stringToIntsType),
 });
 

@@ -54,7 +54,7 @@ export default function analyze(match) {
   function mustHaveBeenFound(entity, name, at) {
     must(
       entity,
-      `Ingredient ${name} is raw, it doesn't even have a value in it!`,
+      `Ingredient ${name} is so raw, it doesn't even have a value in it!`,
       at
     );
   }
@@ -298,12 +298,12 @@ export default function analyze(match) {
     },
 
     VarDecl_list(_ingredient, declarations, _semi) {
-      //FIXME: Doesn't handle the ingredient part of the declaration, when it is analyzed, the declaration will just be x=5, not ingredient x=5
       return declarations
         .asIteration()
         .children.map((declaration) => declaration.rep());
     },
 
+    // WORKING
     VarDecl_without_init(_ingredient, id, _colon, type, _semi) {
       const variableName = id.sourceString;
       const variableType = type.rep();
@@ -323,15 +323,20 @@ export default function analyze(match) {
       context.add(variableName, variable);
       return variable;
     },
-    //TODO: FIGURE THIS OUT
-    VarInit(variable_id, _equals, expression) {
-      const source = expression.rep();
-      const target = variable_id.rep();
-      mustBeAssignable(source, { toType: target.type }, { at: target });
-      const variable = core.variableDeclaration(target, source);
-      variable.type = target.type;
-      context.add(target.name, variable);
-      return variable;
+
+    // WORKING
+    VarInit(id, _colon_equals, exp, _section, modifier) {
+      // true declaration, not just initialization
+      const initializer = exp.rep();
+      const readOnly = modifier.sourceString === "const";
+      const variable = core.variable(
+        id.sourceString,
+        readOnly,
+        initializer.type
+      );
+      mustNotAlreadyBeDeclared(id.sourceString, { at: id });
+      context.add(id.sourceString, variable);
+      return core.variableDeclaration(variable, initializer);
     },
 
     Stmt_assign(variable, _eq, expression, _semicolon) {
@@ -420,27 +425,67 @@ export default function analyze(match) {
     },
 
     WhileStmt(_while, _open, exp, _closed, block) {
-      return new core.WhileStatement(exp.rep(), block.rep());
-    },
-
-    ForStmt_norm(_for, _open, init, test, _semi, update, _updatesemi, block) {
-      return core.forStatement(initialization, condition, update, body);
+      const test = exp.rep();
+      mustHaveBooleanType(test, { at: exp });
+      context = context.newChildContext({ inLoop: true });
+      const body = block.rep();
+      context = context.parent;
+      return core.whileStatement(test, body);
     },
 
     ErrorStmt(_eightysix, _open, exp, _closed, _semi) {
       return new core.ErrorStatement(exp);
     },
 
-    PythForStmt(_f, id, _r, id1, id2, block) {
-      const [low, high] = [id1.rep(), id2.rep()];
-      mustHaveIntegerType(low, { at: id1 });
-      mustHaveIntegerType(high, { at: id2 });
-      const iterator = core.variable(id.sourceString, INT, true);
+    ForStmt_norm(_for, _open, init, exp, _semi, update, _close, block) {
+      const initialization = init.rep();
+
+      const condition = exp.rep();
+      mustHaveBooleanType(condition, { at: exp });
+
+      const updateExpression = update.rep();
+
       context = context.newChildContext({ inLoop: true });
-      context.add(id.sourceString, iterator);
       const body = block.rep();
       context = context.parent;
-      return core.forRangeStatement(iterator, low, op.sourceString, high, body);
+      return core.forStatement(
+        initialization,
+        condition,
+        updateExpression,
+        body
+      );
+    },
+
+    PythForStmt(_f, id, _r, id1, id2, block) {
+      const lowerBoundVar = context.lookup(id1.sourceString);
+      const upperBoundVar = context.lookup(id2.sourceString);
+
+      mustHaveBeenFound(lowerBoundVar, id1.sourceString, {
+        at: id1,
+      });
+      mustHaveBeenFound(upperBoundVar, id2.sourceString, {
+        at: id2,
+      });
+
+      mustHaveIntegerType(lowerBoundVar, { at: id1 });
+      mustHaveIntegerType(upperBoundVar, { at: id2 });
+
+      const iteratorName = id.sourceString;
+      mustNotAlreadyBeDeclared(iteratorName, { at: id });
+
+      context = context.newChildContext({ inLoop: true });
+      context.add(iteratorName, core.variable(iteratorName, false, INT));
+
+      const bodyStatements = block.rep();
+
+      context = context.parent;
+
+      return core.pythForStatement(
+        iteratorName,
+        lowerBoundVar,
+        upperBoundVar,
+        bodyStatements
+      );
     },
 
     // FunDecl = recipe id "(" Params ")" (":" Type)? Block
@@ -478,20 +523,19 @@ export default function analyze(match) {
     Block(_open, statements, _close) {
       return statements.children.map((s) => s.rep());
     },
+
     //FIXME: THIS MIGHT BE INCORRECT, IDK SO PLEASE CHECK
     ClassDecl(_dish, id, _open, varDecls, funDecls, _closed) {
       const className = id.sourceString;
       mustNotAlreadyBeDeclared(className, id);
+
       context = context.newChildContext();
 
-      const fields = varDecls
-        .asIteration()
-        .children.map((varDecl) => varDecl.rep());
-      const methods = funDecls
-        .asIteration()
-        .children.map((funDecl) => funDecl.rep());
+      const fields = varDecls.children.map((varDecl) => varDecl.rep());
+      const methods = funDecls.children.map((funDecl) => funDecl.rep());
 
-      context = context.parent; // Revert to the parent context after adding fields and methods
+      context = context.parent;
+
       const classDeclaration = core.classDeclaration(
         className,
         fields,
@@ -502,17 +546,35 @@ export default function analyze(match) {
       return classDeclaration;
     },
 
-    //TODO: Check this!
-    ObjDecl(id1, id2, _equals, _new, classid, _open, args, _closed, _semi) {
-      const objectName = id2.sourceString;
-      const className = classid.sourceString;
+    //TODO: Check this! Might be incorrect
+    ObjDecl(
+      class_id1,
+      id2,
+      _equals,
+      _new,
+      class_id2,
+      _open,
+      args,
+      _closed,
+      _semi
+    ) {
+      must(
+        class_id1.sourceString === class_id2.sourceString,
+        "This is Hell's Kitchen, not a circus. These aren't even the same dish!",
+        { at: class_id2 }
+      );
+
+      const className = class_id1.sourceString;
       const classEntity = context.lookup(className);
+      mustHaveBeenFound(classEntity, className, class_id1);
 
-      mustHaveBeenFound(classEntity, className, id1); // Ensure the class exists
-      const argument = args.asIteration().children.map((arg) => arg.rep());
-
-      // Verify arguments against class constructor here (if applicable)
-      const objDeclaration = core.constructorCall(classEntity, argument);
+      const objectName = id2.sourceString;
+      const fields = args.children.map((arg) => arg.rep());
+      const objDeclaration = core.objectConstructor(
+        objectName,
+        fields,
+        className
+      );
       context.add(objectName, objDeclaration);
 
       return objDeclaration;
@@ -774,18 +836,14 @@ export default function analyze(match) {
     },
 
     intlit(_digits) {
-      // Carlos ints will be represented as plain JS bigints
       return BigInt(this.sourceString);
     },
 
     floatlit(_whole, _point, _fraction, _e, _sign, _exponent) {
-      // Carlos floats will be represented as plain JS numbers
       return Number(this.sourceString);
     },
 
     stringlit(_openQuote, _chars, _closeQuote) {
-      // Carlos strings will be represented as plain JS strings, including
-      // the quotation marks
       return this.sourceString;
     },
   });

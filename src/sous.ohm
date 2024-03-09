@@ -27,7 +27,7 @@ Sous {
                 | id                                                      --id
   VarDecl       = ingredient nonemptyListOf<(VarInit | VarDecl), ","> ";" --list
                 | ingredient id ":" Type ";"                              --without_init
-  VarInit       = id ":=" Exp
+  VarInit       = id ":=" Exp "|"? const?
 
   FunDecl       = recipe id "(" Params ")" (":" Type)? Block
   Params        = ListOf<Param, ",">
@@ -49,7 +49,7 @@ Sous {
   Catch         = catch "(" id ")" Block
   Finally       = finally Block
 
-  ForStmt       = for "(" VarDecl Exp ";" Exp6_bump ")" Block       --norm
+  ForStmt       = for "(" VarDecl Exp4_compare ";" Exp6_bump ")" Block       --norm
   PythForStmt   = "F" single_letter_id  "r" single_letter_id single_letter_id Block
   ErrorStmt     = eightysix "(" Exp ")" ";"
   ThrowStmt     = throw Exp ";"
@@ -115,9 +115,10 @@ Sous {
   count         = "count" ~idchar
   new           = "new" ~idchar
   eightysix     = "eightysix" ~idchar
+  const         = "const" ~idchar
   keyword       = ingredient | recipe | if | else | for | while | finally | return 
                 | break | continue | try | catch | throw | true | false | in 
-                | ingredient | recipe | new | eightysix
+                | ingredient | recipe | new | eightysix | const
   single_letter_id = ~keyword letter | ~keyword "_"
   id          = ~keyword letter idchar* --multi_letter
               | ~keyword "_" idchar*    --underscore_letters
