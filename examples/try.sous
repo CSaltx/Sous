@@ -1,0 +1,8 @@
+try {
+   serve("Started");
+   eightysix("Error Entered", Exception);
+} catch (Exception e) {
+    serve(e);
+} finally {
+    serve("Finished");
+}

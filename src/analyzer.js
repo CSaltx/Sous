@@ -287,6 +287,19 @@ export default function analyze(match) {
     mustBeAssignable(e, { toType: f.type.returnType }, at);
   }
 
+  function mustBeValidErrorType(e, at) {
+    const errors = [
+      "TypeError",
+      "ValueError",
+      "KeyError",
+      "IndexError",
+      "RuntimeError",
+      "Exception",
+    ];
+    console.log(e.sourceString);
+    must(errors.includes(e.sourceString), "Expected valid error type", at);
+  }
+
   function mustHaveCorrectArgumentCount(argCount, paramCount, at) {
     const message = `${paramCount} argument(s) required but ${argCount} passed`;
     must(argCount === paramCount, message, at);
@@ -433,10 +446,6 @@ export default function analyze(match) {
       return core.whileStatement(test, body);
     },
 
-    ErrorStmt(_eightysix, _open, exp, _closed, _semi) {
-      return new core.ErrorStatement(exp);
-    },
-
     ForStmt_norm(_for, _open, init, exp, _semi, update, _close, block) {
       const initialization = init.rep();
 
@@ -524,7 +533,7 @@ export default function analyze(match) {
       return statements.children.map((s) => s.rep());
     },
 
-    //FIXME: THIS MIGHT BE INCORRECT, IDK SO PLEASE CHECK
+    // WORKING
     ClassDecl(_dish, id, _open, varDecls, funDecls, _closed) {
       const className = id.sourceString;
       mustNotAlreadyBeDeclared(className, id);
@@ -546,38 +555,95 @@ export default function analyze(match) {
       return classDeclaration;
     },
 
-    //TODO: Check this! Might be incorrect
+    //TODO: Check this with Prof. bc idk if it will work well enough
     ObjDecl(
-      class_id1,
-      id2,
-      _equals,
+      classId1,
+      objName,
+      _assign,
       _new,
-      class_id2,
-      _open,
+      classId2,
+      _openParen,
       args,
-      _closed,
+      _closeParen,
       _semi
     ) {
       must(
-        class_id1.sourceString === class_id2.sourceString,
-        "This is Hell's Kitchen, not a circus. These aren't even the same dish!",
-        { at: class_id2 }
+        classId1.sourceString === classId2.sourceString,
+        "Class names must match for object declaration and instantiation",
+        { at: classId2 }
       );
 
-      const className = class_id1.sourceString;
-      const classEntity = context.lookup(className);
-      mustHaveBeenFound(classEntity, className, class_id1);
-
-      const objectName = id2.sourceString;
-      const fields = args.children.map((arg) => arg.rep());
-      const objDeclaration = core.objectConstructor(
-        objectName,
-        fields,
-        className
+      const classEntity = context.lookup(classId1.sourceString);
+      mustHaveBeenFound(classEntity, classId1.sourceString, { at: classId1 });
+      must(
+        classEntity.kind === "ClassDeclaration",
+        "Identifier must refer to a class",
+        { at: classId1 }
       );
-      context.add(objectName, objDeclaration);
 
-      return objDeclaration;
+      mustNotAlreadyBeDeclared(objName.sourceString, { at: objName });
+
+      const actualArgs = args.asIteration().children.map((arg) => arg.rep());
+      const expectedFields = classEntity.fields;
+      must(
+        actualArgs.length === expectedFields.length,
+        `Expected ${expectedFields.length} argument(s), but got ${actualArgs.length}`,
+        { at: args }
+      );
+
+      actualArgs.forEach((arg, i) => {
+        mustBothHaveTheSameType(expectedFields[i], arg, { at: args });
+      });
+
+      const newObj = core.objectConstructor(
+        objName.sourceString,
+        actualArgs,
+        classEntity
+      );
+      context.add(objName.sourceString, newObj);
+
+      return newObj;
+    },
+
+    TryStmt(_try, block, catchClauses, finallyPart) {
+      const tryBlock = block.rep();
+      const catchClause = catchClauses.children.map((clause) => clause.rep()); // Assuming catchClauses is an iteration
+      const finallyBlock =
+        finallyPart.children.length > 0 ? finallyPart.children[0].rep() : null;
+      return core.tryStatement(tryBlock, catchClause, finallyBlock);
+    },
+
+    Catch(_catch, _open, error, id, _close, block) {
+      mustBeValidErrorType(error);
+      const errorType = error.sourceString;
+      const errorName = id.sourceString;
+      mustNotAlreadyBeDeclared(errorName, { at: id });
+      context = context.newChildContext();
+      context.add(errorName, errorType);
+      const body = block.rep();
+      context = context.parent;
+      return core.catchClause(errorType, errorName, body);
+    },
+
+    Finally(_finally, block) {
+      const finallyBlock = block.rep();
+      return core.finallyBlock(finallyBlock);
+    },
+
+    // working: eightysix('message', ExceptionType);
+    ErrorStmt(
+      _eightysix,
+      _open,
+      errorMessage,
+      _comma,
+      errorType,
+      _closed,
+      _semi
+    ) {
+      const error = errorType ? errorType.sourceString : "Exception";
+      const message = errorMessage.sourceString;
+      mustBeValidErrorType(errorType, { at: errorType });
+      return new core.errorStatement(error, message);
     },
 
     Exp_conditional(exp, _questionMark, exp1, colon, exp2) {

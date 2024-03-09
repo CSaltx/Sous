@@ -22,6 +22,10 @@ export function classDeclaration(name, fields, methods) {
   return { kind: "ClassDeclaration", name, fields, methods };
 }
 
+export function objectConstructor(name, fields, type) {
+  return { kind: "ObjectConstructor", name, fields, type };
+}
+
 export function fun(name, type) {
   return { kind: "Function", name, type };
 }
@@ -130,20 +134,20 @@ export function throwStatement(argument) {
   return { kind: "ThrowStatement", argument };
 }
 
-export function tryStatement(block) {
-  return { kind: "TryStatement", block };
+export function tryStatement(block, catchClauses, finallyBlock) {
+  return { kind: "TryStatement", block, catchClauses, finallyBlock };
 }
 
-export function catchClause(param, body) {
-  return { kind: "CatchClause", param, body };
+export function catchClause(errorType, name, body) {
+  return { kind: "CatchClause", errorType, name, body };
 }
 
 export function finallyBlock(block) {
   return { kind: "Finally", block };
 }
 
-export function objectConstructor(name, fields, type) {
-  return { kind: "ObjectConstructor", name, fields, type };
+export function errorStatement(type, message) {
+  return { kind: "ErrorStatement", type, message };
 }
 
 // the following code is taken from Professor Ray Toal's lecture notes: https://cs.lmu.edu/~ray/notes/howtowriteacompiler/
