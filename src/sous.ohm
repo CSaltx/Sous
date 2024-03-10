@@ -7,7 +7,6 @@ Sous {
                 | ObjDecl
                 | ("++" | "--") Exp9 ";"           --bump
                 | Exp9 "=" Exp ";"                 --assign
-                | id "." Exp9_call                 --methodCall 
                 | Exp9_call ";" 			             --call
                 | break ";"                        --breakstmt
                 | ContinueStmt
@@ -36,7 +35,7 @@ Sous {
 
   ClassDecl     = dish id "{" (VarDecl)* (FunDecl)* "}"
 
-  ObjDecl       = id id ":=" new id "(" ListOf<stringlit, ","> ")" ";"
+  ObjDecl       = Type id ":=" new Type "(" ListOf<stringlit, ","> ")" ";"
 
   ContinueStmt  = continue ";"
 

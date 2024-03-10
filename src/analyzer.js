@@ -296,7 +296,6 @@ export default function analyze(match) {
       "RuntimeError",
       "Exception",
     ];
-    console.log(e.sourceString);
     must(errors.includes(e.sourceString), "Expected valid error type", at);
   }
 
