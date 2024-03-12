@@ -150,6 +150,15 @@ export function errorStatement(type, message) {
   return { kind: "ErrorStatement", type, message };
 }
 
+export function methodCall(object, method, args) {
+  return {
+    kind: "MethodCall",
+    object,
+    method,
+    args,
+    type: method.type.returnType,
+  };
+}
 // the following code is taken from Professor Ray Toal's lecture notes: https://cs.lmu.edu/~ray/notes/howtowriteacompiler/
 // all code is taken with permission from the author
 

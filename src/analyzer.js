@@ -516,6 +516,14 @@ export default function analyze(match) {
       return core.functionDeclaration(id.sourceString, fun, params, body);
     },
 
+    Stmt_call(call, _semicolon) {
+      return call.rep();
+    },
+
+    Stmt_methodcall(memberCall, _semicolon) {
+      return memberCall.rep();
+    },
+
     Params(paramList) {
       // Returns a list of variable nodes
       return paramList.asIteration().children.map((p) => p.rep());
@@ -759,10 +767,6 @@ export default function analyze(match) {
         : core.decrement(variable);
     },
 
-    Stmt_call(call, _semicolon) {
-      return call.rep();
-    },
-
     Exp7_multiply(exp1, mulOp, exp2) {
       const [left, op, right] = [exp1.rep(), mulOp.sourceString, exp2.rep()];
       mustHaveNumericType(left, { at: exp1 });
@@ -821,16 +825,32 @@ export default function analyze(match) {
       return core.subscript(array, subscript);
     },
 
+    // working!
+    Exp9_methodCall(objectId, _dot, methodId, _open, Params, _closed) {
+      const object = objectId.rep();
+      const classContext = context.lookup(object.type.name);
+      const method = classContext.methods.find(
+        (m) => m.name === methodId.sourceString
+      );
+      must(
+        method,
+        `Method ${methodId.sourceString} is bland, it doesn't even exist!`,
+        {
+          at: methodId,
+        }
+      );
+      const methodDecl = method["fun"];
+      const args = Params.rep();
+      mustBeCallable(methodDecl, { at: methodId });
+      const targetTypes = methodDecl.type.paramTypes;
+      mustHaveCorrectArgumentCount(args.length, targetTypes.length, {
+        at: objectId,
+      });
+      return core.methodCall(object, methodDecl, args);
+    },
+
     Exp9_member(exp, dot, id) {
       const object = exp.rep();
-      let structType;
-      if (dot.sourceString === "?.") {
-        mustHaveAnOptionalStructType(object, { at: exp });
-        structType = object.type.baseType;
-      } else {
-        mustHaveAStructType(object, { at: exp });
-        structType = object.type;
-      }
       mustHaveMember(structType, id.sourceString, { at: id });
       const field = structType.fields.find((f) => f.name === id.sourceString);
       return core.memberExpression(object, dot.sourceString, field);

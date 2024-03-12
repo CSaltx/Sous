@@ -7,7 +7,8 @@ Sous {
                 | ObjDecl
                 | ("++" | "--") Exp9 ";"           --bump
                 | Exp9 "=" Exp ";"                 --assign
-                | Exp9_call ";" 			             --call
+                | Exp9_call ";" 			       --call
+                | Exp9_methodCall ";"			   --methodcall
                 | break ";"                        --breakstmt
                 | ContinueStmt
                 | return Exp ";"                   --returnstmt
@@ -50,7 +51,7 @@ Sous {
 
   ForStmt       = for "(" VarDecl Exp4_compare ";" Exp6_bump ")" Block       --norm
   PythForStmt   = "F" single_letter_id  "r" single_letter_id single_letter_id Block
-  ErrorStmt     = eightysix "(" Exp "," Exp ")" ";"
+  ErrorStmt     = eightysix "(" Exp "," id ")" ";"
   // ThrowStmt     = throw Exp ";"
     
   Exp           = Exp1 "?" Exp1 ":" Exp                         --conditional
@@ -83,6 +84,7 @@ Sous {
                 | stringlit ~mut
                 | Exp9 ("(" | "?(") ListOf<Exp, ","> ")" ~mut   --call
                 | Exp9 ("[" | "?[") Exp "]"                     --subscript
+                | Exp9_id ("." | "?.") Exp9_id "(" Params ")"	  --methodCall
                 | Exp9 ("." | "?.") id                          --member
                 | id                                            --id
                 | Type_array "(" ")" ~mut                       --emptyarray
@@ -108,8 +110,8 @@ Sous {
   try           = "try" ~idchar
   catch         = "catch" ~idchar
   throw         = "throw" ~idchar
-  true          = "true" ~idchar
-  false         = "false" ~idchar
+  true          = "fresh" ~idchar
+  false         = "stale" ~idchar
   in            = "in" ~idchar
   count         = "count" ~idchar
   new           = "new" ~idchar
@@ -119,10 +121,7 @@ Sous {
                 | break | continue | try | catch | throw | true | false | in 
                 | ingredient | recipe | new | eightysix | const
   single_letter_id = ~keyword letter | ~keyword "_"
-  id          = ~keyword letter idchar* --multi_letter
-              | ~keyword "_" idchar*    --underscore_letters
-              | ~keyword "_"            --single_underscore
-              | ~keyword letter         --single_letter
+  id          = ~keyword letter alnum*
   idchar      = alnum | "_" | symbol
   intlit      = digit+
   floatlit    = digit+ "." digit+ (("E" | "e") ("+" | "-")? digit+)?
@@ -132,7 +131,7 @@ Sous {
               | "\\u{" hex hex? hex? hex? hex? hex? "}"       --codepoint
   control     = "\x00".."\x1f" | "\x80".."\x9f"
   hex         = hexDigit
-  symbol      = "." | "!" | "?" | "_"
+  symbol      = "_"
   num         = digit+ ("." digit+)? (("e" | "E") ("+" | "-")? digit+)?
   space       += "//" (~"\n" any)*   --comment
               | "'''" (~"'''" any)* "'''"
