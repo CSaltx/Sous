@@ -21,7 +21,7 @@ Prints to stdout according to <outputType>, which must be one of:
   js         the translation to JavaScript
 `;
 
-async function compileFromFile(filename, outputType) {
+export async function compileFromFile(filename, outputType) {
   try {
     const buffer = await fs.readFile(filename);
     const compiled = compile(buffer.toString(), outputType);

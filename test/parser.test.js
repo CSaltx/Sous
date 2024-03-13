@@ -28,7 +28,10 @@ const syntaxChecks = [
     "for statement with subscript",
     'for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx) {serve( "Prepararing", menu[dishIdx]);}',
   ],
-  ["for statement without init", "for (ingredient x; x < 5; ++x) {serve();}"],
+  [
+    "for statement without init",
+    "for (ingredient x : int; x < 5; ++x) {serve();}",
+  ],
   ["while statement", "while (true) {serve();}"],
   ["empty program", ""],
   ["program with just a comment", "// yay"],
@@ -51,10 +54,10 @@ const syntaxChecks = [
     "if 3x else if statement",
     "if (x != 27 || y == 3) {serve();} else if (x == 0) {serve();} else if (x == 1) {serve();} else {serve();}",
   ],
-  ["try catch statement", "try {serve();} catch (x) {serve();}"],
+  ["try catch statement", "prep {serve();} rescue (Exception x) {serve();}"],
   [
     "try catch finally statement",
-    "try {serve();} catch (x) {serve();} finally {serve();}",
+    "prep {serve();} rescue (Exception x) {serve();} cleanup {serve();}",
   ],
   ["serve works with list of expressions", "serve(5 + 3, 7 * 2, 1);"],
   ["serve works with single expression", "serve(5 + 3);"],
@@ -68,7 +71,7 @@ const syntaxChecks = [
     'Dish Cake { ingredient flour : int; recipe Bake() { serve("Baking the Cake..."); } } ',
   ],
   ["a class instance", 'Cake myCake := new Cake("2 cups", "1 cup", "3");'],
-  ["a variable declaration with no assignment", "ingredient sugar;"],
+  ["a variable declaration with no assignment", "ingredient sugar : string;"],
   ["a variable declaration with an assignment", "ingredient temp := 350;"],
 ];
 
@@ -145,12 +148,12 @@ const syntaxErrors = [
   [
     "try catch statement without block",
     "try serve(); catch (x) serve();",
-    /Line 1, col 5/,
+    /Line 1, col 10/,
   ],
   [
     "try catch finally statement without block",
     "try serve(); catch (x) serve(); finally serve();",
-    /Line 1, col 5/,
+    /Line 1, col 10/,
   ],
   ["unmatched right paren", "serve(5 + (3 * 7);", /Line 1, col 18/],
   ["unmatched right brace", "serve(5 + {3 * 7);", /Line 1, col 11/],
