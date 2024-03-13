@@ -20,3 +20,11 @@ myCake.MixIngredients();
 ingredient flour := myCake.sugar;
 serve(stale);
 myCake.Bake();
+
+// Looping through a list of cakes and serving them
+
+ingredient cakes := ["Vanilla", "Chocolate", "Strawberry"];
+for cake in cakes {
+    serve(cake);
+    serve("looped");
+}

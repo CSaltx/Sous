@@ -54,7 +54,9 @@ export function assignment(target, source) {
   return { kind: "Assignment", target, source };
 }
 
-export const breakStatement = { kind: "BreakStatement" };
+export function breakStatement() {
+  return { kind: "BreakStatement" };
+}
 
 export function returnStatement(expression) {
   return { kind: "ReturnStatement", expression };
@@ -125,11 +127,18 @@ export function pythForStatement(iterator, low, high, body) {
   return { kind: "ForStatement", iterator, low, high, body };
 }
 
-export const continueStatement = { kind: "ContinueStatement" };
+export function continueStatement() {
+  return { kind: "ContinueStatement" };
+}
 
 export function forStatement(init, test, update, body) {
   return { kind: "ForStatement", init, test, update, body };
 }
+
+export function forCollectionStmt(iterator, collection, body) {
+  return { kind: "ForStatement", iterator, collection, body };
+}
+
 export function throwStatement(argument) {
   return { kind: "ThrowStatement", argument };
 }

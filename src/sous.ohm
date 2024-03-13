@@ -20,7 +20,6 @@ Sous {
                 | ForStmt
                 | PythForStmt
   
-  Decl          = VarDecl | FunDecl | ClassDecl | ObjDecl
   Type          = Type "?"                                                --optional
                 | "[" Type "]"                                            --array
                 | "(" ListOf<Type, ","> ")" "->" Type                     --function
@@ -36,7 +35,7 @@ Sous {
 
   ClassDecl     = dish id "{" (VarDecl)* (FunDecl)* "}"
 
-  ObjDecl       = Type id ":=" new Type "(" ListOf<stringlit, ","> ")" ";"
+  ObjDecl       = Type id ":=" new Type "(" ListOf<Exp, ","> ")" ";"
 
   ContinueStmt  = continue ";"
 
@@ -49,7 +48,8 @@ Sous {
   Catch         = catch "(" id id ")" Block
   Finally       = finally Block
 
-  ForStmt       = for "(" VarDecl Exp4_compare ";" Exp6_bump ")" Block       --norm
+  ForStmt       = for "(" VarDecl Exp4_compare ";" Exp6_bump ")" Block        --norm
+                | for id in Exp Block                                         --collection
   PythForStmt   = "F" single_letter_id  "r" single_letter_id single_letter_id Block
   ErrorStmt     = eightysix "(" Exp "," id ")" ";"
   // ThrowStmt     = throw Exp ";"

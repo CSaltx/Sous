@@ -102,7 +102,7 @@ export default function analyze(match) {
   function mustHaveAnArrayType(e, at) {
     must(
       e.type?.kind === "ArrayType",
-      "Expected an array, but this is like expecting a full course meal and only getting a plate. Where's the rest?",
+      "Expected an array, but this is like expecting a full course meal and only getting a plate. Where's the entree?",
       at
     );
   }
@@ -335,7 +335,7 @@ export default function analyze(match) {
     VarDecl_without_init(_ingredient, id, _colon, type, _semi) {
       const variableName = id.sourceString;
       const variableType = type.rep();
-      mustNotAlreadyBeDeclared(variableName, id);
+      mustNotAlreadyBeDeclared(variableName, { at: id });
       const value =
         variableType === INT
           ? 0
@@ -446,7 +446,6 @@ export default function analyze(match) {
       return core.breakStatement;
     },
 
-    //TODO: FIGURE OUT HOW TO DO THE TRY CATCH FINALLY STATEMENTS
     ContinueStmt(_continue, _semi) {
       mustBeInLoop({ at: _continue });
       return new core.ContinueStatement();
@@ -478,6 +477,21 @@ export default function analyze(match) {
         updateExpression,
         body
       );
+    },
+
+    ForStmt_collection(_for, id, _in, exp, block) {
+      const collection = exp.rep();
+      mustHaveAnArrayType(collection, { at: exp });
+      const iterator = core.variable(
+        id.sourceString,
+        true,
+        collection.type.baseType
+      );
+      context = context.newChildContext({ inLoop: true });
+      context.add(iterator.name, iterator);
+      const body = block.rep();
+      context = context.parent;
+      return core.forCollectionStmt(iterator, collection, body);
     },
 
     PythForStmt(_f, id, _r, id1, id2, block) {
@@ -562,7 +576,6 @@ export default function analyze(match) {
       mustNotAlreadyBeDeclared(className, id);
 
       context = context.newChildContext();
-
       const fields = varDecls.children.map((varDecl) => varDecl.rep());
       const methods = funDecls.children.map((funDecl) => funDecl.rep());
 
@@ -853,6 +866,7 @@ export default function analyze(match) {
 
     Exp9_member(exp, dot, id) {
       const object = exp.rep();
+      // TODO: ADD in optionals
       const classContext = context.lookup(object.type.name);
       mustHaveBeenFound(object, object.sourceString, { at: exp });
       const field = classContext.fields.find((f) => f.name === id.sourceString);
