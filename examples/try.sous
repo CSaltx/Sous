@@ -1,8 +1,9 @@
-try {
-   serve("Started");
-   eightysix("Error Entered", Exception);
-} catch (Exception e) {
+prep {
+    ingredient _x := 0;
+    serve("Started");
+    eightysix("Error Entered", Exception);
+} rescue (Exception e) {
     serve(e);
-} finally {
+} cleanup {
     serve("Finished");
 }

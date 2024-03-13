@@ -96,33 +96,31 @@ Sous {
   relop         = "<=" | "<" | ">=" | ">" | "==" | "!="
   string        = "\"" char* "\""
     
-  dish          = "Dish" ~idchar
-  ingredient    = "ingredient" ~idchar
-  recipe        = "recipe" ~idchar
-  if            = "if" ~idchar
-  else          = "else" ~idchar
-  for           = "for" ~idchar
-  while         = "while" ~idchar
-  finally       = "finally" ~idchar
-  return        = "return" ~idchar
-  break         = "break" ~idchar
-  continue      = "continue" ~idchar
-  try           = "try" ~idchar
-  catch         = "catch" ~idchar
-  throw         = "throw" ~idchar
-  true          = "fresh" ~idchar
-  false         = "stale" ~idchar
-  in            = "in" ~idchar
-  count         = "count" ~idchar
-  new           = "new" ~idchar
-  eightysix     = "eightysix" ~idchar
-  const         = "const" ~idchar
+  dish          = "Dish" ~alnum
+  ingredient    = "ingredient" ~alnum
+  recipe        = "recipe" ~alnum
+  if            = "if" ~alnum
+  else          = "else" ~alnum
+  for           = "for" ~alnum
+  while         = "while" ~alnum
+  return        = "return" ~alnum
+  break         = "break" ~alnum
+  continue      = "continue" ~alnum
+  try           = "prep" ~alnum
+  catch         = "rescue" ~alnum
+  finally       = "cleanup" ~alnum
+  true          = "fresh" ~alnum
+  false         = "stale" ~alnum
+  in            = "in" ~alnum
+  count         = "count" ~alnum
+  new           = "new" ~alnum
+  eightysix     = "eightysix" ~alnum
+  const         = "const" ~alnum
   keyword       = ingredient | recipe | if | else | for | while | finally | return 
-                | break | continue | try | catch | throw | true | false | in 
+                | break | continue | try | catch | true | false | in 
                 | ingredient | recipe | new | eightysix | const
   single_letter_id = ~keyword letter | ~keyword "_"
-  id          = ~keyword letter alnum*
-  idchar      = alnum | "_" | symbol
+  id          = ~keyword (letter | "_") (alnum | "_")*
   intlit      = digit+
   floatlit    = digit+ "." digit+ (("E" | "e") ("+" | "-")? digit+)?
   stringlit   = "\"" char* "\""
@@ -131,8 +129,7 @@ Sous {
               | "\\u{" hex hex? hex? hex? hex? hex? "}"       --codepoint
   control     = "\x00".."\x1f" | "\x80".."\x9f"
   hex         = hexDigit
-  symbol      = "_"
   num         = digit+ ("." digit+)? (("e" | "E") ("+" | "-")? digit+)?
-  space       += "//" (~"\n" any)*   --comment
-              | "'''" (~"'''" any)* "'''"
+  space       += "//" (~"\n" any)*                            --comment
+              | "'''" (~"'''" any)* "'''"                     --multiline
 }

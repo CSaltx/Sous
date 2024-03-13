@@ -75,6 +75,14 @@ export default function analyze(match) {
     );
   }
 
+  function mustBeAClass(e, at) {
+    must(
+      e?.kind === "ClassDeclaration",
+      "Expected a Dish, but this is like asking for a cake and getting a candle instead!",
+      at
+    );
+  }
+
   function mustHaveBooleanType(e, at) {
     must(
       e.type === BOOLEAN,
@@ -244,17 +252,9 @@ export default function analyze(match) {
   }
 
   //TODO: FIX ERROR MSGS AFTER THIS
-  function mustHaveDistinctFields(type, at) {
-    const fieldNames = new Set(type.fields.map((f) => f.name));
-    must(fieldNames.size === type.fields.length, "Fields must be distinct", at);
-  }
-
-  function mustHaveMember(structType, field, at) {
-    must(
-      structType.fields.map((f) => f.name).includes(field),
-      "No such field",
-      at
-    );
+  function mustHaveDistinctFields(fields, at) {
+    const fieldNames = new Set(fields.map((f) => f.name));
+    must(fieldNames.size === fields.length, "Fields must be distinct", at);
   }
 
   function mustBeInLoop(at) {
@@ -302,6 +302,22 @@ export default function analyze(match) {
   function mustHaveCorrectArgumentCount(argCount, paramCount, at) {
     const message = `${paramCount} argument(s) required but ${argCount} passed`;
     must(argCount === paramCount, message, at);
+  }
+
+  function mustBeSameClass(id1, id2, at) {
+    must(
+      id1.sourceString === id2.sourceString,
+      "Class Names must match, you think you'll be a MasterChef at this rate!",
+      at
+    );
+  }
+
+  function mustBeAMethod(method, id, at) {
+    must(
+      method,
+      `Did you just try and call method ${id.sourceString} when it doesn't exist! GO GET ME SOME OREGANO FROM MARS, YOU DONUT!`,
+      at
+    );
   }
 
   const analyzer = match.matcher.grammar.createSemantics().addOperation("rep", {
@@ -558,7 +574,7 @@ export default function analyze(match) {
         methods
       );
       context.add(className, classDeclaration);
-
+      // TODO: ENSURE THAT MUSTHAVEDISTINCTFIELDS() IS NOT REQUIRED, SHOULD B FINE BUT IM GETTING ERROR WHEN NON-DISTINCT FIELDS
       return classDeclaration;
     },
 
@@ -574,20 +590,11 @@ export default function analyze(match) {
       _closeParen,
       _semi
     ) {
-      must(
-        classId1.sourceString === classId2.sourceString,
-        "Class names must match for object declaration and instantiation",
-        { at: classId2 }
-      );
+      mustBeSameClass(classId1, classId2, { at: classId2 });
 
       const classEntity = context.lookup(classId1.sourceString);
       mustHaveBeenFound(classEntity, classId1.sourceString, { at: classId1 });
-      must(
-        classEntity.kind === "ClassDeclaration",
-        "Identifier must refer to a class",
-        { at: classId1 }
-      );
-
+      mustBeAClass(classEntity, { at: classId1 });
       mustNotAlreadyBeDeclared(objName.sourceString, { at: objName });
 
       const actualArgs = args.asIteration().children.map((arg) => arg.rep());
@@ -828,17 +835,12 @@ export default function analyze(match) {
     // working!
     Exp9_methodCall(objectId, _dot, methodId, _open, Params, _closed) {
       const object = objectId.rep();
+      mustBeAClass(context.lookup(object.type.name), { at: objectId });
       const classContext = context.lookup(object.type.name);
       const method = classContext.methods.find(
         (m) => m.name === methodId.sourceString
       );
-      must(
-        method,
-        `Method ${methodId.sourceString} is bland, it doesn't even exist!`,
-        {
-          at: methodId,
-        }
-      );
+      mustBeAMethod(method, methodId, { at: methodId });
       const methodDecl = method["fun"];
       const args = Params.rep();
       mustBeCallable(methodDecl, { at: methodId });
@@ -851,8 +853,14 @@ export default function analyze(match) {
 
     Exp9_member(exp, dot, id) {
       const object = exp.rep();
-      mustHaveMember(structType, id.sourceString, { at: id });
-      const field = structType.fields.find((f) => f.name === id.sourceString);
+      const classContext = context.lookup(object.type.name);
+      mustHaveBeenFound(object, object.sourceString, { at: exp });
+      const field = classContext.fields.find((f) => f.name === id.sourceString);
+      must(
+        field,
+        `Method ${id.sourceString} is bland, it doesn't even exist!`,
+        { at: id }
+      );
       return core.memberExpression(object, dot.sourceString, field);
     },
 
@@ -861,8 +869,6 @@ export default function analyze(match) {
       if (callee.name === "serve") {
         // Handle 'serve' differently: it can take any number of arguments and returns void.
         const args = expList.asIteration().children.map((exp) => exp.rep());
-        // Since 'serve' always returns void, you don't need to adjust the return type here.
-        // You might still want to check if arguments are valid expressions if necessary.
         return core.functionCall(callee, args);
       }
       mustBeCallable(callee, { at: exp });
