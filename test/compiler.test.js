@@ -30,7 +30,7 @@ describe("The compiler", () => {
   //   assert.throws(() => {
   //     compile(sampleProgram, "analyzed");
   //   });
-  // });
+  // }); //FIXME: ADD IN TEST HERE
 
   it("throws an error with the 'optimized' option", () => {
     // manually test for non-implementation

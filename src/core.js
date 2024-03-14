@@ -2,24 +2,24 @@ export function program(statements) {
   return { kind: "Program", statements };
 }
 
-export function variableDeclaration(name, initializer) {
-  return { kind: "VariableDeclaration", name, initializer };
+export function variableDeclaration(variable, initializer) {
+  return { kind: "VariableDeclaration", variable, initializer };
 }
 
 export function variable(name, readOnly, type) {
   return { kind: "Variable", name, readOnly, type };
 }
 
-export function field(name, type) {
-  return { kind: "Field", name, type };
-}
-
 export function functionDeclaration(name, fun, params, body) {
   return { kind: "FunctionDeclaration", name, fun, params, body };
 }
 
-export function classDeclaration(name, fields, methods) {
-  return { kind: "ClassDeclaration", name, fields, methods };
+export function classDeclaration(name, type) {
+  return { kind: "ClassDeclaration", name, type };
+}
+
+export function classType(name, fields, methods) {
+  return { kind: "ClassType", name, fields, methods };
 }
 
 export function objectConstructor(name, fields, type) {
@@ -70,6 +70,10 @@ export function ifStatement(test, consequent, alternate) {
   return { kind: "IfStatement", test, consequent, alternate };
 }
 
+export function shortIfStatement(test, consequent) {
+  return { kind: "ShortIfStatement", test, consequent };
+}
+
 export function whileStatement(test, body) {
   return { kind: "WhileStatement", test, body };
 }
@@ -86,9 +90,9 @@ export function unary(op, operand, type) {
   return { kind: "UnaryExpression", op, operand, type };
 }
 
-export function emptyOptional(baseType) {
-  return { kind: "EmptyOptional", baseType, type: optionalType(baseType) };
-}
+// export function emptyOptional(baseType) {
+//   return { kind: "EmptyOptional", baseType, type: optionalType(baseType) };
+// } //TODO: FIXME: CHECK THIS
 
 export function subscript(array, index) {
   return {
@@ -119,9 +123,9 @@ export function functionCall(callee, args) {
   return { kind: "FunctionCall", callee, args, type: callee.type.returnType };
 }
 
-export function constructorCall(callee, args) {
-  return { kind: "ConstructorCall", callee, args, type: callee };
-}
+// export function constructorCall(callee, args) {
+//   return { kind: "ConstructorCall", callee, args, type: callee };
+// } TODO: CHECK HERE FIXME: CHECK HERE
 
 export function pythForStatement(iterator, low, high, body) {
   return { kind: "ForStatement", iterator, low, high, body };
@@ -137,10 +141,6 @@ export function forStatement(init, test, update, body) {
 
 export function forCollectionStmt(iterator, collection, body) {
   return { kind: "ForStatement", iterator, collection, body };
-}
-
-export function throwStatement(argument) {
-  return { kind: "ThrowStatement", argument };
 }
 
 export function tryStatement(block, catchClauses, finallyBlock) {
@@ -177,6 +177,12 @@ export const floatType = { kind: "FloatType" };
 export const stringType = { kind: "StringType" };
 export const voidType = { kind: "VoidType" };
 export const anyType = { kind: "AnyType" };
+export const Exception = { kind: "Exception" };
+export const TypeError = { kind: "TypeError" };
+export const ValueError = { kind: "ValueError" };
+export const KeyError = { kind: "KeyError" };
+export const IndexError = { kind: "IndexError" };
+export const RuntimeError = { kind: "RuntimeError" };
 
 const floatToFloatType = functionType([floatType], floatType);
 const floatFloatToFloatType = functionType([floatType, floatType], floatType);
@@ -191,6 +197,12 @@ export const standardLibrary = Object.freeze({
   string: stringType,
   void: voidType,
   any: anyType,
+  Exception: Exception,
+  TypeError: TypeError,
+  ValueError: ValueError,
+  KeyError: KeyError,
+  IndexError: IndexError,
+  RuntimeError: RuntimeError,
   π: variable("π", true, floatType),
   serve: fun("serve", anyToVoidType),
   sin: fun("sin", floatToFloatType),

@@ -49,7 +49,7 @@ Sous {
   Finally       = finally Block
 
   ForStmt       = for "(" VarDecl Exp4_compare ";" Exp6_bump ")" Block        --norm
-                | for id in Exp Block                                         --collection
+                | for "(" id in Exp ")" Block                                 --collection
   PythForStmt   = "F" single_letter_id  "r" single_letter_id single_letter_id Block
   ErrorStmt     = eightysix "(" Exp "," id ")" ";"
   // ThrowStmt     = throw Exp ";"
@@ -76,7 +76,7 @@ Sous {
                 | Exp8
   Exp8          = Exp9 "**" Exp8                                --power
                 | Exp9
-                | ("-" | "!") Exp9        				  --unary
+                | ("-" | "!"| random) Exp9        				--unary
   Exp9          = true ~mut
                 | false ~mut
                 | floatlit ~mut
@@ -95,7 +95,14 @@ Sous {
     
   relop         = "<=" | "<" | ">=" | ">" | "==" | "!="
   string        = "\"" char* "\""
-    
+  
+//   typeerror     = "TypeError" ~alnum
+//   valueerror    = "ValueError" ~alnum
+//   keyerror      = "KeyError" ~alnum
+//   indexerror    = "IndexError" ~alnum
+//   runtimeerror  = "RuntimeError" ~alnum
+//   exception     = "Exception" ~alnum
+//   errorTypes    = typeerror | valueerror | keyerror | indexerror | runtimeerror | exception
   dish          = "Dish" ~alnum
   ingredient    = "ingredient" ~alnum
   recipe        = "recipe" ~alnum
@@ -109,6 +116,7 @@ Sous {
   try           = "prep" ~alnum
   catch         = "rescue" ~alnum
   finally       = "cleanup" ~alnum
+  random        = "random" ~alnum
   true          = "fresh" ~alnum
   false         = "stale" ~alnum
   in            = "in" ~alnum
@@ -118,7 +126,7 @@ Sous {
   const         = "const" ~alnum
   keyword       = ingredient | recipe | if | else | for | while | finally | return 
                 | break | continue | try | catch | true | false | in 
-                | ingredient | recipe | new | eightysix | const
+                | ingredient | recipe | new | eightysix | const | random
   single_letter_id = ~keyword letter | ~keyword "_"
   id          = ~keyword (letter | "_") (alnum | "_")*
   intlit      = digit+

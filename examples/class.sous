@@ -24,7 +24,7 @@ myCake.Bake();
 // Looping through a list of cakes and serving them
 
 ingredient cakes := ["Vanilla", "Chocolate", "Strawberry"];
-for cake in cakes {
+for (cake in cakes) {
     serve(cake);
     serve("looped");
 }

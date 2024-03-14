@@ -77,7 +77,7 @@ export default function analyze(match) {
 
   function mustBeAClass(e, at) {
     must(
-      e?.kind === "ClassDeclaration",
+      e?.kind === "ClassType",
       "Expected a Dish, but this is like asking for a cake and getting a candle instead!",
       at
     );
@@ -152,34 +152,34 @@ export default function analyze(match) {
     );
   }
 
-  function includesAsField(structType, type) {
-    // Whether the struct type has a field of type type, directly or indirectly
-    return structType.fields.some(
-      (field) =>
-        field.type === type ||
-        (field.type?.kind === "StructType" && includesAsField(field.type, type))
-    );
-  }
+  //   function includesAsField(structType, type) {
+  //     // Whether the struct type has a field of type type, directly or indirectly
+  //     return structType.fields.some(
+  //       (field) =>
+  //         field.type === type ||
+  //         (field.type?.kind === "StructType" && includesAsField(field.type, type))
+  //     );
+  //   }
 
-  function mustNotBeSelfContaining(structType, at) {
-    const containsSelf = includesAsField(structType, structType);
-    must(!containsSelf, "Struct type must not be self-containing", at);
-  }
+  //   function mustNotBeSelfContaining(structType, at) {
+  //     const containsSelf = includesAsField(structType, structType);
+  //     must(!containsSelf, "Struct type must not be self-containing", at);
+  //   }
 
-  function mustBeCallable(entity, at) {
-    must(
-      entity.kind === "Function" || entity.kind === "ClassDeclaration",
-      `Expected a recipe or a dish but found ${entity.kind.toLowerCase()}`,
-      at
-    );
-  }
+  //   function mustBeCallable(entity, at) {
+  //     must(
+  //       entity.kind === "Function" || entity.kind === "ClassDeclaration",
+  //       `Expected a recipe or a dish but found ${entity.kind.toLowerCase()}`,
+  //       at
+  //     );
+  //   }
 
   function equivalent(t1, t2) {
     return (
       t1 === t2 ||
-      (t1?.kind === "OptionalType" &&
-        t2?.kind === "OptionalType" &&
-        equivalent(t1.baseType, t2.baseType)) ||
+      //   (t1?.kind === "OptionalType" &&
+      //     t2?.kind === "OptionalType" &&
+      //     equivalent(t1.baseType, t2.baseType)) || TODO: FIXME: IF OPTIONAL TYPES ADDED FIX THIS
       (t1?.kind === "ArrayType" &&
         t2?.kind === "ArrayType" &&
         equivalent(t1.baseType, t2.baseType)) ||
@@ -221,16 +221,14 @@ export default function analyze(match) {
         return "void";
       case "AnyType":
         return "any";
-      case "StructType":
-        return type.name;
       case "FunctionType":
         const paramTypes = type.paramTypes.map(typeDescription).join(", ");
         const returnType = typeDescription(type.returnType);
         return `(${paramTypes})->${returnType}`;
       case "ArrayType":
         return `[${typeDescription(type.baseType)}]`;
-      case "OptionalType":
-        return `${typeDescription(type.baseType)}?`;
+      //   case "OptionalType":
+      //     return `${typeDescription(type.baseType)}?`; TODO: FIXME: CHECK AFTER OPTIONAL IMPLEMENTATION
     }
   }
 
@@ -252,10 +250,10 @@ export default function analyze(match) {
   }
 
   //TODO: FIX ERROR MSGS AFTER THIS
-  function mustHaveDistinctFields(fields, at) {
-    const fieldNames = new Set(fields.map((f) => f.name));
-    must(fieldNames.size === fields.length, "Fields must be distinct", at);
-  }
+  //   function mustHaveDistinctFields(fields, at) {
+  //     const fieldNames = new Set(fields.map((f) => f.name));
+  //     must(fieldNames.size === fields.length, "Fields must be distinct", at);
+  //   }
 
   function mustBeInLoop(at) {
     must(context.inLoop, "Break can only appear in a loop", at);
@@ -266,8 +264,7 @@ export default function analyze(match) {
   }
 
   function mustBeCallable(e, at) {
-    const callable =
-      e?.kind === "StructType" || e.type?.kind === "FunctionType";
+    const callable = e.type?.kind === "FunctionType";
     must(callable, "Call of non-function or non-constructor", at);
   }
 
@@ -371,7 +368,11 @@ export default function analyze(match) {
       const source = expression.rep();
       const target = variable.rep();
       mustHaveBeenFound(target, variable.sourceString, variable);
-      mustBeAssignable(source, { toType: target.type }, { at: variable });
+      let toType = target.type;
+      if (toType.kind === "OptionalType") {
+        toType = toType.baseType;
+      }
+      mustBeAssignable(source, { toType: toType }, { at: variable });
       mustNotBeReadOnly(target, { at: variable });
       return core.assignment(target, source);
     },
@@ -415,7 +416,7 @@ export default function analyze(match) {
       return core.shortIfStatement(test, consequent);
     },
 
-    Stmt_returnstmt(_return, exp, _semi) {
+    Stmt_returnstmt(returnKeyword, exp, _semi) {
       mustBeInAFunction({ at: returnKeyword });
       mustReturnSomething(context.function, { at: returnKeyword });
       const returnExpression = exp.rep();
@@ -443,12 +444,12 @@ export default function analyze(match) {
 
     Stmt_breakstmt(breakKeyword, _semicolon) {
       mustBeInLoop({ at: breakKeyword });
-      return core.breakStatement;
+      return core.breakStatement();
     },
 
     ContinueStmt(_continue, _semi) {
       mustBeInLoop({ at: _continue });
-      return new core.ContinueStatement();
+      return new core.continueStatement();
     },
 
     WhileStmt(_while, _open, exp, _closed, block) {
@@ -479,7 +480,7 @@ export default function analyze(match) {
       );
     },
 
-    ForStmt_collection(_for, id, _in, exp, block) {
+    ForStmt_collection(_for, _open, id, _in, exp, _closed, block) {
       const collection = exp.rep();
       mustHaveAnArrayType(collection, { at: exp });
       const iterator = core.variable(
@@ -540,7 +541,6 @@ export default function analyze(match) {
       fun.type = core.functionType(paramTypes, returnType);
 
       const body = block.rep();
-      console.log(body);
 
       context = context.parent;
       return core.functionDeclaration(id.sourceString, fun, params, body);
@@ -574,19 +574,17 @@ export default function analyze(match) {
     ClassDecl(_dish, id, _open, varDecls, funDecls, _closed) {
       const className = id.sourceString;
       mustNotAlreadyBeDeclared(className, id);
-
+      const type = core.classType(className, [], []);
+      context.add(className, type);
       context = context.newChildContext();
       const fields = varDecls.children.map((varDecl) => varDecl.rep());
       const methods = funDecls.children.map((funDecl) => funDecl.rep());
 
       context = context.parent;
-
-      const classDeclaration = core.classDeclaration(
-        className,
-        fields,
-        methods
-      );
-      context.add(className, classDeclaration);
+      type.fields = fields;
+      type.methods = methods;
+      const classDeclaration = core.classDeclaration(className, type);
+      //   context.add(className, classDeclaration);
       // TODO: ENSURE THAT MUSTHAVEDISTINCTFIELDS() IS NOT REQUIRED, SHOULD B FINE BUT IM GETTING ERROR WHEN NON-DISTINCT FIELDS
       return classDeclaration;
     },
@@ -667,7 +665,7 @@ export default function analyze(match) {
       _closed,
       _semi
     ) {
-      const error = errorType ? errorType.sourceString : "Exception";
+      const error = errorType.sourceString;
       const message = errorMessage.sourceString;
       mustBeValidErrorType(errorType, { at: errorType });
       return new core.errorStatement(error, message);
@@ -804,23 +802,26 @@ export default function analyze(match) {
     Exp8_unary(unaryOp, exp) {
       const [op, operand] = [unaryOp.sourceString, exp.rep()];
       let type;
-      if (op === "#") {
-        mustHaveAnArrayType(operand, { at: exp });
-        type = INT;
-      } else if (op === "-") {
+      //   if (op === "#") {
+      //     mustHaveAnArrayType(operand, { at: exp });
+      //     type = INT;
+      //   } else
+      if (op === "-") {
         mustHaveNumericType(operand, { at: exp });
         type = operand.type;
       } else if (op === "!") {
         mustHaveBooleanType(operand, { at: exp });
         type = BOOLEAN;
-      } else if (op === "some") {
-        type = core.optionalType(operand.type);
       } else if (op === "random") {
         mustHaveAnArrayType(operand, { at: exp });
         type = operand.type.baseType;
       }
       return core.unary(op, operand, type);
     },
+
+    // else if (op === "some") {
+    //     type = core.optionalType(operand.type);
+    //   } FIXME: TODO: IF ADDING OPTIONALS, REPLACE THIS
 
     Exp9_emptyarray(ty, _open, _close) {
       const type = ty.rep();
@@ -856,7 +857,7 @@ export default function analyze(match) {
       mustBeAMethod(method, methodId, { at: methodId });
       const methodDecl = method["fun"];
       const args = Params.rep();
-      mustBeCallable(methodDecl, { at: methodId });
+      //   mustBeCallable(methodDecl, { at: methodId });
       const targetTypes = methodDecl.type.paramTypes;
       mustHaveCorrectArgumentCount(args.length, targetTypes.length, {
         at: objectId,
@@ -869,10 +870,13 @@ export default function analyze(match) {
       // TODO: ADD in optionals
       const classContext = context.lookup(object.type.name);
       mustHaveBeenFound(object, object.sourceString, { at: exp });
-      const field = classContext.fields.find((f) => f.name === id.sourceString);
+      const field = classContext.fields.find(
+        (f) => f.variable === id.sourceString
+      );
+      //FIXME: MAKE THIS ITS OWN MUST FUNCTION
       must(
         field,
-        `Method ${id.sourceString} is bland, it doesn't even exist!`,
+        `Member ${id.sourceString} is so bland, it doesn't even exist!`,
         { at: id }
       );
       return core.memberExpression(object, dot.sourceString, field);
@@ -887,10 +891,7 @@ export default function analyze(match) {
       }
       mustBeCallable(callee, { at: exp });
       const exps = expList.asIteration().children;
-      const targetTypes =
-        callee?.kind === "StructType"
-          ? callee.fields.map((f) => f.type)
-          : callee.type.paramTypes;
+      const targetTypes = callee.type.paramTypes;
       mustHaveCorrectArgumentCount(exps.length, targetTypes.length, {
         at: open,
       });
@@ -899,9 +900,7 @@ export default function analyze(match) {
         mustBeAssignable(arg, { toType: targetTypes[i] }, { at: exp });
         return arg;
       });
-      return callee?.kind === "StructType"
-        ? core.constructorCall(callee, args)
-        : core.functionCall(callee, args);
+      return core.functionCall(callee, args);
     },
 
     Exp9_id(id) {
