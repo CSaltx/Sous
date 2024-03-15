@@ -28,3 +28,17 @@ for (cake in cakes) {
     serve(cake);
     serve("looped");
 }
+
+// Private vars inside classes
+
+Dish PrivateCake {
+    ingredient _recipe: string;
+    
+    recipe bake() {
+        // make according to recipe
+    }
+}
+
+PrivateCake grandma_recipe := new PrivateCake("prviate family recipe");
+grandma_recipe.bake(); // works
+// grandma_recipe._recipe; will error because _recipe is private
