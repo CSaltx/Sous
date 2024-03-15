@@ -187,17 +187,13 @@ describe("The parser", () => {
       assert.throws(() => parse(source), errorMessagePattern);
     });
   }
-  // const programs = [
-  //   "class.sous",
-  //   "fib.sous",
-  //   "functions.sous",
-  //   "hello.sous",
-  //   "loops.sous",
-  // ];
-  // programs.forEach((program) => {
-  //   it(`parses program ${program}`, async () => {
-  //     const result = await compileFromFile(`../examples/${program}`, "parsed");
-  //     assert.equal(result, "Syntax is ok");
-  //   });
-  // });
+  it('parses a file with "compileFromFile"', async () => {
+    let error = false;
+    try {
+      const result = await compileFromFile("examples/hello.sous", "parsed");
+    } catch (e) {
+      error = true;
+    }
+    assert.equal(error, false);
+  });
 });
