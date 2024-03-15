@@ -67,6 +67,12 @@ export default function analyze(match) {
     );
   }
 
+  function mustHaveValidMember(e, name, at) {
+    must(e, `Member ${name} is so bland, it doesn't even exist!`, {
+      at: at,
+    });
+  }
+
   function mustHaveNumericOrStringType(e, at) {
     must(
       [INT, FLOAT, STRING].includes(e.type),
@@ -150,6 +156,9 @@ export default function analyze(match) {
       "Must be an array type, you gave me a slice of cake? Where's the rest...",
       at
     );
+  }
+  function mustNotBePrivate(e, at) {
+    must(e, "Cannot access private member", at);
   }
 
   //   function includesAsField(structType, type) {
@@ -870,22 +879,19 @@ export default function analyze(match) {
       // TODO: ADD in optionals
       const classContext = context.lookup(object.type.name);
       mustHaveBeenFound(object, object.sourceString, { at: exp });
+      mustNotBePrivate(id.sourceString[0] !== "_", {
+        at: id,
+      });
       const field = classContext.fields.find(
         (f) => f.variable === id.sourceString
       );
-      //FIXME: MAKE THIS ITS OWN MUST FUNCTION
-      must(
-        field,
-        `Member ${id.sourceString} is so bland, it doesn't even exist!`,
-        { at: id }
-      );
+      mustHaveValidMember(field, id.sourceString, { at: id });
       return core.memberExpression(object, dot.sourceString, field);
     },
 
     Exp9_call(exp, open, expList, _close) {
       const callee = exp.rep();
       if (callee.name === "serve") {
-        // Handle 'serve' differently: it can take any number of arguments and returns void.
         const args = expList.asIteration().children.map((exp) => exp.rep());
         return core.functionCall(callee, args);
       }
