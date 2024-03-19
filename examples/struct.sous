@@ -1,0 +1,21 @@
+// Example of using a class as a struct in Sous
+
+Dish Chef {
+    ingredient name : string;
+    ingredient age : int;
+    ingredient isHeadChef : boolean;
+}
+
+Chef headChef := new Chef("Coby", 22, fresh);
+Chef sousChef := new Chef("Other", 21, stale);
+
+serve("Head Chef is ", headChef.name);
+serve("Sous Chef is ", sousChef.name);
+
+ingredient chefs := [headChef, sousChef];
+
+if (chefs[0].isHeadChef != fresh) {
+    eightysix("Head Chef must be the first indexed chef!", ValueError);
+} else {
+    serve("valid ordering");
+}

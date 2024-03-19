@@ -68,9 +68,7 @@ export default function analyze(match) {
   }
 
   function mustHaveValidMember(e, name, at) {
-    must(e, `Member ${name} is so bland, it doesn't even exist!`, {
-      at: at,
-    });
+    must(e, `Member ${name} is so bland, it doesn't even exist!`, at);
   }
 
   function mustHaveNumericOrStringType(e, at) {
@@ -267,6 +265,10 @@ export default function analyze(match) {
   function mustBeInLoop(at) {
     must(context.inLoop, "Break can only appear in a loop", at);
   }
+
+  //   function mustBeInClass(at) {
+  //     must(context.inClass, "This can only appear in a class", at);
+  //   }
 
   function mustBeInAFunction(at) {
     must(context.function, "Return can only appear in a function", at);
@@ -585,7 +587,7 @@ export default function analyze(match) {
       mustNotAlreadyBeDeclared(className, id);
       const type = core.classType(className, [], []);
       context.add(className, type);
-      context = context.newChildContext();
+      context = context.newChildContext({ inClass: true });
       const fields = varDecls.children.map((varDecl) => varDecl.rep());
       const methods = funDecls.children.map((funDecl) => funDecl.rep());
 

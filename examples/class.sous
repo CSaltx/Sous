@@ -32,10 +32,10 @@ for (cake in cakes) {
 // Private vars inside classes
 
 Dish PrivateCake {
-    ingredient _recipe: string;
+    ingredient _recipe: string; // private variable, inaccessible by member access
     
     recipe bake() {
-        // make according to recipe
+        serve(_recipe);
     }
 }
 
