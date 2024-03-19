@@ -1,0 +1,29 @@
+// Example usage of private variables in classes
+
+Dish FamilyRecipe {
+    ingredient _ingredients : string;
+    ingredient _instructions : string;
+    ingredient _heat : int;
+
+    recipe bake() {
+        serve("start preheating at ", _heat, " degrees");
+        ingredient i := 0;
+        ingredient e := _heat;
+        while (i < e) {
+            serve("preheating... ", i," degrees");
+            i = i + 1;
+        }
+
+        serve("preheating complete");
+        serve("mixing ingredients: ", _ingredients);
+        serve("baking at ", _heat, " degrees for 30 minutes");
+        return;
+    }
+}
+
+FamilyRecipe grandma_cookies := new FamilyRecipe("flour, sugar, eggs, butter", "mix ingredients, bake at 350 degrees", 350);
+grandma_cookies.bake();
+
+'''
+grandma_cookies._ingredients; // Error: _ingredients is a private variable
+'''
