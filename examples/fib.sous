@@ -1,4 +1,4 @@
-ingredient N := 10; // Number of Fibonacci numbers to generate
+ingredient N := 10 | const; // Number of Fibonacci numbers to generate
 ingredient first := 0, second := 1, next := 0;
 
 serve("Fibonacci Sequence up to ", N, " numbers:");
@@ -13,7 +13,6 @@ for (ingredient plate := 0; plate < N; ++plate) {
     }
     serve(next, " ");
 }
-
 '''
 for loop can be replaced as seen below:
 ingredient Z := 0;

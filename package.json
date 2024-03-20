@@ -4,18 +4,32 @@
   "description": "Compiler for Sous Programming Language for CMSI 3802",
   "main": "sous.js",
   "type": "module",
+  "directories": {
+    "docs": "docs",
+    "example": "examples",
+    "test": "test"
+  },
   "scripts": {
     "test": "c8 mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+github.com:CSaltx/Sous.git"
   },
   "keywords": [],
   "author": "Coby Schumitzky (CSaltx), Milla Penelope Markovic (mpmarkovic), Christina Choi (cchoi17), Clifford Phillips (CJPhill)",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CSaltx/Sous/issues"
+  },
+  "homepage": "https://github.com/CSaltx/Sous#readme",
   "devDependencies": {
     "c8": "^9.1.0",
     "mocha": "^10.3.0",
     "tailwindcss": "^3.4.1"
   },
   "dependencies": {
+    "graph-stringify": "^1.1.0",
     "ohm-js": "^17.1.0"
   }
 }

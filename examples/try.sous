@@ -1,0 +1,9 @@
+prep {
+    ingredient _x := 0;
+    serve("Started");
+    eightysix("Error Entered", Exception);
+} rescue (Exception e) {
+    serve(e);
+} cleanup {
+    serve("Finished");
+}

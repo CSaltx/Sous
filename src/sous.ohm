@@ -1,122 +1,143 @@
 Sous {
-  Program  = (Decl | Stmt)*
+  Program       = Stmt*
 
-  Decl = VarDecl | FunDecl | ClassDecl | ObjDecl
+  Stmt          = VarDecl
+                | FunDecl
+                | ClassDecl
+                | ObjDecl
+                | ("++" | "--") Exp9 ";"           --bump
+                | Exp9 "=" Exp ";"                 --assign
+                | Exp9_call ";" 			       --call
+                | Exp9_methodCall ";"			   --methodcall
+                | break ";"                        --breakstmt
+                | ContinueStmt
+                | return Exp ";"                   --returnstmt
+                | return ";"				               --shortreturn
+                | ErrorStmt
+                | WhileStmt
+                | IfStmt
+                | TryStmt
+                | ForStmt
+                | PythForStmt
+  
+  Type          = Type "?"                                                --optional
+                | "[" Type "]"                                            --array
+                | "(" ListOf<Type, ","> ")" "->" Type                     --function
+                | id                                                      --id
+  VarDecl       = ingredient nonemptyListOf<(VarInit | VarDecl), ","> ";" --list
+                | ingredient id ":" Type ";"                              --without_init
+  VarInit       = id ":=" Exp "|"? const?
 
-  VarDecl = ingredient nonemptyListOf<(VarInit | id), ","> ";" --list
-          | ingredient id ";" --wihout_init
-  VarInit = id ":=" (Exp | id)
+  FunDecl       = recipe id "(" Params ")" (":" Type)? Block
+  Params        = ListOf<Param, ",">
+  Param         = ingredient id ":" Type
+  Block         = "{" Stmt* "}"
 
-  FunDecl = recipe id "(" Params ")" Block
-  Params = ListOf<Param, ",">
-  Param = ingredient id
-  Block = "{" Stmt* "}"
+  ClassDecl     = dish id "{" (VarDecl)* (FunDecl)* "}"
 
-  ClassDecl = dish id "{" Decl* "}"
+  ObjDecl       = Type id ":=" new Type "(" ListOf<Exp, ","> ")" ";"
 
-  ObjDecl = id id ":=" new id "(" ListOf<(Param | string), ","> ")" ";"
+  ContinueStmt  = continue ";"
 
-  Stmt = VarDecl
-      | Assignment
-      | BreakStmt
-      | ContinueStmt
-      | ReturnStmt
-      | PrintStmt
-      | CallStmt
-      | WhileStmt
-      | IfStmt
-      | TryStmt
-      | ForStmt
-      | pythForStmt Block         --pyth
+  WhileStmt     = while "(" Exp ")" Block
+  IfStmt        = if "(" Exp ")" Block else Block --with_else
+                | if "(" Exp ")" Block else IfStmt --nested_if
+                | if "(" Exp ")" Block --plain_if
 
-  Assignment = id "=" Exp ";"
-  BreakStmt = break ";"
-  ContinueStmt = continue ";"
-  ReturnStmt = return Exp ";"
-  CallStmt = Call ";"
-  Call = id "(" Args ")"
-  Args = ListOf<Exp, ".">
+  TryStmt       = try Block Catch* Finally?
+  Catch         = catch "(" id id ")" Block
+  Finally       = finally Block
 
-  WhileStmt = while "(" Exp ")" Block
-  IfStmt = if "(" Exp ")" Block else Block --with_else
-         | if "(" Exp ")" Block else IfStmt --nested_if
-         | if "(" Exp ")" Block --plain_if
-
-  TryStmt = try Block Catch* Finally?
-  Catch = catch "(" id ")" Block
-  Finally = finally Block
-
-  ForStmt = for "(" VarDecl Exp ";" Exp ")" Block --norm_style
-  pythForStmt = "F" single_letter_id  "r" single_letter_not_under single_letter_not_under --pyth
-
-  PrintStmt = serve "(" ListOf<Exp, ","> ")" ";"
+  ForStmt       = for "(" VarDecl Exp4_compare ";" Exp6_bump ")" Block        --norm
+                | for "(" id in Exp ")" Block                                 --collection
+  PythForStmt   = "F" single_letter_id  "r" single_letter_id single_letter_id Block
+  ErrorStmt     = eightysix "(" Exp "," id ")" ";"
+  // ThrowStmt     = throw Exp ";"
     
-  Exp = ("-" | "!") Primary    --negation
-      | Exp0 "?" Exp0 ":" Exp  --ternary
-      | Exp0
-      | "++" Primary --incrementing
-  Exp0 = Exp0 "||" Exp --or
-       | Exp1
-  Exp1 = Exp1 "&&" Exp2 --and
-       | Exp2
-  Exp2 = Exp3 relop Exp3 --relational
-       | Exp3
-  Exp3 = Exp3 ("+" | "-") Term --add
-       | Term
-  Term = Term ("*" | "/" | "%") Factor --multiply
-       | Factor
-  Factor = Primary "**" Factor --power
-         | Primary
-  Primary = "[" nonemptyListOf<Exp, ","> "]" --array
-          | ~num Primary "[" Exp "]"         --subscript
-          | ~num Primary "." id              --member
-          | true
-          | false
-          | Call
-          | id
-          | num
-          | string
-          | "(" Exp ")"                      --parens
+  Exp           = Exp1 "?" Exp1 ":" Exp                         --conditional
+                | Exp1
+  Exp1          = Exp1 "??" Exp2                                --unwrapelse
+                | Exp2
+  Exp2          = Exp3 ("||" Exp3)+                             --or
+                | Exp3 ("&&" Exp3)+                             --and
+                | Exp3
+  Exp3          = Exp4 ("|" Exp4)+                              --bitor
+                | Exp4 ("^" Exp4)+                              --bitxor
+                | Exp4 ("&" Exp4)+                              --bitand
+                | Exp4
+  Exp4          = Exp5 ("<="|"<"|"=="|"!="|">="|">") Exp5       --compare
+                | Exp5
+  Exp5          = Exp5 ("<<" | ">>") Exp6                       --shift
+                | Exp6
+  Exp6          = Exp6 ("+" | "-") Exp7                         --add
+                | ("++" | "--") Exp9                            --bump
+                | Exp7
+  Exp7          = Exp7 ("*"| "/" | "%") Exp8                    --multiply
+                | Exp8
+  Exp8          = Exp9 "**" Exp8                                --power
+                | Exp9
+                | ("-" | "!"| random) Exp9        				--unary
+  Exp9          = true ~mut
+                | false ~mut
+                | floatlit ~mut
+                | intlit ~mut
+                | stringlit ~mut
+                | Exp9 ("(" | "?(") ListOf<Exp, ","> ")" ~mut   --call
+                | Exp9 ("[" | "?[") Exp "]"                     --subscript
+                | Exp9_id ("." | "?.") Exp9_id "(" Params ")"	  --methodCall
+                | Exp9 ("." | "?.") id                          --member
+                | id                                            --id
+                | Type_array "(" ")" ~mut                       --emptyarray
+                | "[" NonemptyListOf<Exp, ","> "]" ~mut         --arrayexp
+                | "(" Exp ")" ~mut                              --parens
+      
+  mut           = ~"==" "=" | "++" | "--"
     
-  relop = "<=" | "<" | ">=" | ">" | "==" | "!="
-  string = "\"" char* "\""
-    
-  dish = "Dish" ~idchar
-  ingredient = "ingredient" ~idchar
-  recipe = "recipe" ~idchar
-  serve = "serve" ~idchar
-  if = "if" ~idchar
-  else = "else" ~idchar
-  for = "for" ~idchar
-  while = "while" ~idchar
-  finally = "finally" ~idchar
-  return = "return" ~idchar
-  break = "break" ~idchar
-  continue = "continue" ~idchar
-  try = "try" ~idchar
-  catch = "catch" ~idchar
-  throw = "throw" ~idchar
-  true = "true" ~idchar
-  false = "false" ~idchar
-  in = "in" ~idchar
-  count = "count" ~idchar
-  new = "new" ~idchar
-    
-  char = ~control ~"\\" ~"\"" any
+  relop         = "<=" | "<" | ">=" | ">" | "==" | "!="
+  string        = "\"" char* "\""
+  
+//   typeerror     = "TypeError" ~alnum
+//   valueerror    = "ValueError" ~alnum
+//   keyerror      = "KeyError" ~alnum
+//   indexerror    = "IndexError" ~alnum
+//   runtimeerror  = "RuntimeError" ~alnum
+//   exception     = "Exception" ~alnum
+//   errorTypes    = typeerror | valueerror | keyerror | indexerror | runtimeerror | exception
+  dish          = "Dish" ~alnum
+  ingredient    = "ingredient" ~alnum
+  recipe        = "recipe" ~alnum
+  if            = "if" ~alnum
+  else          = "else" ~alnum
+  for           = "for" ~alnum
+  while         = "while" ~alnum
+  return        = "return" ~alnum
+  break         = "break" ~alnum
+  continue      = "continue" ~alnum
+  try           = "prep" ~alnum
+  catch         = "rescue" ~alnum
+  finally       = "cleanup" ~alnum
+  random        = "random" ~alnum
+  true          = "fresh" ~alnum
+  false         = "stale" ~alnum
+  in            = "in" ~alnum
+  count         = "count" ~alnum
+  new           = "new" ~alnum
+  eightysix     = "eightysix" ~alnum
+  const         = "const" ~alnum
+  keyword       = ingredient | recipe | if | else | for | while | finally | return 
+                | break | continue | try | catch | true | false | in 
+                | ingredient | recipe | new | eightysix | const | random
+  single_letter_id = ~keyword letter | ~keyword "_"
+  id          = ~keyword (letter | "_") (alnum | "_")*
+  intlit      = digit+
+  floatlit    = digit+ "." digit+ (("E" | "e") ("+" | "-")? digit+)?
+  stringlit   = "\"" char* "\""
+  char        = ~control ~"\\" ~"\"" any
               | "\\" ("n" | "t" | "\"" | "\\")                --escape
               | "\\u{" hex hex? hex? hex? hex? hex? "}"       --codepoint
-  control = "\x00".."\x1f" | "\x80".."\x9f"
-  hex = hexDigit
-  keyword = ingredient | recipe | serve | if | else | for | while | finally | return | break | continue | try | catch | throw | true | false | in | ingredient | recipe | serve | new
-  single_letter_id = ~keyword letter | ~keyword "_"
-  single_letter_not_under = ~keyword letter
-  id = ~keyword letter idchar* --multi_letter
-     | ~keyword "_" idchar*    --underscore_letters
-     | ~keyword "_"            --single_underscore
-     | ~keyword letter         --single_letter
-  idchar = alnum | "_" | symbol
-  symbol = "." | "!" | "?" | "_"
-  num = digit+ ("." digit+)? (("e" | "E") ("+" | "-")? digit+)?
-  space += "//" (~"\n" any)*   --comment
-         | "'''" (~"'''" any)* "'''"
+  control     = "\x00".."\x1f" | "\x80".."\x9f"
+  hex         = hexDigit
+  num         = digit+ ("." digit+)? (("e" | "E") ("+" | "-")? digit+)?
+  space       += "//" (~"\n" any)*                            --comment
+              | "'''" (~"'''" any)* "'''"                     --multiline
 }

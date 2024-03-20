@@ -1,9 +1,9 @@
 // Class Usage: Initializing a class using Dish and creating a new Object
 
 Dish Cake {
-    ingredient flour;
-    ingredient sugar;
-    ingredient eggs;
+    ingredient flour : string;
+    ingredient sugar : string;
+    ingredient eggs : string;
 
     recipe MixIngredients() {
         serve("Mixing ingredients: ", flour, ", ", sugar, ", ", eggs);
@@ -14,7 +14,31 @@ Dish Cake {
     }
 }
 
+eightysix("help", ValueError);
 Cake myCake := new Cake("2 cups", "1 cup", "3");
-
 myCake.MixIngredients();
+ingredient flour := myCake.sugar;
+serve(stale);
 myCake.Bake();
+
+// Looping through a list of cakes and serving them
+
+ingredient cakes := ["Vanilla", "Chocolate", "Strawberry"];
+for (cake in cakes) {
+    serve(cake);
+    serve("looped");
+}
+
+// Private vars inside classes
+
+Dish PrivateCake {
+    ingredient _recipe: string; // private variable, inaccessible by member access
+    
+    recipe bake() {
+        serve(_recipe);
+    }
+}
+
+PrivateCake grandma_recipe := new PrivateCake("prviate family recipe");
+grandma_recipe.bake(); // works
+// grandma_recipe._recipe; will error because _recipe is private

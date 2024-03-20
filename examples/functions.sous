@@ -1,6 +1,6 @@
-ingredient temp := 350;
+ingredient temp : int;
 
-recipe CheckTemperature() {
+recipe CheckTemperature() : int{
     if (temp > 300) {
         serve("Temperature is hot enough for baking.");
     } else {

@@ -1,0 +1,1 @@
+Dish S {} S x:=new S(); serve(x.y);
