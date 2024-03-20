@@ -123,6 +123,13 @@ const semanticChecks = [
   ["float without init", "ingredient x : float;"],
   ["error Without type", 'eightysix("Error Message", Exception);'],
   ["decrement", "for (ingredient x := 0; x < 10; --x) {}"],
+  ["optionals", "ingredient x: int?; x = 5; serve(x);"],
+  ["optional ingredient", "ingredient x := poached 5;"],
+  ["empty optional ingredient", "ingredient r := raw int;"],
+  [
+    "optional ingredients in class",
+    'Dish S {ingredient x: int?; ingredient y: string?;} S z := new S(raw int, raw string); S w := new S(poached 5, poached "hello"); serve(w?.x);',
+  ],
 ];
 
 // Programs that are syntactically correct but have semantic errors
@@ -304,6 +311,11 @@ const semanticErrors = [
     "Non-type in field type",
     "ingredient x:=1;Dish S {ingredient y:x;}",
     /You didn't provide a type/,
+  ],
+  [
+    "Wrong optional type",
+    "ingredient x: int?; x = poached 1.0;",
+    /Cannot assign a float\? to a int. It's like putting ketchup on a creme brulee. Stick to the recipe!/,
   ],
 ];
 

@@ -76,15 +76,16 @@ Sous {
                 | Exp8
   Exp8          = Exp9 "**" Exp8                                --power
                 | Exp9
-                | ("-" | "!"| random) Exp9        				--unary
+                | ("-" | "!"| poached | random) Exp9        	--unary
   Exp9          = true ~mut
                 | false ~mut
                 | floatlit ~mut
                 | intlit ~mut
                 | stringlit ~mut
+                | raw Type ~mut                                 --emptyopt
                 | Exp9 ("(" | "?(") ListOf<Exp, ","> ")" ~mut   --call
                 | Exp9 ("[" | "?[") Exp "]"                     --subscript
-                | Exp9_id ("." | "?.") Exp9_id "(" Params ")"	  --methodCall
+                | Exp9_id ("." | "?.") Exp9_id "(" Params ")"	--methodCall
                 | Exp9 ("." | "?.") id                          --member
                 | id                                            --id
                 | Type_array "(" ")" ~mut                       --emptyarray
@@ -103,6 +104,8 @@ Sous {
 //   runtimeerror  = "RuntimeError" ~alnum
 //   exception     = "Exception" ~alnum
 //   errorTypes    = typeerror | valueerror | keyerror | indexerror | runtimeerror | exception
+  poached       = "poached" ~alnum
+  raw           = "raw" ~alnum
   dish          = "Dish" ~alnum
   ingredient    = "ingredient" ~alnum
   recipe        = "recipe" ~alnum
@@ -126,7 +129,7 @@ Sous {
   const         = "const" ~alnum
   keyword       = ingredient | recipe | if | else | for | while | finally | return 
                 | break | continue | try | catch | true | false | in 
-                | ingredient | recipe | new | eightysix | const | random
+                | ingredient | recipe | new | eightysix | const | random | poached | raw
   single_letter_id = ~keyword letter | ~keyword "_"
   id          = ~keyword (letter | "_") (alnum | "_")*
   intlit      = digit+

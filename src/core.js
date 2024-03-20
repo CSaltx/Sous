@@ -14,6 +14,10 @@ export function functionDeclaration(name, fun, params, body) {
   return { kind: "FunctionDeclaration", name, fun, params, body };
 }
 
+export function emptyOptional(baseType) {
+  return { kind: "EmptyOptional", baseType, type: optionalType(baseType) };
+}
+
 export function classDeclaration(name, type) {
   return { kind: "ClassDeclaration", name, type };
 }

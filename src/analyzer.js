@@ -184,9 +184,9 @@ export default function analyze(match) {
   function equivalent(t1, t2) {
     return (
       t1 === t2 ||
-      //   (t1?.kind === "OptionalType" &&
-      //     t2?.kind === "OptionalType" &&
-      //     equivalent(t1.baseType, t2.baseType)) || TODO: FIXME: IF OPTIONAL TYPES ADDED FIX THIS
+      (t1?.kind === "OptionalType" &&
+        t2?.kind === "OptionalType" &&
+        equivalent(t1.baseType, t2.baseType)) ||
       (t1?.kind === "ArrayType" &&
         t2?.kind === "ArrayType" &&
         equivalent(t1.baseType, t2.baseType)) ||
@@ -234,8 +234,8 @@ export default function analyze(match) {
         return `(${paramTypes})->${returnType}`;
       case "ArrayType":
         return `[${typeDescription(type.baseType)}]`;
-      //   case "OptionalType":
-      //     return `${typeDescription(type.baseType)}?`; TODO: FIXME: CHECK AFTER OPTIONAL IMPLEMENTATION
+      case "OptionalType":
+        return `${typeDescription(type.baseType)}?`;
     }
   }
 
@@ -825,26 +825,20 @@ export default function analyze(match) {
     Exp8_unary(unaryOp, exp) {
       const [op, operand] = [unaryOp.sourceString, exp.rep()];
       let type;
-      //   if (op === "#") {
-      //     mustHaveAnArrayType(operand, { at: exp });
-      //     type = INT;
-      //   } else
       if (op === "-") {
         mustHaveNumericType(operand, { at: exp });
         type = operand.type;
       } else if (op === "!") {
         mustHaveBooleanType(operand, { at: exp });
         type = BOOLEAN;
+      } else if (op === "poached") {
+        type = core.optionalType(operand.type);
       } else if (op === "random") {
         mustHaveAnArrayType(operand, { at: exp });
         type = operand.type.baseType;
       }
       return core.unary(op, operand, type);
     },
-
-    // else if (op === "some") {
-    //     type = core.optionalType(operand.type);
-    //   } FIXME: TODO: IF ADDING OPTIONALS, REPLACE THIS
 
     Exp9_emptyarray(ty, _open, _close) {
       const type = ty.rep();
@@ -856,6 +850,10 @@ export default function analyze(match) {
       const elements = args.asIteration().children.map((e) => e.rep());
       mustAllHaveSameType(elements, { at: args });
       return core.arrayExpression(elements);
+    },
+
+    Exp9_emptyopt(_raw, type) {
+      return core.emptyOptional(type.rep());
     },
 
     Exp9_parens(_open, expression, _close) {
@@ -891,16 +889,24 @@ export default function analyze(match) {
     Exp9_member(exp, dot, id) {
       const object = exp.rep();
       // TODO: ADD in optionals
-      const classContext = context.lookup(object.type.name);
-      mustHaveBeenFound(object, object.sourceString, { at: exp });
-      mustNotBePrivate(id.sourceString[0] !== "_", {
-        at: id,
-      });
-      const field = classContext.fields.find(
-        (f) => f.variable === id.sourceString
-      );
-      mustHaveValidMember(field, id.sourceString, { at: id });
-      return core.memberExpression(object, dot.sourceString, field);
+      let classType;
+      if (dot.sourceString === "?.") {
+        // mustHaveAnOptionalStructType(object, { at: exp }); TODO: Reimplement this
+        classType = object.type.baseType;
+      } else {
+        mustBeAClass(context.lookup(object.type.name), { at: exp });
+        classType = object.type;
+        const classContext = context.lookup(object.type.name);
+        mustHaveBeenFound(object, object.sourceString, { at: exp });
+        mustNotBePrivate(id.sourceString[0] !== "_", {
+          at: id,
+        });
+        const field = classContext.fields.find(
+          (f) => f.variable === id.sourceString
+        );
+        mustHaveValidMember(field, id.sourceString, { at: id });
+        return core.memberExpression(object, dot.sourceString, field);
+      }
     },
 
     Exp9_call(exp, open, expList, _close) {

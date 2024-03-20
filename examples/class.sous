@@ -3,7 +3,7 @@
 Dish Cake {
     ingredient flour : string;
     ingredient sugar : string;
-    ingredient eggs : string;
+    ingredient eggs : string?;
 
     recipe MixIngredients() {
         serve("Mixing ingredients: ", flour, ", ", sugar, ", ", eggs);
@@ -15,7 +15,7 @@ Dish Cake {
 }
 
 eightysix("help", ValueError);
-Cake myCake := new Cake("2 cups", "1 cup", "3");
+Cake myCake := new Cake("2 cups", "1 cup", poached "hello");
 myCake.MixIngredients();
 ingredient flour := myCake.sugar;
 serve(stale);
