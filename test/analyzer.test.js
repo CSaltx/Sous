@@ -1,13 +1,6 @@
 import assert from "node:assert/strict";
 import parse from "../src/parser.js";
 import analyze from "../src/analyzer.js";
-import {
-  program,
-  variableDeclaration,
-  variable,
-  binary,
-  floatType,
-} from "../src/core.js";
 
 // Programs that are semantically correct
 const semanticChecks = [
@@ -180,7 +173,7 @@ const semanticErrors = [
   [
     "return outside function",
     "return;",
-    /Return can only appear in a function/,
+    /This is like asparagus and milk, return can only appear in a function/,
   ],
   [
     "return value from void function",
@@ -259,17 +252,17 @@ const semanticErrors = [
   [
     "call of uncallable",
     "ingredient x := 1;\nserve(x());",
-    /Call of non-function/,
+    /You're calling a non-function or non-constructor, you donut!/,
   ],
   [
     "Too many args",
     "recipe f(ingredient x: int) {}\nf(1,2);",
-    /1 argument\(s\) required but 2 passed/,
+    /1 ingredient\(s\) required but 2 passed/,
   ],
   [
     "Too few args",
     "recipe f(ingredient x: int) {}\nf();",
-    /1 argument\(s\) required but 0 passed/,
+    /1 ingredient\(s\) required but 0 passed/,
   ],
   [
     "Parameter type mismatch",

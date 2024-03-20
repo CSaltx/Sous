@@ -271,12 +271,20 @@ export default function analyze(match) {
   //   }
 
   function mustBeInAFunction(at) {
-    must(context.function, "Return can only appear in a function", at);
+    must(
+      context.function,
+      "This is like asparagus and milk, return can only appear in a function",
+      at
+    );
   }
 
   function mustBeCallable(e, at) {
     const callable = e.type?.kind === "FunctionType";
-    must(callable, "Call of non-function or non-constructor", at);
+    must(
+      callable,
+      "You're calling a non-function or non-constructor, you donut!",
+      at
+    );
   }
 
   function mustNotReturnAnything(f, at) {
@@ -304,11 +312,15 @@ export default function analyze(match) {
       "RuntimeError",
       "Exception",
     ];
-    must(errors.includes(e.sourceString), "Expected valid error type", at);
+    must(
+      errors.includes(e.sourceString),
+      "Does this look like a valid error? Cereal is harder to cook than this!",
+      at
+    );
   }
 
   function mustHaveCorrectArgumentCount(argCount, paramCount, at) {
-    const message = `${paramCount} argument(s) required but ${argCount} passed`;
+    const message = `${paramCount} ingredient(s) required but ${argCount} passed`;
     must(argCount === paramCount, message, at);
   }
 
