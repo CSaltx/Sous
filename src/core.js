@@ -18,8 +18,8 @@ export function emptyOptional(baseType) {
   return { kind: "EmptyOptional", baseType, type: optionalType(baseType) };
 }
 
-export function classDeclaration(name, type) {
-  return { kind: "ClassDeclaration", name, type };
+export function classDeclaration(type) {
+  return { kind: "ClassDeclaration", type };
 }
 
 export function classType(name, fields, methods) {
@@ -132,7 +132,7 @@ export function functionCall(callee, args) {
 // } TODO: CHECK HERE FIXME: CHECK HERE
 
 export function pythForStatement(iterator, low, high, body) {
-  return { kind: "ForStatement", iterator, low, high, body };
+  return { kind: "PythForStatement", iterator, low, high, body };
 }
 
 export function continueStatement() {
@@ -140,7 +140,7 @@ export function continueStatement() {
 }
 
 export function forStatement(init, test, update, body) {
-  return { kind: "ForStatement", init, test, update, body };
+  return { kind: "ForRangeStatement", init, test, update, body };
 }
 
 export function forCollectionStmt(iterator, collection, body) {
@@ -193,6 +193,7 @@ const floatFloatToFloatType = functionType([floatType, floatType], floatType);
 const stringToIntsType = functionType([stringType], arrayType(intType));
 const anyToVoidType = functionType([anyType], voidType);
 const anyToIntType = functionType([anyType], intType);
+const anyArrayToVoidType = functionType([arrayType(anyType)], voidType);
 
 export const standardLibrary = Object.freeze({
   int: intType,
@@ -208,7 +209,7 @@ export const standardLibrary = Object.freeze({
   IndexError: IndexError,
   RuntimeError: RuntimeError,
   π: variable("π", true, floatType),
-  serve: fun("serve", anyToVoidType),
+  serve: fun("serve", anyArrayToVoidType),
   sin: fun("sin", floatToFloatType),
   cos: fun("cos", floatToFloatType),
   exp: fun("exp", floatToFloatType),

@@ -25,7 +25,7 @@ Sous {
                 | "(" ListOf<Type, ","> ")" "->" Type                     --function
                 | id                                                      --id
   VarDecl       = ingredient nonemptyListOf<(VarInit | VarDecl), ","> ";" --list
-                | ingredient id ":" Type ";"                              --without_init
+                | ingredient id ":" Type "|"? const? ";"                  --without_init
   VarInit       = id ":=" Exp "|"? const?
 
   FunDecl       = recipe id "(" Params ")" (":" Type)? Block
@@ -85,7 +85,7 @@ Sous {
                 | raw Type ~mut                                 --emptyopt
                 | Exp9 ("(" | "?(") ListOf<Exp, ","> ")" ~mut   --call
                 | Exp9 ("[" | "?[") Exp "]"                     --subscript
-                | Exp9_id ("." | "?.") Exp9_id "(" Params ")"	--methodCall
+                | Exp9_id ("." | "?.") Exp9_id "(" ListOf<Exp, ","> ")"	--methodCall
                 | Exp9 ("." | "?.") id                          --member
                 | id                                            --id
                 | Type_array "(" ")" ~mut                       --emptyarray
