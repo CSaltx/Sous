@@ -350,9 +350,22 @@ export default function analyze(match) {
     },
 
     VarDecl_list(_ingredient, declarations, _semi) {
-      return declarations
-        .asIteration()
-        .children.map((declaration) => declaration.rep());
+      const declarationList = declarations.asIteration().children;
+      const variableDeclarations = [];
+
+      for (const declaration of declarationList) {
+        const varDecl = declaration.rep();
+        const variableName = varDecl.variable.name;
+        const initializer = varDecl.initializer;
+
+        context.add(variableName, varDecl.variable);
+
+        variableDeclarations.push(
+          core.variableDeclaration(varDecl.variable, initializer)
+        );
+      }
+
+      return core.variableList(variableDeclarations);
     },
 
     // WORKING
@@ -670,18 +683,21 @@ export default function analyze(match) {
 
     TryStmt(_try, block, catchClauses, finallyPart) {
       const tryBlock = block.rep();
-      const catchClause = catchClauses.children.map((clause) => clause.rep()); // Assuming catchClauses is an iteration
-      const finallyBlock =
-        finallyPart.children.length > 0 ? finallyPart.children[0].rep() : null;
-      return core.tryStatement(tryBlock, catchClause, finallyBlock);
+      const catchClause = catchClauses.children.map((clause) => clause.rep());
+      const finallyStatement = finallyPart?.children[0]?.rep() ?? null;
+      return core.tryStatement(tryBlock, catchClause, finallyStatement);
     },
 
+    // FIXME: HOW TO CONNECT ERROR VALUES TO ERROR VARIABLES SUCH THAT AN ERROR VARIABLE
+    // IS AN OBJECT CONTAINING E.MSG AND E.TYPE FOR THE MSG AND ERROR TYPE PASSED, WORK WITH ERRORSTMT TO FIX
+    // TODO: FIX THIS SOON
     Catch(_catch, _open, error, id, _close, block) {
       mustBeValidErrorType(error);
       const errorType = error.sourceString;
       const errorName = id.sourceString;
       mustNotAlreadyBeDeclared(errorName, { at: id });
       context = context.newChildContext();
+      //   const error = core.error(errorType); FIXME: THIS NEEDS TO BE REWORKED AND CORE ERROR MUST BE CREATED TO ACCOUNT FOR MSG
       context.add(errorName, errorType);
       const body = block.rep();
       context = context.parent;

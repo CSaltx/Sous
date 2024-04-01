@@ -6,6 +6,10 @@ export function variableDeclaration(variable, initializer) {
   return { kind: "VariableDeclaration", variable, initializer };
 }
 
+export function variableList(declarations) {
+  return { kind: "VariableList", declarations };
+}
+
 export function variable(name, readOnly, type) {
   return { kind: "Variable", name, readOnly, type };
 }
@@ -147,16 +151,16 @@ export function forCollectionStmt(iterator, collection, body) {
   return { kind: "ForStatement", iterator, collection, body };
 }
 
-export function tryStatement(block, catchClauses, finallyBlock) {
-  return { kind: "TryStatement", block, catchClauses, finallyBlock };
+export function tryStatement(body, catchClauses, finallyBlock) {
+  return { kind: "TryStatement", body, catchClauses, finallyBlock };
 }
 
-export function catchClause(errorType, name, body) {
-  return { kind: "CatchClause", errorType, name, body };
+export function catchClause(errorType, errorName, body) {
+  return { kind: "CatchClause", errorType, errorName, body };
 }
 
-export function finallyBlock(block) {
-  return { kind: "Finally", block };
+export function finallyBlock(body) {
+  return { kind: "Finally", body };
 }
 
 export function errorStatement(type, message) {

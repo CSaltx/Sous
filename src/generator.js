@@ -48,9 +48,10 @@ export default function generate(program) {
       // already checked that we never updated a const, so let is always fine.
       output.push(`let ${gen(d.variable)} = ${gen(d.initializer)};`);
     },
-
+    VariableList(l) {
+      l.declarations.forEach(gen);
+    },
     ClassDeclaration(d) {
-      console.log(d.type);
       output.push(`class ${gen(d.type.name)} {`);
       const type = d.type;
       output.push(
@@ -145,10 +146,51 @@ export default function generate(program) {
       s.body.forEach(gen);
       output.push("}");
     },
+
     ForStatement(s) {
       output.push(`for (let ${gen(s.iterator)} of ${gen(s.collection)}) {`);
       s.body.forEach(gen);
       output.push("}");
+    },
+
+    PythForStatement(s) {
+      const iter = gen(s.iterator);
+      output.push(
+        `for (let ${iter} = ${gen(s.low)}; ${iter} < ${gen(s.high)}; iter++){`
+      );
+      s.body.forEach(gen);
+      output.push("}");
+    },
+
+    ErrorStatement(s) {
+      output.push(`throw new ${s.type}(${gen(s.message)});`);
+    },
+
+    TryStatement(s) {
+      output.push("try {");
+      s.body.forEach(gen);
+      output.push("}");
+      s.catchClauses.forEach(gen);
+      gen(s.finallyBlock);
+    },
+
+    CatchClause(c) {
+      output.push(`catch (${c.errorName}) {`);
+      c.body.forEach(gen);
+      output.push("}");
+    },
+
+    Finally(s) {
+      output.push("finally {");
+      s.body.forEach(gen);
+      output.push("}");
+    },
+
+    ObjectConstructor(e) {
+      const name = gen(e.name);
+      const className = gen(e.type.name);
+      const fields = e.fields.map((f) => gen(f));
+      output.push(`let ${name} = new ${className}(${fields.join(", ")});`);
     },
     Conditional(e) {
       return `((${gen(e.test)}) ? (${gen(e.consequent)}) : (${gen(
