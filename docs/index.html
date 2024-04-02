@@ -13,15 +13,15 @@
     <header
       class="h-[7vh] flex justify-center items-center relative bg-white z-[999]"
     >
-      <h2 class="font-bold text-black text-[1.75vh]">
+      <h2 class="font-bold text-black text-[1.75vh] xs:text-[1.5vh]">
         BETA RELEASE OF <span class="text-[#5a00ff]">SOUS</span> IN PROGRESS
         — MADE WITH YOU IN MIND
       </h2>
     </header>
     <div class="nav bg-[#5a00ff] h-[93vh] flex flex-col relative">
       <nav class="h-[10vh] p-0">
-        <div class="flex gap-20">
-          <h1 class="font-bold text-[4vh] flex justify-center items-center">
+        <div class="flex justify-left gap-20 ms:gap-5 xs:gap-5">
+          <h1 class="font-bold text-[4vh] flex items-center xs:text-[3vh]">
             <img
               src="sous-500-no-bg.png"
               alt="Sous logo"
@@ -31,11 +31,11 @@
           </h1>
           <a
             href="https://github.com/CSaltx/Sous"
-            class="flex flex-row text-white justify-center items-center gap-2 font-bold"
+            class="flex flex-row text-white items-center gap-2 font-bold xs:text-[1.5vh]"
             target="_blank"
             rel="noopener noreferrer"
             >GitHub<svg
-              class="h-4 w-4"
+              class="h-4 w-4 xs:h-3 xs:w-3"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
               width="10"
@@ -51,9 +51,9 @@
           ></a>
           <a
             href="mailto:cschumit@lion.lmu.edu"
-            class="flex flex-row text-white justify-center items-center gap-2 font-bold z-[9999]"
+            class="flex flex-row text-white items-center gap-2 font-bold z-[9999] xs:text-[1.5vh]"
             >Contact<svg
-              class="h-4 w-4"
+              class="h-4 w-4 xs:h-3 xs:w-3"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
               width="10"
@@ -80,11 +80,13 @@
           />
         </div>
         <div class="w-screen flex justify-center items-center">
-          <h1 class="text-white text-[6vh] font-bold">
+          <h1
+            class="text-white text-[6vh] font-bold xs:text-[3vh] xs:text-center"
+          >
             A modern, culinary-inspired language
           </h1>
         </div>
-        <p class="text-white mt-[2vh] mb-[3vh] font-[500]">
+        <p class="text-white mt-[2vh] mb-[3vh] font-[500] text-center">
           Sous is a language made for culinary enthusiasts with the SoTA coding
           practices.
         </p>
@@ -100,17 +102,18 @@
         >
       </div>
     </div>
-    <div class="dev__bios grid grid-cols-4 gap-2 mx-2 my-10">
+    <div
+      class="dev__bios grid grid-cols-4 sm:grid-cols-1 xs:grid-cols-1 gap-2 mx-2 my-10"
+    >
       <div class="coby_dev__bio">
         <div class="w-full">
           <div class="bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-xl font-bold mt-2">Coby Schumitzky</h2>
             <p class="text-purple-800">Principal Developer</p>
             <p class="text-gray-700 mt-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. A, unde
-              veritatis consequatur temporibus consectetur eaque aspernatur vel
-              exercitationem excepturi aut maiores, molestiae libero tenetur
-              maxime suscipit, ex dolore dolorem. Officia?
+              Senior at Loyola Marymount University majoring in Computer
+              Science. Interested in Algorithm Engineering and ML/AI. Enjoys
+              cooking, competing, and learning.
             </p>
           </div>
         </div>
@@ -119,12 +122,11 @@
         <div class="w-full">
           <div class="bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-xl font-bold mt-2">Milla Penelope Markovic</h2>
-            <p class="text-purple-800">Project Lead, Associate Developer</p>
+            <p class="text-purple-800">Project Lead, Supporting Developer</p>
             <p class="text-gray-700 mt-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. A, unde
-              veritatis consequatur temporibus consectetur eaque aspernatur vel
-              exercitationem excepturi aut maiores, molestiae libero tenetur
-              maxime suscipit, ex dolore dolorem. Officia?
+              Senior at Loyola Marymount University majoring in Computer
+              Science. Interested in Cyber Security. Enjoys running and spending
+              time with family.
             </p>
           </div>
         </div>
@@ -135,10 +137,9 @@
             <h2 class="text-xl font-bold mt-2">Clifford Phillips</h2>
             <p class="text-purple-800">Supporting Developer</p>
             <p class="text-gray-700 mt-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. A, unde
-              veritatis consequatur temporibus consectetur eaque aspernatur vel
-              exercitationem excepturi aut maiores, molestiae libero tenetur
-              maxime suscipit, ex dolore dolorem. Officia?
+              Junior at Loyola Marymount University majoring in Computer Science
+              with focus on game development and AI. Enjoys cooking and making
+              games.
             </p>
           </div>
         </div>
@@ -149,22 +150,69 @@
             <h2 class="text-xl font-bold mt-2">Christina Choi</h2>
             <p class="text-purple-800">Supporting Developer</p>
             <p class="text-gray-700 mt-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. A, unde
-              veritatis consequatur temporibus consectetur eaque aspernatur vel
-              exercitationem excepturi aut maiores, molestiae libero tenetur
-              maxime suscipit, ex dolore dolorem. Officia?
+              Senior at Loyola Marymount University majoring in Computer
+              Science. Partial to iOS Development. Beach goer. Pickle hater.
             </p>
           </div>
         </div>
       </div>
     </div>
-    <main class="grid grid-cols-2">
-      <div class="language_info"></div>
-      <div class="language__features"></div>
+    <main class="grid grid-cols-3 sm:grid-cols-1 xs:grid-cols-1 bg-[#5a00ff]">
+      <div
+        class="feature__one flex flex-col justify-center items-center p-20 border-2"
+      >
+        <h1 class="font-bold text-white text-[3vh] mb-4">Restaurant-Themed</h1>
+        <p class="text-[#e3e3e3]">
+          Inspired by a love of cooking and food. Thematically aligned to infuse
+          retaurant aspects into every paradigm and programmatic notion.
+        </p>
+      </div>
+      <div
+        class="feature__two flex flex-col justify-center items-center p-20 border-2"
+      >
+        <h1 class="font-bold text-white text-[3vh] mb-4">Intuitive</h1>
+        <p class="text-[#e3e3e3]">
+          Blends features such as strong and static typing, garbage collection,
+          type inference, optionals, and Pyth-style loops.
+        </p>
+      </div>
+      <div
+        class="feature__three flex flex-col justify-center items-center p-20 border-2"
+      >
+        <h1 class="font-bold text-white text-[3vh] mb-4">For Everyone</h1>
+        <p class="text-[#e3e3e3]">
+          Easy to learn and use. For those who savor the art of code as much as
+          the art of cooking. Made for people who love to program.
+        </p>
+      </div>
     </main>
 
-    <div class="flex p-[30vh] flex-col h-[130vh]">
-      <h1 class="flex justify-center items-center font-bold text-[4vh]">
+    <main class="grid grid-cols-1 bg-[#5a00ff]">
+      <div
+        class="flex flex-col justify-center items-center border-10 mt-4 p-10"
+      >
+        <h1 class="font-bold text-white text-[4vh] mb-4">About Sous</h1>
+        <p
+          class="text-[#e3e3e3] text-[2vh] p-10 text-center lg:text-[2.5vh] md:text-[2vh] xs:text-[1.5vh] xs:p-2"
+        >
+          One of the most interesting facts about Sous is the fact that it is
+          the work of just four undergraduate Computer Science students. One of
+          the final projects for CS Majors at Loyola Marymount University is the
+          creation of their very own language. Sitting in class, our group
+          brainstormed ideas. A Candygrammer? A Golfing language? After much
+          discussion about various concepts and themes, we came to the
+          realization that each member of our group enjoys cooking. Finally, we
+          settled on a themed language combining some of our favorite features
+          from other languages. We began our work on Sous, an intuitive
+          cooking-themed language meant for everyone.
+        </p>
+      </div>
+    </main>
+
+    <div class="flex p-[3vh] flex-col h-[120vh] mt-4 xs:p-0 xs:h-[140vw]">
+      <h1
+        class="flex justify-center items-center font-bold text-[4vh] xs:text-[2.5vh]"
+      >
         Example Programs
       </h1>
       <div class="flex justify-center items-center gap-10 mb-4">
@@ -181,7 +229,7 @@
           Next
         </button>
       </div>
-      <div class="w-full flex flex-col items-center justify-center">
+      <div class="w-full flex flex-col items-center justify-center p-2 xs:p-0">
         <div
           id="slideshow"
           class="w-full flex justify-center items-center p-10 rounded-md"
@@ -194,22 +242,38 @@
           <!-- Example Programs -->
           <div class="slide w-full" style="display: block">
             <h3
-              class="text-lg font-semibold mb-4 flex justify-center items-center"
+              class="text-lg font-semibold mb-4 flex justify-center items-center sm:text-md xs:text-sm"
             >
-              Hello Program
+              Try-Catch-Finally Block
             </h3>
-            <code class="prettyprint linenums:4">serve("Hello World!");</code>
+            <code class="prettyprint linenums:4 xs:text-[2vw]">
+              // Prep, Rescue, Cleanup is Sous's version of Try-Catch-Finally
+              Blocks
+              <br />
+              prep {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient _x := 0;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;serve("Started");<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;eightysix("Error Entered", Exception);<br />
+              } rescue (Exception e) {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;serve(e);<br />
+              } rescue (ValueError v) {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;serve(v);<br />
+              } cleanup {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;serve("Finished");<br />
+              }</code
+            >
           </div>
           <div class="slide w-full" style="display: none">
             <h3
-              class="text-lg font-semibold mb-4 flex justify-center items-center"
+              class="text-lg font-semibold mb-4 flex justify-center items-center sm:text-md xs:text-sm"
             >
               Functions
             </h3>
-            <code class="prettyprint linenums:4">
+            <code class="prettyprint linenums:4 xs:text-[2vw]">
+              // Functions are created using the `recipe` keyword<br />
               ingredient temp := 350;<br />
               <br />
-              recipe CheckTemperature() {<br />
+              recipe CheckTemperature() : int {<br />
               &nbsp;&nbsp;&nbsp;if (temp > 300) {<br />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Temperature is hot
               enough for baking.");<br />
@@ -217,74 +281,88 @@
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Temperature too low.
               Increase heat.");<br />
               &nbsp;&nbsp;&nbsp;}<br />
+              &nbsp;&nbsp;&nbspreturn temp; <br />
               }<br />
               <br />
-              CheckTemperature();<br />
+              ingredient x := CheckTemperature();<br />
+              if (x != 300) { <br />
+              &nbsp;&nbsp;&nbspserve("Temperature is not 300 degrees."); <br />
+              } else {<br />
+              &nbsp;&nbsp;&nbspserve("Temperature is 300 degrees."); <br />
+              }<br />
             </code>
           </div>
           <div class="slide w-full" style="display: none">
             <h3
-              class="text-lg font-semibold mb-4 flex justify-center items-center"
+              class="text-lg font-semibold mb-4 flex justify-center items-center sm:text-md xs:text-sm"
             >
               Loops
             </h3>
-            <code class="prettyprint linenums:4">
+            <code class="prettyprint linenums:4 xs:text-[2vw]">
+              // Example of looping through an array using a regular for loop<br />
               ingredient menu := ["Soup", "Salad", "Steak", "Dessert"];<br />
               <br />
               for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx)
               {<br />
-              &nbsp;&nbsp;&nbsp;serve("Preparing ", menu[dishIdx]);<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;serve("Preparing ", menu[dishIdx]);<br />
               }<br />
               <br />
-              // OR<br />
+              // OR Using Pyth Style Syntax<br />
               <br />
               ingredient Z := 0;<br />
               ingredient C := count(menu);<br />
               <br />
               FDrZC {<br />
-              &nbsp;&nbsp;&nbsp;serve("Preparing ", menu[Z]);<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;serve("Preparing ", menu[Z]);<br />
+              } <br />
+              // OR Using python style `in` collection loop <br />
+              for (item in menu) {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;serve("Preparing ", item);<br />
               }<br />
             </code>
           </div>
           <div class="slide w-full" style="display: none">
             <h3
-              class="text-lg font-semibold mb-4 flex justify-center items-center"
+              class="text-lg font-semibold mb-4 flex justify-center items-center sm:text-md xs:text-sm"
             >
               Classes
             </h3>
-            <code class="prettyprint linenums:4">
+            <code class="prettyprint linenums:4 xs:text-[2vw]">
               // Class Usage: Initializing a class using Dish and creating a new
               Object<br />
-              <br />
               Dish Cake {<br />
-              &nbsp;&nbsp;&nbsp;ingredient flour;<br />
-              &nbsp;&nbsp;&nbsp;ingredient sugar;<br />
-              &nbsp;&nbsp;&nbsp;ingredient eggs;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient flour : string;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient sugar : string;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient eggs : string?;<br />
               <br />
-              &nbsp;&nbsp;&nbsp;recipe MixIngredients() {<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Mixing ingredients: ",
-              flour, ", ", sugar, ", ", eggs);<br />
-              &nbsp;&nbsp;&nbsp;}<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;recipe MixIngredients(ingredient x : int)
+              {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Mixing
+              ingredients: ", flour, ", ", sugar, ", ", eggs);<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;}<br />
               <br />
-              &nbsp;&nbsp;&nbsp;recipe Bake() {<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Baking the
+              &nbsp;&nbsp;&nbsp;&nbsp;recipe Bake() {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("Baking the
               cake...");<br />
-              &nbsp;&nbsp;&nbsp;}<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;}<br />
               }<br />
               <br />
-              Cake myCake := new Cake("2 cups", "1 cup", "3");<br />
+              Cake myCake := new Cake("2 cups", "1 cup", poached "hello");<br />
+              myCake.MixIngredients(2);<br />
               <br />
-              myCake.MixIngredients();<br />
-              myCake.Bake();<br />
+              ingredient flour := 5;<br />
+              serve(stale);<br />
+              myCake.Bake();
             </code>
           </div>
           <div class="slide w-full" style="display: none">
             <h3
-              class="text-lg font-semibold mb-4 flex justify-center items-center"
+              class="text-lg font-semibold mb-4 flex justify-center items-center sm:text-md xs:text-sm"
             >
               Fibbonnaci
             </h3>
-            <code class="prettyprint linenums:4">
+            <code class="prettyprint linenums:4 xs:text-[2vw]">
+              // Fibbonnaci in Sous<br />
               ingredient N := 10; // Number of Fibonacci numbers to generate<br />
               ingredient first := 0, second := 1, next := 0;<br />
               <br />
@@ -311,10 +389,89 @@
               '''
             </code>
           </div>
+          <div class="slide w-full" style="display: none">
+            <h3
+              class="text-lg font-semibold mb-4 flex justify-center items-center sm:text-md xs:text-sm"
+            >
+              Using Classes As Structs
+            </h3>
+            <code class="prettyprint linenums:4 xs:text-[2vw]">
+              // Classes can be used as structs for accessing members<br />
+              Dish Chef {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient name : string;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient age : int;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient isHeadChef : boolean;<br />
+              }<br />
+              <br />
+              Chef headChef := new Chef("Coby", 22, fresh);<br />
+              Chef sousChef := new Chef("Other", 21, stale);<br />
+              <br />
+              // serve("Head Chef is ", headChef.name);<br />
+              // serve("Sous Chef is ", sousChef.name);<br />
+              <br />
+              ingredient chefs := [headChef, sousChef];<br />
+              serve(chefs[0].isHeadChef);<br />
+              if (chefs[0].isHeadChef != fresh) {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;eightysix("Head Chef must be the first
+              indexed chef!", ValueError);<br />
+              } else {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;serve("valid ordering");<br />
+              }<br />
+            </code>
+          </div>
+          <div class="slide w-full" style="display: none">
+            <h3
+              class="text-lg font-semibold mb-4 flex justify-center items-center sm:text-md xs:text-sm"
+            >
+              Private Class Members
+            </h3>
+            <code class="prettyprint linenums:4 xs:text-[2vw]">
+              // Private members can be specified by a _ chaarcter as a prefix
+              to the variable name<br />
+              // These variables are only accessible within the class<br />
+              Dish FamilyRecipe {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient _ingredients : string;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient _instructions : string;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;ingredient _heat : int;<br />
+              <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;recipe bake() {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("start
+              preheating at ", _heat, " degrees");<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ingredient i :=
+              0;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ingredient e :=
+              _heat;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (i < e) {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("preheating...
+              ", i," degrees");<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i
+              = i + 1;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+              <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("preheating
+              complete");<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("mixing
+              ingredients: ", _ingredients);<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serve("baking at
+              ", _heat, " degrees for 30 minutes");<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;}<br />
+              }<br />
+              <br />
+              FamilyRecipe grandma_cookies := new FamilyRecipe("flour, sugar,
+              eggs, butter", "mix ingredients, bake at 350 degrees", 350);<br />
+              grandma_cookies.bake();<br />
+              <br />
+              '''<br />
+              grandma_cookies._ingredients; // Error: _ingredients is a private
+              variable<br />
+              '''
+            </code>
+          </div>
         </div>
       </div>
     </div>
-    <footer class="flex justify-center items-center font-bold p-5">
+    <footer class="flex justify-center items-center font-bold p-5 xs:text-sm">
       <p>&copy; 2024 Sous Language</p>
     </footer>
     <script>
