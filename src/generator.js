@@ -51,20 +51,15 @@ export default function generate(program) {
     VariableList(l) {
       l.declarations.forEach(gen);
     },
+    ClassType(c) {
+      return targetName(c);
+    },
     ClassDeclaration(d) {
-      output.push(`class ${gen(d.type.name)} {`);
+      output.push(`class ${gen(d.type)} {`);
       const type = d.type;
-      output.push(
-        `constructor(${gen(type.fields)
-          .map((f) => f.variable.name)
-          .join(", ")}) {`
-      );
+      output.push(`constructor(${type.fields.map(gen).join(", ")}) {`);
       for (let field of d.type.fields) {
-        output.push(
-          `this[${JSON.stringify(gen(field.variable))}] = ${gen(
-            field.variable
-          )};`
-        );
+        output.push(`this[${JSON.stringify(gen(field))}] = ${gen(field)};`);
       }
       output.push("}");
       // figure out this because methods dont have function before the name in javascript
@@ -108,6 +103,9 @@ export default function generate(program) {
     BreakStatement(s) {
       output.push("break;");
     },
+    ContinueStatement(s) {
+      output.push("continue;");
+    },
     ReturnStatement(s) {
       output.push(`return ${gen(s.expression)};`);
     },
@@ -139,8 +137,8 @@ export default function generate(program) {
     ForRangeStatement(s) {
       const up = gen(s.update);
       output.push(
-        `for (let ${gen(s.init[0].variable)} = ${gen(
-          s.init[0].initializer
+        `for (let ${gen(s.init.declarations[0].variable)} = ${gen(
+          s.init.declarations[0].initializer
         )}; ${gen(s.test)}; ${up}) {`
       );
       s.body.forEach(gen);
@@ -186,12 +184,24 @@ export default function generate(program) {
       output.push("}");
     },
 
+    MethodCall(m) {
+      output.push(
+        gen(m.object.name) +
+          "." +
+          gen(m.method) +
+          "(" +
+          m.args.join(", ") +
+          ");"
+      );
+    },
+
     ObjectConstructor(e) {
-      const name = gen(e.name);
-      const className = gen(e.type.name);
+      const name = targetName(e);
+      const className = gen(e.type);
       const fields = e.fields.map((f) => gen(f));
       output.push(`let ${name} = new ${className}(${fields.join(", ")});`);
     },
+
     Conditional(e) {
       return `((${gen(e.test)}) ? (${gen(e.consequent)}) : (${gen(
         e.alternate
@@ -219,6 +229,9 @@ export default function generate(program) {
       return `${gen(e.array)}[${gen(e.index)}]`;
     },
     ArrayExpression(e) {
+      if (e.type.baseType.kind === "ClassType") {
+        return `[${e.elements.map(targetName).join(",")}]`;
+      }
       return `[${e.elements.map(gen).join(",")}]`;
     },
     EmptyArray(e) {
@@ -227,8 +240,8 @@ export default function generate(program) {
     MemberExpression(e) {
       const object = gen(e.object);
       const field = JSON.stringify(gen(e.field));
-      const chain = e.op === "." ? "" : e.op;
-      return `(${object}${chain}[${field}])`;
+      const chain = e.op === "." ? "" : "?";
+      return `${object}${chain}[${field}]`;
     },
     FunctionCall(c) {
       const targetCode = standardFunctions.has(c.callee)

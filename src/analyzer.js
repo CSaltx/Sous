@@ -415,6 +415,13 @@ export default function analyze(match) {
       return core.variableDeclaration(variable, initializer);
     },
 
+    Field(_ingredient, id, _colon, type, _semi) {
+      const field = core.field(id.sourceString, type.rep());
+      mustNotAlreadyBeDeclared(id.sourceString, { at: id });
+      context.add(id.sourceString, field);
+      return field;
+    },
+
     Stmt_assign(variable, _eq, expression, _semicolon) {
       const source = expression.rep();
       const target = variable.rep();
@@ -634,6 +641,7 @@ export default function analyze(match) {
       context = context.parent;
       type.fields = fields;
       type.methods = methods;
+
       const classDeclaration = core.classDeclaration(type);
       //   context.add(className, classDeclaration);
       // TODO: ENSURE THAT MUSTHAVEDISTINCTFIELDS() IS NOT REQUIRED, SHOULD B FINE BUT IM GETTING ERROR WHEN NON-DISTINCT FIELDS
@@ -658,15 +666,14 @@ export default function analyze(match) {
       mustHaveBeenFound(classEntity, classId1.sourceString, { at: classId1 });
       mustBeAClass(classEntity, { at: classId1 });
       mustNotAlreadyBeDeclared(objName.sourceString, { at: objName });
-
       const actualArgs = args.asIteration().children.map((arg) => arg.rep());
-      const expectedFields = classEntity.fields.map((field) => field.variable);
+
+      const expectedFields = classEntity.fields;
       must(
         actualArgs.length === expectedFields.length,
         `Expected ${expectedFields.length} argument(s), but got ${actualArgs.length}`,
         { at: args }
       );
-
       actualArgs.forEach((arg, i) => {
         mustBothHaveTheSameType(expectedFields[i], arg, { at: args });
       });
@@ -936,9 +943,7 @@ export default function analyze(match) {
         at: id,
       });
 
-      const field = classContext.fields.find(
-        (f) => f.variable.name === id.sourceString
-      );
+      const field = classContext.fields.find((f) => f.name === id.sourceString);
       mustHaveValidMember(field, id.sourceString, { at: id });
       return core.memberExpression(object, dot.sourceString, field);
     },

@@ -27,13 +27,14 @@ Sous {
   VarDecl       = ingredient nonemptyListOf<VarInit, ","> ";" --list
                 | ingredient id ":" Type "|"? const? ";"                  --without_init
   VarInit       = id ":=" Exp "|"? const?
+  Field         = ingredient id ":" Type ";"
 
   FunDecl       = recipe id "(" Params ")" (":" Type)? Block
   Params        = ListOf<Param, ",">
   Param         = ingredient id ":" Type
   Block         = "{" Stmt* "}"
 
-  ClassDecl     = dish id "{" (VarDecl)* (FunDecl)* "}"
+  ClassDecl     = dish id "{" (Field)* (FunDecl)* "}"
 
   ObjDecl       = Type id ":=" new Type "(" ListOf<Exp, ","> ")" ";"
 

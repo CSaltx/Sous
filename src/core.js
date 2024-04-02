@@ -38,6 +38,10 @@ export function fun(name, type) {
   return { kind: "Function", name, type };
 }
 
+export function field(name, type) {
+  return { kind: "Field", name, type };
+}
+
 export function arrayType(baseType) {
   return { kind: "ArrayType", baseType };
 }
