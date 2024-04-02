@@ -3,7 +3,7 @@ Most CSS should be done via tailwind which is installed but must be pre-deployed
 > npm run build
 in terminal. */
 
-/* ! tailwindcss v3.4.3 | MIT License | https://tailwindcss.com */
+/* ! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com */
 
 /*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
@@ -214,8 +214,6 @@ textarea {
   /* 1 */
   line-height: inherit;
   /* 1 */
-  letter-spacing: inherit;
-  /* 1 */
   color: inherit;
   /* 1 */
   margin: 0;
@@ -239,9 +237,9 @@ select {
 */
 
 button,
-input:where([type='button']),
-input:where([type='reset']),
-input:where([type='submit']) {
+[type='button'],
+[type='reset'],
+[type='submit'] {
   -webkit-appearance: button;
   /* 1 */
   background-color: transparent;
@@ -497,10 +495,6 @@ video {
   --tw-backdrop-opacity:  ;
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
-  --tw-contain-size:  ;
-  --tw-contain-layout:  ;
-  --tw-contain-paint:  ;
-  --tw-contain-style:  ;
 }
 
 ::backdrop {
@@ -551,10 +545,6 @@ video {
   --tw-backdrop-opacity:  ;
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
-  --tw-contain-size:  ;
-  --tw-contain-layout:  ;
-  --tw-contain-paint:  ;
-  --tw-contain-style:  ;
 }
 
 .pointer-events-none {
@@ -635,8 +625,8 @@ video {
   height: 10vh;
 }
 
-.h-\[130vh\] {
-  height: 130vh;
+.h-\[120vh\] {
+  height: 120vh;
 }
 
 .h-\[50vh\] {
@@ -750,6 +740,10 @@ video {
   padding: 2.5rem;
 }
 
+.p-2 {
+  padding: 0.5rem;
+}
+
 .p-20 {
   padding: 5rem;
 }
@@ -762,8 +756,8 @@ video {
   padding: 1.5rem;
 }
 
-.p-\[30vh\] {
-  padding: 30vh;
+.p-\[3vh\] {
+  padding: 3vh;
 }
 
 .px-4 {
@@ -784,6 +778,10 @@ video {
 .py-\[1\.5vh\] {
   padding-top: 1.5vh;
   padding-bottom: 1.5vh;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .text-\[1\.75vh\] {
@@ -916,14 +914,75 @@ html {
   background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }
 
-@media (max-width: 639px) {
+@media (min-width: 0px) and (max-width: 639px) {
+  .xs\:h-3 {
+    height: 0.75rem;
+  }
+
+  .xs\:h-\[140vw\] {
+    height: 140vw;
+  }
+
+  .xs\:w-3 {
+    width: 0.75rem;
+  }
+
   .xs\:grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .xs\:gap-5 {
+    gap: 1.25rem;
+  }
+
+  .xs\:p-0 {
+    padding: 0px;
+  }
+
+  .xs\:p-2 {
+    padding: 0.5rem;
+  }
+
+  .xs\:text-center {
+    text-align: center;
+  }
+
+  .xs\:text-\[1\.5vh\] {
+    font-size: 1.5vh;
+  }
+
+  .xs\:text-\[2\.5vh\] {
+    font-size: 2.5vh;
+  }
+
+  .xs\:text-\[2vw\] {
+    font-size: 2vw;
+  }
+
+  .xs\:text-\[3vh\] {
+    font-size: 3vh;
+  }
+
+  .xs\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 }
 
 @media (min-width: 640px) and (max-width: 767px) {
   .sm\:grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .md\:text-\[2vh\] {
+    font-size: 2vh;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .lg\:text-\[2\.5vh\] {
+    font-size: 2.5vh;
   }
 }
