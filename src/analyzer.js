@@ -234,8 +234,6 @@ export default function analyze(match) {
         return "boolean";
       case "VoidType":
         return "void";
-      case "AnyType":
-        return "any";
       case "FunctionType":
         const paramTypes = type.paramTypes.map(typeDescription).join(", ");
         const returnType = typeDescription(type.returnType);
@@ -248,6 +246,7 @@ export default function analyze(match) {
   }
 
   function mustBeAssignable(e, { toType: type }, at) {
+    console.log(typeDescription(e.type));
     const message = `Cannot assign a ${typeDescription(
       e.type
     )} to a ${typeDescription(
@@ -421,12 +420,7 @@ export default function analyze(match) {
     Stmt_assign(variable, _eq, expression, _semicolon) {
       const source = expression.rep();
       const target = variable.rep();
-      mustHaveBeenFound(target, variable.sourceString, variable);
-      let toType = target.type;
-      if (toType.kind === "OptionalType") {
-        toType = toType.baseType;
-      }
-      mustBeAssignable(source, { toType: toType }, { at: variable });
+      mustBeAssignable(source, { toType: target.type }, { at: variable });
       mustNotBeReadOnly(target, { at: variable });
       return core.assignment(target, source);
     },

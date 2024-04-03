@@ -1,8 +1,4 @@
-Dish x {
-    recipe s (ingredient y : int) {
-        serve(y);
-    }
-}
-
-x test := new x();
-test.s(5);
+ingredient a := raw int;
+ingredient b:=poached 1;
+a=b;
+b=a;

@@ -16,7 +16,10 @@ const semanticChecks = [
   ["assign to array element", "ingredient a := [1,2,3] | const; a[1]=100;"],
   ["short return", "recipe f() { return; }"],
   ["long return", "recipe f(): boolean { return fresh; }"],
-  //   ["assign optionals", "ingredient a = no int;ingredient b=some 1;a=b;b=a;"],
+  [
+    "assign optionals",
+    "ingredient a := raw int;ingredient b:=poached 1;a=b;b=a;",
+  ],
   ["return in nested if", "recipe f() {if (fresh) {return;}}"],
   ["break in nested if", "while (stale) {if (fresh) {break;}}"],
   ["long if", "if (fresh) {serve(1);} else {serve(3);}"],
@@ -29,8 +32,9 @@ const semanticChecks = [
   ["conditionals with ints", "serve(fresh ? 8 : 5);"],
   ["conditionals with floats", "serve(1<2 ? 8.0 : -5.22);"],
   ["conditionals with strings", 'serve(1<2 ? "x" : "y");'],
-  ["??", "ingredient x: int?; x = 5; serve(x ?? 0);"],
-  ["nested ??", "ingredient x: int?; x = 5;serve(x ?? 8 ?? 0);"],
+  ["??", "ingredient x: int?; x = poached 5; serve(x ?? 0);"],
+  ["array type", "ingredient x := [5, 2, 3, 4];"],
+  ["nested ??", "ingredient x: int?; x = poached 5;serve(x ?? 8 ?? 0);"],
   ["||", "serve(fresh||1<2||stale||!fresh);"],
   ["&&", "serve(fresh&&1<2&&stale&&!fresh);"],
   ["bit ops", "serve((1&2)|(9^3));"],
@@ -65,6 +69,8 @@ const semanticChecks = [
     "Dish S{} S y := new S(); S z := new S(); ingredient x:=[y, z];",
   ],
   ["assigned functions", "recipe f() {}\ningredient g := f;g = f;"],
+  ["class with method", "Dish S {recipe m() {}} S y := new S(); y.m();"],
+  ["array of optionals", "ingredient x := [poached 1, poached 2, poached 3];"],
   [
     "call of assigned functions",
     "recipe f(ingredient x: int) {}\ningredient g:=f;g(1);",
@@ -130,7 +136,7 @@ const semanticChecks = [
   ["float without init", "ingredient x : float;"],
   ["error Without type", 'eightysix("Error Message", Exception);'],
   ["decrement", "for (ingredient x := 0; x < 10; --x) {}"],
-  ["optionals", "ingredient x: int?; x = 5; serve(x);"],
+  ["optionals", "ingredient x: int?; x = poached 5; serve(x);"],
   ["optional ingredient", "ingredient x := poached 5;"],
   ["empty optional ingredient", "ingredient r := raw int;"],
   [
@@ -327,7 +333,27 @@ const semanticErrors = [
   [
     "Wrong optional type",
     "ingredient x: int?; x = poached 1.0;",
-    /Cannot assign a float\? to a int. It's like putting ketchup on a creme brulee. Stick to the recipe!/,
+    /Cannot assign a float\? to a int\?./,
+  ],
+  [
+    "return mismatch in method",
+    "Dish S {recipe m(): int {return fresh;}}",
+    /Cannot assign a boolean to a int/,
+  ],
+  [
+    "missing argument in method call",
+    "Dish S {recipe m(ingredient x: int) {}} S y := new S(); y.m();",
+    /1 ingredient\(s\) required but 0 passed/,
+  ],
+  [
+    "accessing private field",
+    "Dish S {ingredient _x: int;} S y := new S(1); serve(y._x);",
+    /Cannot access private member/,
+  ],
+  [
+    "non-class member access",
+    "ingredient x := 5; serve(x.y);",
+    /Expected a Dish, but this is like asking for a cake and getting a candle instead!/,
   ],
 ];
 
