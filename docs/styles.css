@@ -42,7 +42,7 @@ html {
 }
 
 .slide {
-  height: 100vh;
+  height: 90vh;
 }
 
 @media screen and (max-width: 690px) {
