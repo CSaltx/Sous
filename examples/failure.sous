@@ -1,4 +1,2 @@
-ingredient a := raw int;
-ingredient b:=poached 1;
-a=b;
-b=a;
+ingredient a : any;
+a = 5;

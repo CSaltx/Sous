@@ -234,6 +234,8 @@ export default function analyze(match) {
         return "boolean";
       case "VoidType":
         return "void";
+      case "AnyType":
+        return "any";
       case "FunctionType":
         const paramTypes = type.paramTypes.map(typeDescription).join(", ");
         const returnType = typeDescription(type.returnType);
@@ -246,7 +248,6 @@ export default function analyze(match) {
   }
 
   function mustBeAssignable(e, { toType: type }, at) {
-    console.log(typeDescription(e.type));
     const message = `Cannot assign a ${typeDescription(
       e.type
     )} to a ${typeDescription(

@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import parse from "../src/parser.js";
 import analyze from "../src/analyzer.js";
+import {
+  program,
+  variableDeclaration,
+  variable,
+  binary,
+  floatType,
+  variableList,
+} from "../src/core.js";
 
 // Programs that are semantically correct
 const semanticChecks = [
@@ -143,6 +151,7 @@ const semanticChecks = [
     "optional ingredients in class",
     'Dish S {ingredient x: int?; ingredient y: string?;} S z := new S(raw int, raw string); S w := new S(poached 5, poached "hello"); serve(w?.x);',
   ],
+  ["any type", "ingredient a : any; a = 5;"],
 ];
 
 // Programs that are syntactically correct but have semantic errors
@@ -368,15 +377,17 @@ describe("The analyzer", () => {
       assert.throws(() => analyze(parse(source)), errorMessagePattern);
     });
   }
-  //   it("produces the expected representation for a trivial program", () => {
-  //     assert.deepEqual(
-  //       analyze(parse("ingredient x := π + 2.2;")),
-  //       program([
-  //         variableDeclaration(
-  //           binary("+", variable("π", true, floatType), 2.2, floatType),
-  //           variable("x", stale, floatType)
-  //         ),
-  //       ])
-  //     );
-  //   });
+  it("produces the expected representation for a trivial program", () => {
+    assert.deepEqual(
+      analyze(parse("ingredient x := π + 2.2;")),
+      program([
+        variableList([
+          variableDeclaration(
+            variable("x", false, floatType),
+            binary("+", variable("π", true, floatType), 2.2, floatType)
+          ),
+        ]),
+      ])
+    );
+  });
 });
