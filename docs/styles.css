@@ -40,3 +40,19 @@ html {
   transition: cubic-bezier(1, 0, 0, 1);
   transition-duration: 0.2s;
 }
+
+.slide {
+  height: 80vh;
+}
+
+@media screen and (max-width: 690px) {
+  .slide {
+    height: 90vh;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .slide {
+    height: 60vh;
+  }
+}

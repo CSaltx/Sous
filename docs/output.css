@@ -625,6 +625,10 @@ video {
   height: 10vh;
 }
 
+.h-\[120vh\] {
+  height: 120vh;
+}
+
 .h-\[130vh\] {
   height: 130vh;
 }
@@ -909,6 +913,22 @@ html {
   transition-duration: 0.2s;
 }
 
+.slide {
+  height: 80vh;
+}
+
+@media screen and (max-width: 690px) {
+  .slide {
+    height: 90vh;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .slide {
+    height: 60vh;
+  }
+}
+
 .hover\:bg-blue-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(29 78 216 / var(--tw-bg-opacity));
@@ -971,10 +991,6 @@ html {
 }
 
 @media (min-width: 640px) and (max-width: 767px) {
-  .sm\:h-\[140vw\] {
-    height: 140vw;
-  }
-
   .sm\:grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
