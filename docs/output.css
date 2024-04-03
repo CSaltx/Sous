@@ -625,8 +625,8 @@ video {
   height: 10vh;
 }
 
-.h-\[120vh\] {
-  height: 120vh;
+.h-\[130vh\] {
+  height: 130vh;
 }
 
 .h-\[50vh\] {
@@ -919,10 +919,6 @@ html {
     height: 0.75rem;
   }
 
-  .xs\:h-\[140vw\] {
-    height: 140vw;
-  }
-
   .xs\:w-3 {
     width: 0.75rem;
   }
@@ -941,6 +937,11 @@ html {
 
   .xs\:p-2 {
     padding: 0.5rem;
+  }
+
+  .xs\:px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 
   .xs\:text-center {
@@ -970,6 +971,10 @@ html {
 }
 
 @media (min-width: 640px) and (max-width: 767px) {
+  .sm\:h-\[140vw\] {
+    height: 140vw;
+  }
+
   .sm\:grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
