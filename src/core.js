@@ -6,6 +6,10 @@ export function variableDeclaration(variable, initializer) {
   return { kind: "VariableDeclaration", variable, initializer };
 }
 
+export function variableList(declarations) {
+  return { kind: "VariableList", declarations };
+}
+
 export function variable(name, readOnly, type) {
   return { kind: "Variable", name, readOnly, type };
 }
@@ -18,8 +22,8 @@ export function emptyOptional(baseType) {
   return { kind: "EmptyOptional", baseType, type: optionalType(baseType) };
 }
 
-export function classDeclaration(name, type) {
-  return { kind: "ClassDeclaration", name, type };
+export function classDeclaration(type) {
+  return { kind: "ClassDeclaration", type };
 }
 
 export function classType(name, fields, methods) {
@@ -32,6 +36,10 @@ export function objectConstructor(name, fields, type) {
 
 export function fun(name, type) {
   return { kind: "Function", name, type };
+}
+
+export function field(name, type) {
+  return { kind: "Field", name, type };
 }
 
 export function arrayType(baseType) {
@@ -132,7 +140,7 @@ export function functionCall(callee, args) {
 // } TODO: CHECK HERE FIXME: CHECK HERE
 
 export function pythForStatement(iterator, low, high, body) {
-  return { kind: "ForStatement", iterator, low, high, body };
+  return { kind: "PythForStatement", iterator, low, high, body };
 }
 
 export function continueStatement() {
@@ -140,23 +148,23 @@ export function continueStatement() {
 }
 
 export function forStatement(init, test, update, body) {
-  return { kind: "ForStatement", init, test, update, body };
+  return { kind: "ForRangeStatement", init, test, update, body };
 }
 
 export function forCollectionStmt(iterator, collection, body) {
   return { kind: "ForStatement", iterator, collection, body };
 }
 
-export function tryStatement(block, catchClauses, finallyBlock) {
-  return { kind: "TryStatement", block, catchClauses, finallyBlock };
+export function tryStatement(body, catchClauses, finallyBlock) {
+  return { kind: "TryStatement", body, catchClauses, finallyBlock };
 }
 
-export function catchClause(errorType, name, body) {
-  return { kind: "CatchClause", errorType, name, body };
+export function catchClause(errorType, errorName, body) {
+  return { kind: "CatchClause", errorType, errorName, body };
 }
 
-export function finallyBlock(block) {
-  return { kind: "Finally", block };
+export function finallyBlock(body) {
+  return { kind: "Finally", body };
 }
 
 export function errorStatement(type, message) {
@@ -193,6 +201,7 @@ const floatFloatToFloatType = functionType([floatType, floatType], floatType);
 const stringToIntsType = functionType([stringType], arrayType(intType));
 const anyToVoidType = functionType([anyType], voidType);
 const anyToIntType = functionType([anyType], intType);
+const anyArrayToVoidType = functionType([arrayType(anyType)], voidType);
 
 export const standardLibrary = Object.freeze({
   int: intType,
@@ -208,7 +217,7 @@ export const standardLibrary = Object.freeze({
   IndexError: IndexError,
   RuntimeError: RuntimeError,
   π: variable("π", true, floatType),
-  serve: fun("serve", anyToVoidType),
+  serve: fun("serve", anyArrayToVoidType),
   sin: fun("sin", floatToFloatType),
   cos: fun("cos", floatToFloatType),
   exp: fun("exp", floatToFloatType),

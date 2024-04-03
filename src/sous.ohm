@@ -12,7 +12,7 @@ Sous {
                 | break ";"                        --breakstmt
                 | ContinueStmt
                 | return Exp ";"                   --returnstmt
-                | return ";"				               --shortreturn
+                | return ";"				       --shortreturn
                 | ErrorStmt
                 | WhileStmt
                 | IfStmt
@@ -24,16 +24,17 @@ Sous {
                 | "[" Type "]"                                            --array
                 | "(" ListOf<Type, ","> ")" "->" Type                     --function
                 | id                                                      --id
-  VarDecl       = ingredient nonemptyListOf<(VarInit | VarDecl), ","> ";" --list
-                | ingredient id ":" Type ";"                              --without_init
+  VarDecl       = ingredient nonemptyListOf<VarInit, ","> ";" --list
+                | ingredient id ":" Type ";"                  --without_init
   VarInit       = id ":=" Exp "|"? const?
+  Field         = ingredient id ":" Type ";"
 
   FunDecl       = recipe id "(" Params ")" (":" Type)? Block
   Params        = ListOf<Param, ",">
   Param         = ingredient id ":" Type
   Block         = "{" Stmt* "}"
 
-  ClassDecl     = dish id "{" (VarDecl)* (FunDecl)* "}"
+  ClassDecl     = dish id "{" (Field)* (FunDecl)* "}"
 
   ObjDecl       = Type id ":=" new Type "(" ListOf<Exp, ","> ")" ";"
 
@@ -85,7 +86,7 @@ Sous {
                 | raw Type ~mut                                 --emptyopt
                 | Exp9 ("(" | "?(") ListOf<Exp, ","> ")" ~mut   --call
                 | Exp9 ("[" | "?[") Exp "]"                     --subscript
-                | Exp9_id ("." | "?.") Exp9_id "(" Params ")"	--methodCall
+                | Exp9_id ("." | "?.") Exp9_id "(" ListOf<Exp, ","> ")"	--methodCall
                 | Exp9 ("." | "?.") id                          --member
                 | id                                            --id
                 | Type_array "(" ")" ~mut                       --emptyarray

@@ -5,7 +5,7 @@ Dish Cake {
     ingredient sugar : string;
     ingredient eggs : string?;
 
-    recipe MixIngredients() {
+    recipe MixIngredients(ingredient x : int) {
         serve("Mixing ingredients: ", flour, ", ", sugar, ", ", eggs);
     }
 
@@ -16,8 +16,9 @@ Dish Cake {
 
 eightysix("help", ValueError);
 Cake myCake := new Cake("2 cups", "1 cup", poached "hello");
-myCake.MixIngredients();
-ingredient flour := myCake.sugar;
+myCake.MixIngredients(2);
+
+ingredient flour := 5;
 serve(stale);
 myCake.Bake();
 
@@ -39,6 +40,6 @@ Dish PrivateCake {
     }
 }
 
-PrivateCake grandma_recipe := new PrivateCake("prviate family recipe");
+PrivateCake grandma_recipe := new PrivateCake("private family recipe");
 grandma_recipe.bake(); // works
 // grandma_recipe._recipe; will error because _recipe is private

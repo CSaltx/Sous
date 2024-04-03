@@ -1,1 +1,8 @@
-x := t;
+Dish x {
+    recipe s (ingredient y : int) {
+        serve(y);
+    }
+}
+
+x test := new x();
+test.s(5);

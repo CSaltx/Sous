@@ -13,5 +13,5 @@ export default function compile(source, outputType) {
   if (outputType === "analyzed") return analyzed;
   //   const optimized = optimize(analyzed);
   //   if (outputType === "optimized") return optimized;
-  //   return generate(analyzed);
+  return generate(analyzed);
 }

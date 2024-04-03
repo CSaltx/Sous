@@ -156,7 +156,7 @@ export default function analyze(match) {
     );
   }
   function mustNotBePrivate(e, at) {
-    must(e, "Cannot access private member", at);
+    must(e.sourceString[0] !== "_", "Cannot access private member", at);
   }
 
   //   function includesAsField(structType, type) {
@@ -195,6 +195,14 @@ export default function analyze(match) {
         equivalent(t1.returnType, t2.returnType) &&
         t1.paramTypes.length === t2.paramTypes.length &&
         t1.paramTypes.every((t, i) => equivalent(t, t2.paramTypes[i])))
+    );
+  }
+
+  function mustHaveConstString(modifier, at) {
+    must(
+      modifier.sourceString === "const",
+      "Cannot have section without modifier",
+      at
     );
   }
 
@@ -346,19 +354,33 @@ export default function analyze(match) {
     },
 
     VarDecl_list(_ingredient, declarations, _semi) {
-      return declarations
-        .asIteration()
-        .children.map((declaration) => declaration.rep());
+      const declarationList = declarations.asIteration().children;
+      const variableDeclarations = [];
+
+      for (const declaration of declarationList) {
+        const varDecl = declaration.rep();
+        const variableName = varDecl.variable.name;
+        const initializer = varDecl.initializer;
+
+        context.add(variableName, varDecl.variable);
+
+        variableDeclarations.push(
+          core.variableDeclaration(varDecl.variable, initializer)
+        );
+      }
+
+      return core.variableList(variableDeclarations);
     },
 
     // WORKING
     VarDecl_without_init(_ingredient, id, _colon, type, _semi) {
       const variableName = id.sourceString;
       const variableType = type.rep();
+      const readOnly = false;
       mustNotAlreadyBeDeclared(variableName, { at: id });
-      const value =
+      const initializer =
         variableType === INT
-          ? 0
+          ? 0n
           : variableType === FLOAT
           ? 0.0
           : variableType === STRING
@@ -366,10 +388,9 @@ export default function analyze(match) {
           : variableType === BOOLEAN
           ? false
           : null;
-      const variable = core.variableDeclaration(variableName, value);
-      variable.type = variableType; // Ensure type is set correctly
+      const variable = core.variable(variableName, readOnly, variableType);
       context.add(variableName, variable);
-      return variable;
+      return core.variableDeclaration(variable, initializer);
     },
 
     // WORKING
@@ -377,6 +398,9 @@ export default function analyze(match) {
       // true declaration, not just initialization
       const initializer = exp.rep();
       const readOnly = modifier.sourceString === "const";
+      if (_section.sourceString === "|") {
+        mustHaveConstString(modifier, { at: _section });
+      }
       const variable = core.variable(
         id.sourceString,
         readOnly,
@@ -385,6 +409,13 @@ export default function analyze(match) {
       mustNotAlreadyBeDeclared(id.sourceString, { at: id });
       context.add(id.sourceString, variable);
       return core.variableDeclaration(variable, initializer);
+    },
+
+    Field(_ingredient, id, _colon, type, _semi) {
+      const field = core.field(id.sourceString, type.rep());
+      mustNotAlreadyBeDeclared(id.sourceString, { at: id });
+      context.add(id.sourceString, field);
+      return field;
     },
 
     Stmt_assign(variable, _eq, expression, _semicolon) {
@@ -606,7 +637,8 @@ export default function analyze(match) {
       context = context.parent;
       type.fields = fields;
       type.methods = methods;
-      const classDeclaration = core.classDeclaration(className, type);
+
+      const classDeclaration = core.classDeclaration(type);
       //   context.add(className, classDeclaration);
       // TODO: ENSURE THAT MUSTHAVEDISTINCTFIELDS() IS NOT REQUIRED, SHOULD B FINE BUT IM GETTING ERROR WHEN NON-DISTINCT FIELDS
       return classDeclaration;
@@ -630,15 +662,14 @@ export default function analyze(match) {
       mustHaveBeenFound(classEntity, classId1.sourceString, { at: classId1 });
       mustBeAClass(classEntity, { at: classId1 });
       mustNotAlreadyBeDeclared(objName.sourceString, { at: objName });
-
       const actualArgs = args.asIteration().children.map((arg) => arg.rep());
+
       const expectedFields = classEntity.fields;
       must(
         actualArgs.length === expectedFields.length,
         `Expected ${expectedFields.length} argument(s), but got ${actualArgs.length}`,
         { at: args }
       );
-
       actualArgs.forEach((arg, i) => {
         mustBothHaveTheSameType(expectedFields[i], arg, { at: args });
       });
@@ -655,18 +686,21 @@ export default function analyze(match) {
 
     TryStmt(_try, block, catchClauses, finallyPart) {
       const tryBlock = block.rep();
-      const catchClause = catchClauses.children.map((clause) => clause.rep()); // Assuming catchClauses is an iteration
-      const finallyBlock =
-        finallyPart.children.length > 0 ? finallyPart.children[0].rep() : null;
-      return core.tryStatement(tryBlock, catchClause, finallyBlock);
+      const catchClause = catchClauses.children.map((clause) => clause.rep());
+      const finallyStatement = finallyPart?.children[0]?.rep() ?? null;
+      return core.tryStatement(tryBlock, catchClause, finallyStatement);
     },
 
+    // FIXME: HOW TO CONNECT ERROR VALUES TO ERROR VARIABLES SUCH THAT AN ERROR VARIABLE
+    // IS AN OBJECT CONTAINING E.MSG AND E.TYPE FOR THE MSG AND ERROR TYPE PASSED, WORK WITH ERRORSTMT TO FIX
+    // TODO: FIX THIS SOON
     Catch(_catch, _open, error, id, _close, block) {
       mustBeValidErrorType(error);
       const errorType = error.sourceString;
       const errorName = id.sourceString;
       mustNotAlreadyBeDeclared(errorName, { at: id });
       context = context.newChildContext();
+      //   const error = core.error(errorType); FIXME: THIS NEEDS TO BE REWORKED AND CORE ERROR MUST BE CREATED TO ACCOUNT FOR MSG
       context.add(errorName, errorType);
       const body = block.rep();
       context = context.parent;
@@ -868,7 +902,7 @@ export default function analyze(match) {
     },
 
     // working!
-    Exp9_methodCall(objectId, _dot, methodId, _open, Params, _closed) {
+    Exp9_methodCall(objectId, _dot, methodId, _open, expList, _closed) {
       const object = objectId.rep();
       mustBeAClass(context.lookup(object.type.name), { at: objectId });
       const classContext = context.lookup(object.type.name);
@@ -877,7 +911,10 @@ export default function analyze(match) {
       );
       mustBeAMethod(method, methodId, { at: methodId });
       const methodDecl = method["fun"];
-      const args = Params.rep();
+      const exps = expList.asIteration().children;
+      const args = exps.map((exp) => {
+        return exp.rep();
+      });
       //   mustBeCallable(methodDecl, { at: methodId });
       const targetTypes = methodDecl.type.paramTypes;
       mustHaveCorrectArgumentCount(args.length, targetTypes.length, {
@@ -888,44 +925,48 @@ export default function analyze(match) {
 
     Exp9_member(exp, dot, id) {
       const object = exp.rep();
-      // TODO: ADD in optionals
       let classType;
       if (dot.sourceString === "?.") {
         // mustHaveAnOptionalStructType(object, { at: exp }); TODO: Reimplement this
         classType = object.type.baseType;
       } else {
-        mustBeAClass(context.lookup(object.type.name), { at: exp });
         classType = object.type;
-        const classContext = context.lookup(object.type.name);
-        mustHaveBeenFound(object, object.sourceString, { at: exp });
-        mustNotBePrivate(id.sourceString[0] !== "_", {
-          at: id,
-        });
-        const field = classContext.fields.find(
-          (f) => f.variable === id.sourceString
-        );
-        mustHaveValidMember(field, id.sourceString, { at: id });
-        return core.memberExpression(object, dot.sourceString, field);
       }
+      mustBeAClass(context.lookup(object.type.name), { at: exp });
+      const classContext = context.lookup(object.type.name);
+      mustHaveBeenFound(object, object.sourceString, { at: exp });
+      mustNotBePrivate(id, {
+        at: id,
+      });
+
+      const field = classContext.fields.find((f) => f.name === id.sourceString);
+      mustHaveValidMember(field, id.sourceString, { at: id });
+      return core.memberExpression(object, dot.sourceString, field);
     },
 
     Exp9_call(exp, open, expList, _close) {
       const callee = exp.rep();
+      mustBeCallable(callee, { at: exp });
+
+      // Handle calls to "serve" differently by not checking argument types
       if (callee.name === "serve") {
         const args = expList.asIteration().children.map((exp) => exp.rep());
         return core.functionCall(callee, args);
       }
-      mustBeCallable(callee, { at: exp });
+
+      // For all other functions, perform regular argument type checks
       const exps = expList.asIteration().children;
       const targetTypes = callee.type.paramTypes;
       mustHaveCorrectArgumentCount(exps.length, targetTypes.length, {
         at: open,
       });
+
       const args = exps.map((exp, i) => {
         const arg = exp.rep();
         mustBeAssignable(arg, { toType: targetTypes[i] }, { at: exp });
         return arg;
       });
+
       return core.functionCall(callee, args);
     },
 

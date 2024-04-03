@@ -4,6 +4,8 @@ prep {
     eightysix("Error Entered", Exception);
 } rescue (Exception e) {
     serve(e);
+} rescue (ValueError v) {
+    serve(v);
 } cleanup {
     serve("Finished");
 }
