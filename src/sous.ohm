@@ -25,7 +25,7 @@ Sous {
                 | "(" ListOf<Type, ","> ")" "->" Type                     --function
                 | id                                                      --id
   VarDecl       = ingredient nonemptyListOf<VarInit, ","> ";" --list
-                | ingredient id ":" Type "|"? const? ";"                  --without_init
+                | ingredient id ":" Type ";"                  --without_init
   VarInit       = id ":=" Exp "|"? const?
   Field         = ingredient id ":" Type ";"
 

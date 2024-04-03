@@ -199,7 +199,11 @@ export default function analyze(match) {
   }
 
   function mustHaveConstString(modifier, at) {
-    must(modifier === "const", "cannot have section without modifier", at);
+    must(
+      modifier.sourceString === "const",
+      "Cannot have section without modifier",
+      at
+    );
   }
 
   function assignable(fromType, toType) {
@@ -369,21 +373,10 @@ export default function analyze(match) {
     },
 
     // WORKING
-    VarDecl_without_init(
-      _ingredient,
-      id,
-      _colon,
-      type,
-      _semi,
-      _section,
-      modifier
-    ) {
+    VarDecl_without_init(_ingredient, id, _colon, type, _semi) {
       const variableName = id.sourceString;
       const variableType = type.rep();
-      if (_section.sourceString === "|") {
-        mustHaveConstString(modifier, { at: _section });
-      }
-      const readOnly = modifier.sourceString === "const";
+      const readOnly = false;
       mustNotAlreadyBeDeclared(variableName, { at: id });
       const initializer =
         variableType === INT
@@ -405,6 +398,9 @@ export default function analyze(match) {
       // true declaration, not just initialization
       const initializer = exp.rep();
       const readOnly = modifier.sourceString === "const";
+      if (_section.sourceString === "|") {
+        mustHaveConstString(modifier, { at: _section });
+      }
       const variable = core.variable(
         id.sourceString,
         readOnly,

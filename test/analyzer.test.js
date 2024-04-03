@@ -51,6 +51,13 @@ const semanticChecks = [
     "nested classes",
     "Dish T{ingredient y:int;} Dish S{ingredient z: T;} T y := new T(1);S x:= new S(y); serve(x.z.y);",
   ],
+  [
+    "method exp",
+    "Dish x {recipe s (ingredient y : int) {serve(y);}} x test := new x();test.s(5);",
+  ],
+  ["int without init", "ingredient x : int;"],
+  ["string without init", "ingredient x : string;"],
+  ["bool without init", "ingredient x : boolean;"],
   ["member exp", "Dish S {ingredient x: int;} S y := new S(1);serve(y.x);"],
   ["subscript exp", "ingredient a:=[1,2];serve(a[0]);"],
   [
@@ -186,6 +193,11 @@ const semanticErrors = [
     "return value from void function",
     "recipe f() {return 1;}",
     /Cannot return a value/,
+  ],
+  [
+    "section without modifier",
+    "ingredient x := 1 |;",
+    /Cannot have section without modifier/,
   ],
   [
     "return nothing from non-void",

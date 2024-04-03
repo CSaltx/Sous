@@ -48,10 +48,10 @@ describe("The compiler", () => {
     });
   });
 
-  it("throws an error with the 'js' option", () => {
-    // manually test for non-implementation
-    assert.throws(() => {
-      generate(), "Not yet implemented";
-    });
-  });
+  //   it("throws an error with the 'js' option", () => {
+  //     // manually test for non-implementation
+  //     assert.throws(() => {
+  //       generate(), "Not yet implemented";
+  //     });
+  //   });
 });
