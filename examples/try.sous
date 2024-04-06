@@ -1,11 +1,15 @@
 prep {
     ingredient _x := 0;
     serve("Started");
-    eightysix("Error Entered", Exception);
+    eightysix("Error Entered", TypeError);
 } rescue (Exception e) {
-    serve(e);
-} rescue (ValueError v) {
-    serve(v);
+    serve(e.stack);
 } cleanup {
     serve("Finished");
 }
+
+'''
+rescue (ValueError v) {
+    serve(v.stack);
+} 
+'''

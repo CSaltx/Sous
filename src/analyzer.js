@@ -13,9 +13,10 @@ class Context {
     parent = null,
     locals = new Map(),
     inLoop = false,
+    inClass = false,
     function: f = null,
   }) {
-    Object.assign(this, { parent, locals, inLoop, function: f });
+    Object.assign(this, { parent, locals, inLoop, inClass, function: f });
   }
   add(name, entity) {
     this.locals.set(name, entity);
@@ -348,6 +349,18 @@ export default function analyze(match) {
     );
   }
 
+  function mustHaveValidErrorMember(id, message, at) {
+    const validMembers = [
+      "message",
+      "name",
+      "stack",
+      "fileName",
+      "lineNumber",
+      "columnNumber",
+    ];
+    must(validMembers.includes(id), message, at);
+  }
+
   const analyzer = match.matcher.grammar.createSemantics().addOperation("rep", {
     Program(statements) {
       return core.program(statements.children.map((s) => s.rep()));
@@ -412,8 +425,8 @@ export default function analyze(match) {
     },
 
     Field(_ingredient, id, _colon, type, _semi) {
-      const field = core.field(id.sourceString, type.rep());
       mustNotAlreadyBeDeclared(id.sourceString, { at: id });
+      const field = core.field(id.sourceString, type.rep());
       context.add(id.sourceString, field);
       return field;
     },
@@ -562,14 +575,15 @@ export default function analyze(match) {
       mustNotAlreadyBeDeclared(iteratorName, { at: id });
 
       context = context.newChildContext({ inLoop: true });
-      context.add(iteratorName, core.variable(iteratorName, false, INT));
+      const iteratorVar = core.variable(iteratorName, false, INT);
+      context.add(iteratorName, iteratorVar);
 
       const bodyStatements = block.rep();
 
       context = context.parent;
 
       return core.pythForStatement(
-        iteratorName,
+        iteratorVar,
         lowerBoundVar,
         upperBoundVar,
         bodyStatements
@@ -592,6 +606,9 @@ export default function analyze(match) {
       const body = block.rep();
 
       context = context.parent;
+      if (context.inClass) {
+        return core.methodDeclaration(id.sourceString, fun, params, body);
+      }
       return core.functionDeclaration(id.sourceString, fun, params, body);
     },
 
@@ -668,9 +685,8 @@ export default function analyze(match) {
       actualArgs.forEach((arg, i) => {
         mustBothHaveTheSameType(expectedFields[i], arg, { at: args });
       });
-
       const newObj = core.objectConstructor(
-        objName.sourceString,
+        core.variable(objName.sourceString, true, classEntity),
         actualArgs,
         classEntity
       );
@@ -686,17 +702,16 @@ export default function analyze(match) {
       return core.tryStatement(tryBlock, catchClause, finallyStatement);
     },
 
-    // FIXME: HOW TO CONNECT ERROR VALUES TO ERROR VARIABLES SUCH THAT AN ERROR VARIABLE
-    // IS AN OBJECT CONTAINING E.MSG AND E.TYPE FOR THE MSG AND ERROR TYPE PASSED, WORK WITH ERRORSTMT TO FIX
-    // TODO: FIX THIS SOON
     Catch(_catch, _open, error, id, _close, block) {
       mustBeValidErrorType(error);
       const errorType = error.sourceString;
       const errorName = id.sourceString;
       mustNotAlreadyBeDeclared(errorName, { at: id });
       context = context.newChildContext();
-      //   const error = core.error(errorType); FIXME: THIS NEEDS TO BE REWORKED AND CORE ERROR MUST BE CREATED TO ACCOUNT FOR MSG
       context.add(errorName, errorType);
+      //   const error = core.error(errorType); FIXME: THIS NEEDS TO BE REWORKED AND CORE ERROR MUST BE CREATED TO ACCOUNT FOR MSG
+      const errorObj = core.errorObject(errorType, errorName);
+      context.add(errorName, errorObj);
       const body = block.rep();
       context = context.parent;
       return core.catchClause(errorType, errorName, body);
@@ -910,7 +925,7 @@ export default function analyze(match) {
       const args = exps.map((exp) => {
         return exp.rep();
       });
-      //   mustBeCallable(methodDecl, { at: methodId });
+      mustBeCallable(methodDecl, { at: methodId });
       const targetTypes = methodDecl.type.paramTypes;
       mustHaveCorrectArgumentCount(args.length, targetTypes.length, {
         at: objectId,
@@ -919,6 +934,28 @@ export default function analyze(match) {
     },
 
     Exp9_member(exp, dot, id) {
+      //FIXME: ASK TOAL ABOUT IF I CAN USE ERRORS THAT ARE NOT IN JAVASCRIPT OR IF I SHOULD JUST STICK TO THOSE
+      const errors = [
+        "TypeError",
+        "ValueError",
+        "KeyError",
+        "IndexError",
+        "RuntimeError",
+        "Exception",
+      ];
+      const obj = exp.rep();
+      if (errors.includes(obj?.type)) {
+        mustHaveValidErrorMember(
+          id.sourceString,
+          "THAT'S NOT VALID! THIS IS HELL'S KITCHEN, NOT A MCDONALDS! GET OUT!",
+          { at: id }
+        );
+        return core.memberExpression(
+          obj?.name,
+          dot.sourceString,
+          id.sourceString
+        );
+      }
       const object = exp.rep();
       let classType;
       if (dot.sourceString === "?.") {

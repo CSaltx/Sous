@@ -1,0 +1,30 @@
+#!/bin/bash
+# EXECUTABLE FOR RUNNING SOUS CODE
+# RUN WITH ./sous [filepath].sous
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 filename.sous"
+    exit 1
+fi
+
+filename=$(basename -- "$1")
+extension="${filename##*.}"
+filename="${filename%.*}"
+
+outputJsFile="newfile.js"
+
+node src/sous "$1" js > "$outputJsFile"
+
+if [ $? -ne 0 ]; then
+    echo "Failed to transpile $1"
+    exit 2
+fi
+node "$outputJsFile"
+
+if [ $? -ne 0 ]; then
+    echo "Failed to run the JavaScript code"
+    rm "$outputJsFile"
+    exit 3
+fi
+
+rm "$outputJsFile"

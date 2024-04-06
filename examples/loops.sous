@@ -10,5 +10,5 @@ ingredient Z := 0;
 ingredient C := count(menu);
 
 FDrZC {
-    serve("Preparing ", menu[Z]);
+    serve("Preparing ", menu[D]);
 }
