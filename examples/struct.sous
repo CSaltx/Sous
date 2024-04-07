@@ -9,15 +9,13 @@ Dish Chef {
 Chef headChef := new Chef("Coby", 22, fresh);
 Chef sousChef := new Chef("Other", 21, stale);
 
-// serve("Head Chef is ", headChef.name);
-// serve("Sous Chef is ", sousChef.name);
+serve("Head Chef is", headChef.name);
+serve("Sous Chef is", sousChef.name);
 
 ingredient chefs := [headChef, sousChef];
-serve(chefs[0].isHeadChef);
-'''
-if (chefs[0].isHeadChef != fresh) {
-    eightysix("Head Chef must be the first indexed chef!", ValueError);
+
+if (chefs[1].isHeadChef != fresh) {
+    eightysix("Head Chef must be the first indexed chef!", TypeError);
 } else {
     serve("valid ordering");
 }
-'''

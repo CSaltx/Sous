@@ -152,15 +152,26 @@ const semanticChecks = [
     'Dish S {ingredient x: int?; ingredient y: string?;} S z := new S(raw int, raw string); S w := new S(poached 5, poached "hello"); serve(w?.x);',
   ],
   ["any type", "ingredient a : any; a = 5;"],
+  ["error throw", 'eightysix("Error Message", Exception);'],
 ];
 
 // Programs that are syntactically correct but have semantic errors
 const semanticErrors = [
   [
+    "incorrect error type",
+    'eightysix("error", randomErrorName);',
+    /Does this look like a valid error/,
+  ],
+  [
+    "incorrect member of error object",
+    'prep {eightysix("error", Exception);} rescue (Exception e) {serve(e.x);}',
+    /THAT'S NOT VALID! THIS IS HELL'S KITCHEN/,
+  ],
+  [
     "non-distinct fields",
     "Dish S {ingredient x: boolean; ingredient x: int;}",
     /Ingredient x is already declared you IDIOT SANDWICH/,
-  ], //TODO: Figure out if i need to chnage this to check for distinct fields
+  ],
   ["non-int increment", "ingredient x:=stale;++x;", /an integer/],
   ["non-int decrement", 'ingredient x:=[""];++x;', /an integer/],
   [
@@ -363,6 +374,11 @@ const semanticErrors = [
     "non-class member access",
     "ingredient x := 5; serve(x.y);",
     /Expected a Dish, but this is like asking for a cake and getting a candle instead!/,
+  ],
+  [
+    "assigning into to classType",
+    "Dish S {} S x := new S(); x = 5;",
+    /Cannot assign a int to a undefined/,
   ],
 ];
 

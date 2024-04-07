@@ -6,6 +6,7 @@ recipe CheckTemperature() : int {
     } else {
         serve("Temperature too low. Increase heat.");
     }
+    return 350;
 }
 
 serve(CheckTemperature());

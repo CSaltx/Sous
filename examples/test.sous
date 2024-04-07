@@ -1,10 +1,10 @@
-// Dish S {} S x:=new S(); serve(x.y);
 '''
+// Dish S {} S x:=new S(); serve(x.y);
+
 Dish S {
     ingredient x : int;
     recipe bake() : int {
         serve(x);
-        return 5;
     }
 }
 
@@ -19,6 +19,13 @@ recipe x (ingredient y: int) : int {
 
 ingredient z := 5;
 serve("z:", z);
-'''
 
 ingredient x := 5, y := 2, z := "s";
+'''
+
+for (ingredient i := 0; i < 50; ++i) {
+    serve(i);
+}
+for (ingredient i := 0; i < 50; ++i) {
+    serve(i);
+}

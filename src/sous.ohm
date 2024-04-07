@@ -49,8 +49,9 @@ Sous {
   Catch         = catch "(" id id ")" Block
   Finally       = finally Block
 
-  ForStmt       = for "(" VarDecl Exp4_compare ";" Exp6_bump ")" Block        --norm
+  ForStmt       = for "(" VarDecl Exp4_compare ";" ForUpdate  ")" Block        --norm
                 | for "(" id in Exp ")" Block                                 --collection
+  ForUpdate     = Exp9_assign | Exp6_bump
   PythForStmt   = "F" single_letter_id  "r" single_letter_id single_letter_id Block
   ErrorStmt     = eightysix "(" Exp "," id ")" ";"
   // ThrowStmt     = throw Exp ";"
@@ -92,6 +93,7 @@ Sous {
                 | Type_array "(" ")" ~mut                       --emptyarray
                 | "[" NonemptyListOf<Exp, ","> "]" ~mut         --arrayexp
                 | "(" Exp ")" ~mut                              --parens
+                | Exp9 "=" Exp ~mut                             --assign    
       
   mut           = ~"==" "=" | "++" | "--"
     

@@ -18,6 +18,10 @@ export function functionDeclaration(name, fun, params, body) {
   return { kind: "FunctionDeclaration", name, fun, params, body };
 }
 
+export function methodDeclaration(name, fun, params, body) {
+  return { kind: "MethodDeclaration", name, fun, params, body };
+}
+
 export function emptyOptional(baseType) {
   return { kind: "EmptyOptional", baseType, type: optionalType(baseType) };
 }
@@ -30,8 +34,8 @@ export function classType(name, fields, methods) {
   return { kind: "ClassType", name, fields, methods };
 }
 
-export function objectConstructor(name, fields, type) {
-  return { kind: "ObjectConstructor", name, fields, type };
+export function objectConstructor(variable, fields, type) {
+  return { kind: "ObjectConstructor", variable, fields, type };
 }
 
 export function fun(name, type) {
@@ -66,8 +70,16 @@ export function assignment(target, source) {
   return { kind: "Assignment", target, source };
 }
 
+export function forUpdateAssignment(target, source) {
+  return { kind: "ForUpdateAssignment", target, source };
+}
+
 export function breakStatement() {
   return { kind: "BreakStatement" };
+}
+
+export function continueStatement() {
+  return { kind: "ContinueStatement" };
 }
 
 export function returnStatement(expression) {
@@ -143,10 +155,6 @@ export function pythForStatement(iterator, low, high, body) {
   return { kind: "PythForStatement", iterator, low, high, body };
 }
 
-export function continueStatement() {
-  return { kind: "ContinueStatement" };
-}
-
 export function forStatement(init, test, update, body) {
   return { kind: "ForRangeStatement", init, test, update, body };
 }
@@ -159,8 +167,8 @@ export function tryStatement(body, catchClauses, finallyBlock) {
   return { kind: "TryStatement", body, catchClauses, finallyBlock };
 }
 
-export function catchClause(errorType, errorName, body) {
-  return { kind: "CatchClause", errorType, errorName, body };
+export function catchClause(errorName, body) {
+  return { kind: "CatchClause", errorName, body };
 }
 
 export function finallyBlock(body) {
@@ -169,6 +177,10 @@ export function finallyBlock(body) {
 
 export function errorStatement(type, message) {
   return { kind: "ErrorStatement", type, message };
+}
+
+export function errorObject(type, name) {
+  return { kind: "ErrorObject", type, name };
 }
 
 export function methodCall(object, method, args) {
