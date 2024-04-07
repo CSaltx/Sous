@@ -70,6 +70,10 @@ export function assignment(target, source) {
   return { kind: "Assignment", target, source };
 }
 
+export function forUpdateAssignment(target, source) {
+  return { kind: "ForUpdateAssignment", target, source };
+}
+
 export function breakStatement() {
   return { kind: "BreakStatement" };
 }
@@ -163,8 +167,8 @@ export function tryStatement(body, catchClauses, finallyBlock) {
   return { kind: "TryStatement", body, catchClauses, finallyBlock };
 }
 
-export function catchClause(errorType, errorName, body) {
-  return { kind: "CatchClause", errorType, errorName, body };
+export function catchClause(errorName, body) {
+  return { kind: "CatchClause", errorName, body };
 }
 
 export function finallyBlock(body) {

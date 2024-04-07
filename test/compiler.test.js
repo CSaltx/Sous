@@ -41,17 +41,15 @@ describe("The compiler", () => {
     assert.equal(errorCaught, false);
   });
 
-  it("throws an error with the 'optimized' option", () => {
-    // manually test for non-implementation
-    assert.throws(() => {
-      optimize(), "Not yet implemented";
-    });
+  it("accepts the optimized option", (done) => {
+    const compiled = compile(sampleProgram, "optimized");
+    assert(compiled.kind === "Program");
+    done();
   });
 
-  //   it("throws an error with the 'js' option", () => {
-  //     // manually test for non-implementation
-  //     assert.throws(() => {
-  //       generate(), "Not yet implemented";
-  //     });
-  //   });
+  it("generates js code when given the js option", (done) => {
+    const compiled = compile(sampleProgram, "js");
+    assert(compiled.startsWith("console.log(0)"));
+    done();
+  });
 });

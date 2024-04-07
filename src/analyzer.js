@@ -706,15 +706,14 @@ export default function analyze(match) {
       mustBeValidErrorType(error);
       const errorType = error.sourceString;
       const errorName = id.sourceString;
+      const variable = core.variable(errorName, false, errorType);
       mustNotAlreadyBeDeclared(errorName, { at: id });
       context = context.newChildContext();
-      context.add(errorName, errorType);
-      //   const error = core.error(errorType); FIXME: THIS NEEDS TO BE REWORKED AND CORE ERROR MUST BE CREATED TO ACCOUNT FOR MSG
-      const errorObj = core.errorObject(errorType, errorName);
+      const errorObj = core.errorObject(errorType, variable);
       context.add(errorName, errorObj);
       const body = block.rep();
       context = context.parent;
-      return core.catchClause(errorType, errorName, body);
+      return core.catchClause(variable, body);
     },
 
     Finally(_finally, block) {
@@ -951,7 +950,7 @@ export default function analyze(match) {
           { at: id }
         );
         return core.memberExpression(
-          obj?.name,
+          obj.name,
           dot.sourceString,
           id.sourceString
         );
@@ -1007,6 +1006,14 @@ export default function analyze(match) {
       const entity = context.lookup(id.sourceString);
       mustHaveBeenFound(entity, id.sourceString, { at: id });
       return entity;
+    },
+
+    Exp9_assign(id, _eq, exp) {
+      const source = id.rep();
+      const target = exp.rep();
+      mustBeAssignable(source, { toType: target.type }, { at: id });
+      mustNotBeReadOnly(target, { at: exp });
+      return core.forUpdateAssignment(source, target);
     },
 
     Type_optional(baseType, _questionMark) {

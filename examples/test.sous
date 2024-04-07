@@ -1,3 +1,4 @@
+'''
 // Dish S {} S x:=new S(); serve(x.y);
 
 Dish S {
@@ -6,7 +7,7 @@ Dish S {
         serve(x);
     }
 }
-'''
+
 S test := new S(5);
 
 test.bake();
@@ -21,3 +22,10 @@ serve("z:", z);
 
 ingredient x := 5, y := 2, z := "s";
 '''
+
+for (ingredient i := 0; i < 50; ++i) {
+    serve(i);
+}
+for (ingredient i := 0; i < 50; ++i) {
+    serve(i);
+}

@@ -85,7 +85,7 @@ export default function generate(program) {
       const type = d.type;
       output.push(`constructor(${type.fields.map(gen).join(", ")}) {`);
       for (let field of d.type.fields) {
-        output.push(`this[${gen(field)}] = ${gen(field)};`);
+        output.push(`this[${JSON.stringify(gen(field))}] = ${gen(field)};`);
       }
       output.push("}");
       // figure out this because methods dont have function before the name in javascript
@@ -117,11 +117,11 @@ export default function generate(program) {
     },
 
     Increment(s) {
-      return `${gen(s.variable)}++;`;
+      output.push(`${gen(s.variable)}++;`);
     },
 
     Decrement(s) {
-      return `${gen(s.variable)}--;`;
+      output.push(`${gen(s.variable)}--;`);
     },
 
     Assignment(s) {
@@ -182,10 +182,8 @@ export default function generate(program) {
 
     UnaryExpression(e) {
       const operand = gen(e.operand);
-      if (e.op === "some") {
+      if (e.op === "poached") {
         return operand;
-      } else if (e.op === "#") {
-        return `${operand}.length`;
       } else if (e.op === "random") {
         return `((a=>a[~~(Math.random()*a.length)])(${operand}))`;
       }
@@ -210,8 +208,9 @@ export default function generate(program) {
     MemberExpression(e) {
       const object = e.object.variable ? gen(e.object.variable) : gen(e.object);
       const field = JSON.stringify(gen(e.field));
-      const chain = e.op === "." ? "" : "?";
-      return `${object}${chain}[${field}]`;
+      //   const chain = e.op === "." ? "" : "?";
+      const chain = "";
+      return `(${object}${chain}[${field}])`;
     },
 
     FunctionCall(c) {
@@ -237,9 +236,13 @@ export default function generate(program) {
     },
 
     ForRangeStatement(s) {
-      let up = gen(s.update);
-      if (up.endsWith(";")) {
-        up = up.slice(0, -1);
+      let up;
+      if (s.update.kind !== "Increment" && s.update.kind !== "Decrement") {
+        up = gen(s.update);
+      } else {
+        up =
+          `${gen(s.update.variable)}` +
+          (s.update.kind === "Increment" ? "++" : "--");
       }
       output.push(
         `for (let ${gen(s.init.declarations[0].variable)} = ${gen(
@@ -248,6 +251,10 @@ export default function generate(program) {
       );
       s.body.forEach(gen);
       output.push("}");
+    },
+
+    ForUpdateAssignment(s) {
+      return `${gen(s.target)} = ${gen(s.source)}`;
     },
 
     ForStatement(s) {
@@ -265,7 +272,7 @@ export default function generate(program) {
     },
 
     CatchClause(c) {
-      output.push(`catch (${c.errorName}) {`);
+      output.push(`catch (${gen(c.errorName)}) {`);
       c.body.forEach(gen);
       output.push("}");
     },
