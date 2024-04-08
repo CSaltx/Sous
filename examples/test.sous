@@ -26,8 +26,9 @@ for (ingredient i := 0; i < 50; ++i) {
     serve(i);
 }
 
+
 '''
-// SHOULD THIS BE ALLOWED OR NO?
+// SHOULD THIS BE ALLOWED OR NOT? -- decide scope of for loop iterators
 for (ingredient i := 0; i < 50; ++i) {
     serve(i);
 }

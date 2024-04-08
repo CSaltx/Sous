@@ -439,7 +439,7 @@ export default function analyze(match) {
       return core.assignment(target, source);
     },
 
-    IfStmt_with_else(_if, _open, exp, _close, block1, _else, block2) {
+    IfStmt_long(_if, _open, exp, _close, block1, _else, block2) {
       const test = exp.rep();
       mustHaveBooleanType(test, { at: exp });
       context = context.newChildContext();
@@ -464,12 +464,12 @@ export default function analyze(match) {
       mustHaveBooleanType(test, { at: exp });
       context = context.newChildContext();
       const consequent = block.rep();
-      // Do NOT make a new context for the alternate!
+      context = context.parent;
       const alternate = trailingIfStatement.rep();
       return core.ifStatement(test, consequent, alternate);
     },
 
-    IfStmt_plain_if(_if, _open, exp, _closed, block) {
+    IfStmt_short(_if, _open, exp, _closed, block) {
       const test = exp.rep();
       mustHaveBooleanType(test, { at: exp });
       context = context.newChildContext();
