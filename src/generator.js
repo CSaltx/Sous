@@ -297,6 +297,10 @@ export default function generate(program) {
           ");"
       );
     },
+
+    RangeArray(m) {
+      return `Array.from({length: ${m.end} - ${m.start}}, (_, i) => ${m.start} + i)`;
+    },
   };
 
   gen(program);

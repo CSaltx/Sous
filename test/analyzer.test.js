@@ -153,6 +153,7 @@ const semanticChecks = [
   ],
   ["any type", "ingredient a : any; a = 5;"],
   ["error throw", 'eightysix("Error Message", Exception);'],
+  ["for with range", "for (i in 0..50) {}"],
 ];
 
 // Programs that are syntactically correct but have semantic errors

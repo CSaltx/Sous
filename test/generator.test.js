@@ -327,6 +327,17 @@ const fixtures = [
     let y_4 = new S_1(10);
     let z_5 = [x_3,y_4];`,
   },
+  {
+    name: "for loop with range collection",
+    source: `
+    for (i in 0..50) {
+        serve(i);
+    }`,
+    expected: dedent`
+    for (let i_1 of Array.from({length: 50 - 0}, (_, i) => 0 + i)) {
+        console.log(i_1);
+    }`,
+  },
 ];
 
 describe("The code generator", () => {

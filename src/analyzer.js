@@ -883,6 +883,14 @@ export default function analyze(match) {
       return core.unary(op, operand, type);
     },
 
+    Exp9_range(low, _op, high) {
+      const [start, end] = [low.rep(), high.rep()];
+      mustHaveIntegerType(start, { at: low });
+      mustHaveIntegerType(end, { at: high });
+      const baseType = start.type;
+      return core.range(start, end, baseType);
+    },
+
     Exp9_emptyarray(ty, _open, _close) {
       const type = ty.rep();
       mustBeAnArrayType(type, { at: ty });

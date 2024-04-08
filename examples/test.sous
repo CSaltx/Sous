@@ -16,16 +16,19 @@ test.bake();
 recipe x (ingredient y: int) : int {
     return 5;
 }
-
-ingredient z := 5;
-serve("z:", z);
-
-ingredient x := 5, y := 2, z := "s";
 '''
 
+ingredient x := 5, y := 2, z := "s";
+serve("z:", z);
+
+
 for (ingredient i := 0; i < 50; ++i) {
     serve(i);
 }
+
+'''
+// SHOULD THIS BE ALLOWED OR NO?
 for (ingredient i := 0; i < 50; ++i) {
     serve(i);
 }
+'''
