@@ -219,7 +219,7 @@ const fixtures = [
                 this["x_2"] = x_2;
             }
             bake_3() {
-                console.log(x_2);
+                console.log(this["x_2"]);
             }
         }
         let test_4 = new S_1(5);
