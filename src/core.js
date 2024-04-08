@@ -197,6 +197,10 @@ export function range(start, end, baseType) {
   return { kind: "RangeArray", start, end, type: arrayType(baseType) };
 }
 
+export function fieldReference(id, field) {
+  return { kind: "FieldReference", id, field, type: field.type };
+}
+
 // the following code is taken from Professor Ray Toal's lecture notes: https://cs.lmu.edu/~ray/notes/howtowriteacompiler/
 // all code is taken with permission from the author
 

@@ -427,7 +427,8 @@ export default function analyze(match) {
     Field(_ingredient, id, _colon, type, _semi) {
       mustNotAlreadyBeDeclared(id.sourceString, { at: id });
       const field = core.field(id.sourceString, type.rep());
-      context.add(id.sourceString, field);
+      const fieldRef = core.fieldReference(id.souceString, field);
+      context.add(id.sourceString, fieldRef);
       return field;
     },
 

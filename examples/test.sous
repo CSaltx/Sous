@@ -18,15 +18,11 @@ recipe x (ingredient y: int) : int {
 }
 '''
 
-ingredient x := 5, y := 2, z := "s";
-serve("z:", z);
+ingredient a := "s";
 
-
-for (ingredient i := 0; i < 50; ++i) {
-    serve(i);
+for (i in 0..10) {
+    serve(a);
 }
-
-
 '''
 // SHOULD THIS BE ALLOWED OR NOT? -- decide scope of for loop iterators
 for (ingredient i := 0; i < 50; ++i) {

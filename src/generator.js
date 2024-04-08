@@ -76,7 +76,7 @@ export default function generate(program) {
       output.push("}");
     },
 
-    EmptyOptional(e) {
+    EmptyOptional(_e) {
       return "undefined";
     },
 
@@ -89,9 +89,7 @@ export default function generate(program) {
       }
       output.push("}");
       // figure out this because methods dont have function before the name in javascript
-      // TODO: Ask Toal abt this
       type.methods.forEach((item) => {
-        // console.log(item);
         gen(item);
       });
       output.push("}");
@@ -300,6 +298,10 @@ export default function generate(program) {
 
     RangeArray(m) {
       return `Array.from({length: ${m.end} - ${m.start}}, (_, i) => ${m.start} + i)`;
+    },
+
+    FieldReference(f) {
+      return `this[${JSON.stringify(gen(f.field))}]`;
     },
   };
 
