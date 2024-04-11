@@ -6,22 +6,22 @@ Dish FamilyRecipe {
     ingredient _heat : int;
 
     recipe bake() {
-        serve("start preheating at ", _heat, " degrees");
+        serve("start preheating at ", _heat+340, " degrees");
         ingredient i := 0;
         ingredient e := _heat;
         while (i < e) {
-            serve("preheating... ", i," degrees");
+            serve("preheating... ", i+340," degrees");
             i = i + 1;
         }
 
         serve("preheating complete");
         serve("mixing ingredients: ", _ingredients);
-        serve("baking at ", _heat, " degrees for 30 minutes");
+        serve("baking at ", _heat+340, " degrees for 30 minutes");
         return;
     }
 }
 
-FamilyRecipe grandma_cookies := new FamilyRecipe("flour, sugar, eggs, butter", "mix ingredients, bake at 350 degrees", 350);
+FamilyRecipe grandma_cookies := new FamilyRecipe("flour, sugar, eggs, butter", "mix ingredients, bake at 350 degrees", 10);
 grandma_cookies.bake();
 
 '''

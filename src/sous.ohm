@@ -41,16 +41,16 @@ Sous {
   ContinueStmt  = continue ";"
 
   WhileStmt     = while "(" Exp ")" Block
-  IfStmt        = if "(" Exp ")" Block else Block --with_else
+  IfStmt        = if "(" Exp ")" Block else Block  --long
                 | if "(" Exp ")" Block else IfStmt --nested_if
-                | if "(" Exp ")" Block --plain_if
+                | if "(" Exp ")" Block             --short
 
   TryStmt       = try Block Catch* Finally?
   Catch         = catch "(" id id ")" Block
   Finally       = finally Block
 
   ForStmt       = for "(" VarDecl Exp4_compare ";" ForUpdate  ")" Block        --norm
-                | for "(" id in Exp ")" Block                                 --collection
+                | for "(" id in Exp ")" Block                                  --collection
   ForUpdate     = Exp9_assign | Exp6_bump
   PythForStmt   = "F" single_letter_id  "r" single_letter_id single_letter_id Block
   ErrorStmt     = eightysix "(" Exp "," id ")" ";"
@@ -81,6 +81,7 @@ Sous {
                 | ("-" | "!"| poached | random) Exp9        	--unary
   Exp9          = true ~mut
                 | false ~mut
+                | Exp9 ".." Exp9 ~mut                           --range
                 | floatlit ~mut
                 | intlit ~mut
                 | stringlit ~mut
@@ -93,7 +94,8 @@ Sous {
                 | Type_array "(" ")" ~mut                       --emptyarray
                 | "[" NonemptyListOf<Exp, ","> "]" ~mut         --arrayexp
                 | "(" Exp ")" ~mut                              --parens
-                | Exp9 "=" Exp ~mut                             --assign    
+                | Exp9 "=" Exp ~mut                             --assign
+                
       
   mut           = ~"==" "=" | "++" | "--"
     

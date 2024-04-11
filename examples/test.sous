@@ -16,16 +16,16 @@ test.bake();
 recipe x (ingredient y: int) : int {
     return 5;
 }
-
-ingredient z := 5;
-serve("z:", z);
-
-ingredient x := 5, y := 2, z := "s";
 '''
 
+ingredient a := "s";
+
+for (i in 0..10) {
+    serve(a);
+}
+'''
+// SHOULD THIS BE ALLOWED OR NOT? -- decide scope of for loop iterators
 for (ingredient i := 0; i < 50; ++i) {
     serve(i);
 }
-for (ingredient i := 0; i < 50; ++i) {
-    serve(i);
-}
+'''

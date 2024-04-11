@@ -427,7 +427,8 @@ export default function analyze(match) {
     Field(_ingredient, id, _colon, type, _semi) {
       mustNotAlreadyBeDeclared(id.sourceString, { at: id });
       const field = core.field(id.sourceString, type.rep());
-      context.add(id.sourceString, field);
+      const fieldRef = core.fieldReference(id.souceString, field);
+      context.add(id.sourceString, fieldRef);
       return field;
     },
 
@@ -439,7 +440,7 @@ export default function analyze(match) {
       return core.assignment(target, source);
     },
 
-    IfStmt_with_else(_if, _open, exp, _close, block1, _else, block2) {
+    IfStmt_long(_if, _open, exp, _close, block1, _else, block2) {
       const test = exp.rep();
       mustHaveBooleanType(test, { at: exp });
       context = context.newChildContext();
@@ -464,12 +465,12 @@ export default function analyze(match) {
       mustHaveBooleanType(test, { at: exp });
       context = context.newChildContext();
       const consequent = block.rep();
-      // Do NOT make a new context for the alternate!
+      context = context.parent;
       const alternate = trailingIfStatement.rep();
       return core.ifStatement(test, consequent, alternate);
     },
 
-    IfStmt_plain_if(_if, _open, exp, _closed, block) {
+    IfStmt_short(_if, _open, exp, _closed, block) {
       const test = exp.rep();
       mustHaveBooleanType(test, { at: exp });
       context = context.newChildContext();
@@ -881,6 +882,14 @@ export default function analyze(match) {
         type = operand.type.baseType;
       }
       return core.unary(op, operand, type);
+    },
+
+    Exp9_range(low, _op, high) {
+      const [start, end] = [low.rep(), high.rep()];
+      mustHaveIntegerType(start, { at: low });
+      mustHaveIntegerType(end, { at: high });
+      const baseType = start.type;
+      return core.range(start, end, baseType);
     },
 
     Exp9_emptyarray(ty, _open, _close) {

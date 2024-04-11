@@ -12,3 +12,9 @@ ingredient C := count(menu);
 FDrZC {
     serve("Preparing ", menu[D]);
 }
+
+// Alternative way of looping
+
+for (i in 0..50) {
+    serve("Preparing ", i);
+}

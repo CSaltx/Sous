@@ -196,4 +196,13 @@ describe("The parser", () => {
     }
     assert.equal(error, false);
   });
+  //   it('parses fails to parse an invalid file with "compileFromFile"', async () => {
+  //     let error = false;
+  //     try {
+  //       const result = await compileFromFile("examples/failure.sous", "parsed");
+  //     } catch (e) {
+  //       error = true;
+  //     }
+  //     assert.equal(error, true);
+  //   });
 });
