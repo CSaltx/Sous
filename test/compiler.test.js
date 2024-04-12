@@ -1,8 +1,5 @@
 import assert from "node:assert/strict";
 import compile from "../src/compiler.js";
-import optimize from "../src/optimizer.js";
-import generate from "../src/generator.js";
-import { functionCall, program } from "../src/core.js";
 
 // Note: compiler's lines 14-16 cannot be tested as the analyzer fails first
 // and the optimize/generate lines are unreacheable

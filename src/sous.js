@@ -1,13 +1,8 @@
 #! /usr/bin/env node
 
 import * as fs from "node:fs/promises";
-import process from "node:process";
 import compile from "./compiler.js";
-// import { Program } from "./core.js";
 import stringify from "graph-stringify";
-import util from "node:util";
-import parse from "./parser.js";
-import analyze from "./analyzer.js";
 
 const help = `Sous compiler
 

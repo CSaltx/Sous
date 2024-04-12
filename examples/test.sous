@@ -1,4 +1,3 @@
-'''
 // Dish S {} S x:=new S(); serve(x.y);
 
 Dish S {
@@ -16,16 +15,9 @@ test.bake();
 recipe x (ingredient y: int) : int {
     return 5;
 }
-'''
 
-ingredient a := "s";
 
-for (i in 0..10) {
-    serve(a);
-}
-'''
 // SHOULD THIS BE ALLOWED OR NOT? -- decide scope of for loop iterators
 for (ingredient i := 0; i < 50; ++i) {
     serve(i);
 }
-'''
