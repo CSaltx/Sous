@@ -535,7 +535,7 @@ export default function analyze(match) {
       context = context.newChildContext({ inLoop: true });
       const body = block.rep();
       context = context.parent;
-      return core.forStatement(
+      return core.forRangeStatement(
         initialization,
         condition,
         updateExpression,
@@ -555,7 +555,7 @@ export default function analyze(match) {
       context.add(iterator.name, iterator);
       const body = block.rep();
       context = context.parent;
-      return core.forCollectionStmt(iterator, collection, body);
+      return core.forStatement(iterator, collection, body);
     },
 
     PythForStmt(_f, id, _r, id1, id2, block) {

@@ -1,6 +1,7 @@
+import fs from "fs";
 import assert from "node:assert/strict";
 import parse from "../src/parser.js";
-import { compileFromFile } from "../src/sous.js";
+import compile from "../src/compiler.js";
 
 const syntaxChecks = [
   ["all numeric literal forms", "serve(8 * 89.123);"],
@@ -187,10 +188,13 @@ describe("The parser", () => {
       assert.throws(() => parse(source), errorMessagePattern);
     });
   }
-  it('parses a file with "compileFromFile"', async () => {
+  it('parses a file with "compile"', async () => {
     let error = false;
     try {
-      const result = await compileFromFile("examples/hello.sous", "parsed");
+      const result = await compile(
+        fs.readFileSync("examples/hello.sous"),
+        "parsed"
+      );
     } catch (e) {
       error = true;
     }

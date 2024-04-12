@@ -147,19 +147,15 @@ export function functionCall(callee, args) {
   return { kind: "FunctionCall", callee, args, type: callee.type.returnType };
 }
 
-// export function constructorCall(callee, args) {
-//   return { kind: "ConstructorCall", callee, args, type: callee };
-// } TODO: CHECK HERE FIXME: CHECK HERE
-
 export function pythForStatement(iterator, low, high, body) {
   return { kind: "PythForStatement", iterator, low, high, body };
 }
 
-export function forStatement(init, test, update, body) {
+export function forRangeStatement(init, test, update, body) {
   return { kind: "ForRangeStatement", init, test, update, body };
 }
-
-export function forCollectionStmt(iterator, collection, body) {
+// forCollectionStmt
+export function forStatement(iterator, collection, body) {
   return { kind: "ForStatement", iterator, collection, body };
 }
 

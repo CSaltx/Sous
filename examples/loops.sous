@@ -11,6 +11,7 @@ ingredient C := count(menu);
 
 FDrZC {
     serve("Preparing ", menu[D]);
+    break;
 }
 
 // Alternative way of looping
