@@ -17,6 +17,7 @@ node src/sous "$1" js > "$outputJsFile"
 
 if [ $? -ne 0 ]; then
     echo "Failed to transpile $1"
+    rm "$outputJsFile"
     exit 2
 fi
 node "$outputJsFile"

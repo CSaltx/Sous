@@ -1,0 +1,30 @@
+// first option: one-liner
+
+recipe gcd(ingredient x : int, ingredient y : int) : int {
+    return y == 0 ? x : gcd(y, x % y);
+}
+
+'''
+second option: more verbose
+
+recipe gcd(ingredient x : int, ingredient y : int) : int {
+    if (y == 0) {
+        return x;
+    }
+    return gcd(y, x % y);
+}
+
+// and third option: iterative
+
+recipe gcd(ingredient x : int, ingredient y : int) : int {
+    while (y != 0) {
+        ingredient temp := y;
+        y = x % y;
+        x = temp;
+    }
+    return x;
+}
+
+'''
+
+serve(gcd(8, 12));
