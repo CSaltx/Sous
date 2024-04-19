@@ -196,6 +196,21 @@ const tests = [
     ),
   ],
   [
+    "optimizes function decl with useless if",
+    core.functionDeclaration(
+      "x",
+      voidInt,
+      [],
+      [core.shortIfStatement(true, [core.functionCall("serve", ["hello"])])]
+    ),
+    core.functionDeclaration(
+      "x",
+      voidInt,
+      [],
+      [core.functionCall("serve", ["hello"])]
+    ),
+  ],
+  [
     "does not optimize conditional with non-boolean",
     core.conditional(x, 1, 2),
     core.conditional(x, 1, 2),

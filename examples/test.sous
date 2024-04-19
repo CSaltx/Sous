@@ -12,11 +12,10 @@ S test := new S(5);
 test.bake();
 '''
 
-recipe x (ingredient y: int) : int {
-    if (fresh) {
-        return 5;
-    }
-    serve(2);
+recipe x () {
+    serve("Hello");
+    return;
+    serve("hello");
 }
 '''
 recipe y (ingredient z: int) : int {

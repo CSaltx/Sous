@@ -39,7 +39,8 @@ const optimizers = {
         )
       ) {
         foundReturn = true;
-      } else if (Array.isArray(optimizedStatement)) {
+      }
+      if (Array.isArray(optimizedStatement)) {
         newBody.push(...optimizedStatement);
       } else {
         newBody.push(optimizedStatement);
