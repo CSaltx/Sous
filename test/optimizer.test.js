@@ -177,6 +177,25 @@ const tests = [
     ,
   ],
   [
+    "optimizes function decl with dead code",
+    core.functionDeclaration(
+      "x",
+      voidInt,
+      [],
+      [
+        core.functionCall("serve", ["hello"]),
+        core.shortReturnStatement(),
+        core.functionCall("serve", ["hello"]),
+      ]
+    ),
+    core.functionDeclaration(
+      "x",
+      voidInt,
+      [],
+      [core.functionCall("serve", ["hello"]), core.shortReturnStatement()]
+    ),
+  ],
+  [
     "does not optimize conditional with non-boolean",
     core.conditional(x, 1, 2),
     core.conditional(x, 1, 2),

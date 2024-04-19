@@ -63,7 +63,7 @@ export default function generate(program) {
     FunctionDeclaration(d) {
       output.push(`function ${gen(d.fun)}(${d.params.map(gen).join(", ")}) {`);
       d.body.forEach((line) => {
-        gen(line);
+        return gen(line);
       });
       output.push("}");
     },

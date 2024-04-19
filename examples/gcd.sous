@@ -5,7 +5,7 @@ recipe gcd(ingredient x : int, ingredient y : int) : int {
 }
 
 '''
-second option: more verbose
+// second option: more verbose
 
 recipe gcd(ingredient x : int, ingredient y : int) : int {
     if (y == 0) {

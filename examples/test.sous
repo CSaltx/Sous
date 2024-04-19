@@ -1,5 +1,5 @@
 // Dish S {} S x:=new S(); serve(x.y);
-
+'''
 Dish S {
     ingredient x : int;
     recipe bake() : int {
@@ -10,14 +10,24 @@ Dish S {
 S test := new S(5);
 
 test.bake();
-
+'''
 
 recipe x (ingredient y: int) : int {
+    if (fresh) {
+        return 5;
+    }
+    serve(2);
+}
+'''
+recipe y (ingredient z: int) : int {
     return 5;
 }
+'''
 
 
+'''
 // SHOULD THIS BE ALLOWED OR NOT? -- decide scope of for loop iterators
 for (ingredient i := 0; i < 50; ++i) {
     serve(i);
 }
+'''

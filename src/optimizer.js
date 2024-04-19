@@ -24,7 +24,28 @@ const optimizers = {
   //   },
   FunctionDeclaration(d) {
     d.fun = optimize(d.fun);
-    if (d.body) d.body = d.body.flatMap(optimize);
+    d.fun = optimize(d.fun);
+    let foundReturn = false;
+    let newBody = [];
+    for (const statement of d.body) {
+      if (foundReturn) {
+        // Skip any code after return
+        continue;
+      }
+      const optimizedStatement = optimize(statement);
+      if (
+        ["ReturnStatement", "ShortReturnStatement"].includes(
+          optimizedStatement.kind
+        )
+      ) {
+        foundReturn = true;
+      } else if (Array.isArray(optimizedStatement)) {
+        newBody.push(...optimizedStatement);
+      } else {
+        newBody.push(optimizedStatement);
+      }
+    }
+    d.body = newBody;
     return d;
   },
   Increment(s) {
@@ -43,9 +64,6 @@ const optimizers = {
     }
     return s;
   },
-  //   BreakStatement(s) {
-  //     return s;
-  //   },
   ReturnStatement(s) {
     s.expression = optimize(s.expression);
     return s;
@@ -56,7 +74,6 @@ const optimizers = {
   IfStatement(s) {
     s.test = optimize(s.test);
     s.consequent = s.consequent.flatMap(optimize);
-    console.log(s.alternate);
     if (s.alternate?.kind?.endsWith?.("IfStatement")) {
       s.alternate = optimize(s.alternate);
     } else {
