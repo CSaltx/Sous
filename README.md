@@ -26,8 +26,12 @@ What are the two most calming things to do? Cooking and programming. What if you
 - [x] Allows for Variable Immutability and Variable Mutability
 - [x] Allows for Pyth-style loops for conciseness
 
-> Note: Features are tentative and likely will change/update as language develops <br/>
+> **Note:** Features are tentative and likely will change/update as language develops <br/>
 > More features likely to be realized as development process continues
+
+### **Grammar**
+
+**Important:** To understand the structure of our language, consult the [grammar](https://github.com/CSaltx/Sous/blob/main/src/sous.ohm)!
 
 ## Examples
 
