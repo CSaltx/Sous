@@ -102,13 +102,6 @@ Sous {
   relop         = "<=" | "<" | ">=" | ">" | "==" | "!="
   string        = "\"" char* "\""
   
-//   typeerror     = "TypeError" ~alnum
-//   valueerror    = "ValueError" ~alnum
-//   keyerror      = "KeyError" ~alnum
-//   indexerror    = "IndexError" ~alnum
-//   runtimeerror  = "RuntimeError" ~alnum
-//   exception     = "Exception" ~alnum
-//   errorTypes    = typeerror | valueerror | keyerror | indexerror | runtimeerror | exception
   poached       = "poached" ~alnum
   raw           = "raw" ~alnum
   dish          = "Dish" ~alnum
