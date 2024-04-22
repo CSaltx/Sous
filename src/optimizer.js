@@ -14,14 +14,6 @@ const optimizers = {
     d.initializer = optimize(d.initializer);
     return d;
   },
-  //   VariableList(l) {
-  //     l.declarations = l.declarations.flatMap(optimize);
-  //     return l;
-  //   },
-  //   ClassDeclaration(d) {
-  //     d.type = optimize(d.type);
-  //     return d;
-  //   },
   FunctionDeclaration(d) {
     d.fun = optimize(d.fun);
     d.fun = optimize(d.fun);

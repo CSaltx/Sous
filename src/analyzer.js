@@ -160,28 +160,6 @@ export default function analyze(match) {
     must(e.sourceString[0] !== "_", "Cannot access private member", at);
   }
 
-  //   function includesAsField(structType, type) {
-  //     // Whether the struct type has a field of type type, directly or indirectly
-  //     return structType.fields.some(
-  //       (field) =>
-  //         field.type === type ||
-  //         (field.type?.kind === "StructType" && includesAsField(field.type, type))
-  //     );
-  //   }
-
-  //   function mustNotBeSelfContaining(structType, at) {
-  //     const containsSelf = includesAsField(structType, structType);
-  //     must(!containsSelf, "Struct type must not be self-containing", at);
-  //   }
-
-  //   function mustBeCallable(entity, at) {
-  //     must(
-  //       entity.kind === "Function" || entity.kind === "ClassDeclaration",
-  //       `Expected a recipe or a dish but found ${entity.kind.toLowerCase()}`,
-  //       at
-  //     );
-  //   }
-
   function equivalent(t1, t2) {
     return (
       t1 === t2 ||
@@ -265,19 +243,9 @@ export default function analyze(match) {
     );
   }
 
-  //TODO: FIX ERROR MSGS AFTER THIS
-  //   function mustHaveDistinctFields(fields, at) {
-  //     const fieldNames = new Set(fields.map((f) => f.name));
-  //     must(fieldNames.size === fields.length, "Fields must be distinct", at);
-  //   }
-
   function mustBeInLoop(at) {
     must(context.inLoop, "Break can only appear in a loop", at);
   }
-
-  //   function mustBeInClass(at) {
-  //     must(context.inClass, "This can only appear in a class", at);
-  //   }
 
   function mustBeInAFunction(at) {
     must(
@@ -622,7 +590,6 @@ export default function analyze(match) {
     },
 
     Params(paramList) {
-      // Returns a list of variable nodes
       return paramList.asIteration().children.map((p) => p.rep());
     },
 
@@ -637,7 +604,6 @@ export default function analyze(match) {
       return statements.children.map((s) => s.rep());
     },
 
-    // WORKING
     ClassDecl(_dish, id, _open, varDecls, funDecls, _closed) {
       const className = id.sourceString;
       mustNotAlreadyBeDeclared(className, id);
@@ -653,11 +619,9 @@ export default function analyze(match) {
 
       const classDeclaration = core.classDeclaration(type);
       //   context.add(className, classDeclaration);
-      // TODO: ENSURE THAT MUSTHAVEDISTINCTFIELDS() IS NOT REQUIRED, SHOULD B FINE BUT IM GETTING ERROR WHEN NON-DISTINCT FIELDS
       return classDeclaration;
     },
 
-    //TODO: Check this with Prof. bc idk if it will work well enough
     ObjDecl(
       classId1,
       objName,
@@ -722,7 +686,6 @@ export default function analyze(match) {
       return core.finallyBlock(finallyBlock);
     },
 
-    // working: eightysix('message', ExceptionType);
     ErrorStmt(
       _eightysix,
       _open,
@@ -919,7 +882,6 @@ export default function analyze(match) {
       return core.subscript(array, subscript);
     },
 
-    // working!
     Exp9_methodCall(objectId, _dot, methodId, _open, expList, _closed) {
       const object = objectId.rep();
       mustBeAClass(context.lookup(object.type.name), { at: objectId });
@@ -942,7 +904,6 @@ export default function analyze(match) {
     },
 
     Exp9_member(exp, dot, id) {
-      //FIXME: ASK TOAL ABOUT IF I CAN USE ERRORS THAT ARE NOT IN JAVASCRIPT OR IF I SHOULD JUST STICK TO THOSE
       const errors = [
         "TypeError",
         "ValueError",
@@ -967,7 +928,6 @@ export default function analyze(match) {
       const object = exp.rep();
       let classType;
       if (dot.sourceString === "?.") {
-        // mustHaveAnOptionalStructType(object, { at: exp }); TODO: Reimplement this
         classType = object.type.baseType;
       } else {
         classType = object.type;

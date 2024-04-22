@@ -114,10 +114,6 @@ export function unary(op, operand, type) {
   return { kind: "UnaryExpression", op, operand, type };
 }
 
-// export function emptyOptional(baseType) {
-//   return { kind: "EmptyOptional", baseType, type: optionalType(baseType) };
-// } //TODO: FIXME: CHECK THIS
-
 export function subscript(array, index) {
   return {
     kind: "SubscriptExpression",
