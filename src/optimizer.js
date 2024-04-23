@@ -61,9 +61,6 @@ const optimizers = {
     s.expression = optimize(s.expression);
     return s;
   },
-  //   ShortReturnStatement(s) {
-  //     return s;
-  //   },
   IfStatement(s) {
     s.test = optimize(s.test);
     s.consequent = s.consequent.flatMap(optimize);
@@ -99,17 +96,6 @@ const optimizers = {
     s.low = optimize(s.low);
     s.high = optimize(s.high);
     s.body = s.body.flatMap(optimize);
-    // Check if s.low and s.high are defined and their constructors are Number //FIXME: Ask toal abt this: currently useless as references used for low and high
-    // if (
-    //   s.low &&
-    //   s.high &&
-    //   s.low.constructor === Number &&
-    //   s.high.constructor === Number
-    // ) {
-    //   if (s.low > s.high) {
-    //     return [];
-    //   }
-    // }
     return s;
   },
   ForStatement(s) {
