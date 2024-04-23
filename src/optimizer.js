@@ -99,17 +99,14 @@ const optimizers = {
     s.low = optimize(s.low);
     s.high = optimize(s.high);
     s.body = s.body.flatMap(optimize);
-    // Check if s.low and s.high are defined and their constructors are Number //FIXME: Ask toal abt this: currently useless as references used for low and high
-    // if (
-    //   s.low &&
-    //   s.high &&
-    //   s.low.constructor === Number &&
-    //   s.high.constructor === Number
-    // ) {
-    //   if (s.low > s.high) {
-    //     return [];
-    //   }
-    // }
+
+    // Loop Unrolling
+    // 1.) low and high must be int - Number.isInteger(n)
+    // 2.) is (low > high) delete whole statement
+    // 3.) make sure (high - low) is less than ten -- to ensure not going to blow up
+    // 4.) then go ahead and replace statement with 2*(high-low)+1 new statements
+    // assign low, then body, assign low+1, then body, .. asign high, final body
+
     return s;
   },
   ForStatement(s) {
