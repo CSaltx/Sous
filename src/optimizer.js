@@ -99,6 +99,7 @@ const optimizers = {
     s.low = optimize(s.low);
     s.high = optimize(s.high);
     s.body = s.body.flatMap(optimize);
+
     // Check if s.low and s.high are defined and their constructors are Number //FIXME: Ask toal abt this: currently useless as references used for low and high
     // if (
     //   s.low &&
@@ -119,6 +120,14 @@ const optimizers = {
     if (s.collection?.kind === "EmptyArray") {
       return [];
     }
+
+    // Loop Unrolling (If constant found, duplicate by constant times.)
+    // Need to create more nodes (duplicate nodes)
+    // Would not work in this scenario b/c lose what is in the collection -- BUT we could implement in PythForStmt
+    // if (s.collection == Number) {
+    //   return 
+    // }
+
     return s;
   },
   ForRangeStatement(s) {
