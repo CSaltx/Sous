@@ -2,7 +2,7 @@ prep {
     ingredient _x := 0;
     serve("Started");
     eightysix("Error Entered", TypeError);
-} rescue (Exception e) {
+} rescue (TypeError e) {
     serve(e.stack);
 } cleanup {
     serve("Finished");
