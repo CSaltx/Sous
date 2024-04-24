@@ -25,6 +25,7 @@ What are the two most calming things to do? Cooking and programming. What if you
 - [x] Optionals
 - [x] Allows for Variable Immutability and Variable Mutability
 - [x] Allows for Pyth-style loops for conciseness
+- [x] Error Handling with Try-Catch-Finally Blocks (see [example](https://github.com/CSaltx/Sous/blob/main/examples/try.sous))
 
 > **Note:** Features are tentative and likely will change/update as language develops <br/>
 > More features likely to be realized as development process continues
