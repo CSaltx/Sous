@@ -221,6 +221,12 @@ const tests = [
     core.unary("-", x),
   ],
   [
+    "loop unrolling",
+    core.forStatement(x, core.range(0, 1), [xpp]),
+    [core.variableDeclaration(x, 0), core.assignment(x, 0), xpp],
+  ],
+  ["range optimizations", core.range(1, 0), core.emptyArray()],
+  [
     "passes through nonoptimizable constructs",
     ...Array(2).fill([
       core.program([core.shortReturnStatement()]),

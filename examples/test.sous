@@ -12,11 +12,10 @@ S test := new S(5);
 test.bake();
 '''
 
-recipe x () {
-    serve("Hello");
-    return;
-    serve("hello");
+for (i in 1000..1005) {
+    serve(i);
 }
+
 '''
 recipe y (ingredient z: int) : int {
     return 5;

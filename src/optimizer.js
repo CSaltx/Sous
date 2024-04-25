@@ -105,6 +105,19 @@ const optimizers = {
     if (s.collection?.kind === "EmptyArray") {
       return [];
     }
+    if (
+      s.collection?.kind === "RangeArray" &&
+      s.collection.end - s.collection.start <= 5
+    ) {
+      const block = [];
+      block.push(core.variableDeclaration(s.iterator, s.collection.start));
+      for (let i = s.collection.start; i < s.collection.end; i++) {
+        block.push(core.assignment(s.iterator, i));
+        block.push(...s.body);
+      }
+      return block;
+    }
+    // console.log(s.collection?.kind);
     return s;
   },
   ForRangeStatement(s) {
@@ -193,5 +206,11 @@ const optimizers = {
     c.callee = optimize(c.callee);
     c.args = c.args.map(optimize);
     return c;
+  },
+  RangeArray(r) {
+    if (r.end <= r.start) {
+      return core.emptyArray();
+    }
+    return r;
   },
 };
