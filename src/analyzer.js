@@ -516,7 +516,7 @@ export default function analyze(match) {
       mustHaveAnArrayType(collection, { at: exp });
       const iterator = core.variable(
         id.sourceString,
-        true,
+        false,
         collection.type.baseType
       );
       context = context.newChildContext({ inLoop: true });
