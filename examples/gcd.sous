@@ -1,3 +1,5 @@
+// Example program of Greatest Common Denominator (GCD)
+
 // first option: one-liner
 
 recipe gcd(ingredient x : int, ingredient y : int) : int {

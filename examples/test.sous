@@ -1,3 +1,1 @@
-// Dish S {} S x:=new S(); serve(x.y);
-
-ingredient x := 5;
+// This file is an file to mess around with code and test things out

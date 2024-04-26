@@ -1,3 +1,5 @@
+// This file showcases the fibonnaci program
+
 ingredient N := 10 | const; // Number of Fibonacci numbers to generate
 ingredient first := 0, second := 1, next := 0;
 

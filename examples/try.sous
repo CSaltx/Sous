@@ -1,3 +1,5 @@
+// Example showcasing try-catch-finally with the specialized keywords
+
 prep {
     ingredient _x := 0;
     serve("Started");

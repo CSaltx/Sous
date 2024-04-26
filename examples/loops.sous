@@ -1,3 +1,5 @@
+// Example showcasing some example for loops in this language
+
 ingredient menu := ["Soup", "Salad", "Steak", "Dessert"];
 
 for (ingredient dishIdx := 0; dishIdx < count(menu); ++dishIdx) {

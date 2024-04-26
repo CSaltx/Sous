@@ -1,3 +1,7 @@
-// this file doesnt work
+// this file doesnt work and showcases some separate errors:
 
-serve(;
+// 1. the first error is a syntax error:
+ingredient x := "error" //; semi colon should exist
+
+// 2. the second error is a semantic error:
+ingredient z := y; // y does not exist, contextual error

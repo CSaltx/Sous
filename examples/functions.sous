@@ -1,3 +1,5 @@
+// Example program of a function (recipe)
+
 ingredient temp : int;
 
 recipe CheckTemperature() : int {
