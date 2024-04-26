@@ -177,14 +177,6 @@ export default function analyze(match) {
     );
   }
 
-  function mustHaveConstString(modifier, at) {
-    must(
-      modifier.sourceString === "const",
-      "Cannot have section without modifier",
-      at
-    );
-  }
-
   function assignable(fromType, toType) {
     return (
       toType == ANY ||
@@ -375,13 +367,10 @@ export default function analyze(match) {
     },
 
     // WORKING
-    VarInit(id, _colon_equals, exp, _section, modifier) {
-      // true declaration, not just initialization
+    VarInit(id, _colon_equals, exp, modifier) {
+      // true declaration, not just initialization)
       const initializer = exp.rep();
-      const readOnly = modifier.sourceString === "const";
-      if (_section.sourceString === "|") {
-        mustHaveConstString(modifier, { at: _section });
-      }
+      const readOnly = modifier?.children[0]?.rep() === "const";
       const variable = core.variable(
         id.sourceString,
         readOnly,
@@ -390,6 +379,10 @@ export default function analyze(match) {
       mustNotAlreadyBeDeclared(id.sourceString, { at: id });
       context.add(id.sourceString, variable);
       return core.variableDeclaration(variable, initializer);
+    },
+
+    Modifier(_section, modifier) {
+      return modifier.sourceString;
     },
 
     Field(_ingredient, id, _colon, type, _semi) {

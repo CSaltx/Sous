@@ -222,11 +222,6 @@ const semanticErrors = [
     /Cannot return a value/,
   ],
   [
-    "section without modifier",
-    "ingredient x := 1 |;",
-    /Cannot have section without modifier/,
-  ],
-  [
     "return nothing from non-void",
     "recipe f(): int {return;}",
     /should be returned/,

@@ -26,7 +26,8 @@ Sous {
                   | id                                                                       --id
   VarDecl         = ingredient nonemptyListOf<VarInit, ","> ";"                              --list
                   | ingredient id ":" Type ";"                                               --without_init
-  VarInit         = id ":=" Exp "|"? const?
+  VarInit         = id ":=" Exp Modifier?
+  Modifier        = "|" const
   Field           = ingredient id ":" Type ";"
 
   FunDecl         = recipe id "(" Params ")" (":" Type)? Block
