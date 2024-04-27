@@ -18,14 +18,20 @@ What are the two most calming things to do? Cooking and programming. What if you
 - [x] Restaurant-Style Infusion
 - [x] Functions
 - [x] Classes
-- [x] Strongly-Typed
+  - [x] Private Class Variables
+  - [x] Objects 
 - [x] Static Typing
-- [x] Type Inference
 - [x] Static Scoping
 - [x] Optionals
 - [x] Allows for Variable Immutability and Variable Mutability
-- [x] Allows for Pyth-style loops for conciseness
+- [x] Multiple Loops:
+  - [x] Regular For Loops (iterations)
+  - [x] Collection For Loops
+  - [x] Pyth-style for loops
+  - [x] While Loops
+- [x] If, Else Statements
 - [x] Error Handling with Try-Catch-Finally Blocks (see [example](https://github.com/CSaltx/Sous/blob/main/examples/try.sous))
+  - [x] Throw Errors with the `eightysix` keyword
 
 > **Note:** Features are tentative and likely will change/update as language develops <br/>
 > More features likely to be realized as development process continues
