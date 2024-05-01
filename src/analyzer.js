@@ -552,7 +552,6 @@ export default function analyze(match) {
       );
     },
 
-    // FunDecl = recipe id "(" Params ")" (":" Type)? Block
     FunDecl(_recipe, id, _open, parameters, _closed, _colons, type, block) {
       const fun = core.fun(id.sourceString);
       mustNotAlreadyBeDeclared(id.sourceString, { at: id });
